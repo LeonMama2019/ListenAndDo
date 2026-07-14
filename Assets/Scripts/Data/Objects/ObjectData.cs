@@ -13,5 +13,9 @@ public class ObjectData : ScriptableObject
     [Header("Š¿Žš")]
     public string kanji;
 
+
+    [Header("‰æ‘œ")]
+    public Sprite image;
+
     public List<VerbData> availableVerbs;
 }
