@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Object", menuName = "ListenAndDo/Object")]
+[CreateAssetMenu(fileName = "Object_", menuName = "ListenAndDo/Object")]
 public class ObjectData : ScriptableObject
 {
     [Header("‰pŒê")]
@@ -12,10 +12,6 @@ public class ObjectData : ScriptableObject
 
     [Header("Š¿Žš")]
     public string kanji;
-
-
-    [Header("‰æ‘œ")]
-    public Sprite image;
-
+    
     public List<VerbData> availableVerbs;
 }

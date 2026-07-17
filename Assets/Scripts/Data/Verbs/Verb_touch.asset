@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1000442515131c4cb45d192ed02c3fb, type: 3}
+  m_Name: Verb_touch
+  m_EditorClassIdentifier: Assembly-CSharp::VerbData
+  english: touch
+  hiragana: "\u3055\u308F\u308B"
+  kanji: "\u89E6\u308B"

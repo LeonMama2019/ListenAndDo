@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: b85722ced994f174ab36ee458deb79d6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - verb: {instanceID: 0}
+  - targetObject: {instanceID: 0}
+  - targetAdjective: {instanceID: 0}
+  - targetSelector: {instanceID: 0}
+  - preposition: {instanceID: 0}
+  - referenceObject: {instanceID: 0}
+  - referenceAdjective: {instanceID: 0}
+  - referenceSelector: {instanceID: 0}
+  - place: {instanceID: 0}
+  - answerImage: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

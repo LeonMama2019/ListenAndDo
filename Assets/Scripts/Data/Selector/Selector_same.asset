@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad200ab40de498047917b2bf0b7711d0, type: 3}
+  m_Name: Selector_same
+  m_EditorClassIdentifier: Assembly-CSharp::SelectorData
+  english: same
+  hiragana: "\u304A\u306A\u3058"
+  kanji: "\u540C\u3058"
+  pattern: 2
