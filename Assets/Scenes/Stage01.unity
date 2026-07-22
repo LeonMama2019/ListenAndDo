@@ -151,6 +151,7 @@ MonoBehaviour:
   stage: {fileID: 11400000, guid: 5b6b8dffe42290145bf22c3e59a52b9d, type: 2}
   QuestionText: {fileID: 1027360007}
   answerManager: {fileID: 579584487}
+  imageData: {fileID: 0}
 --- !u!4 &97473509
 Transform:
   m_ObjectHideFlags: 0
@@ -905,7 +906,7 @@ GameObject:
   - component: {fileID: 1130757192}
   - component: {fileID: 1130757191}
   m_Layer: 0
-  m_Name: greenApple
+  m_Name: Object2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -997,7 +998,7 @@ GameObject:
   - component: {fileID: 1265914333}
   - component: {fileID: 1265914332}
   m_Layer: 3
-  m_Name: redApple
+  m_Name: Object1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

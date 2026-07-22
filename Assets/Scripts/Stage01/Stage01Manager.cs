@@ -1,17 +1,22 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Stage01Manager : MonoBehaviour
 {
     public StageData stage;
     public TextMeshProUGUI QuestionText;
     public AnswerManager answerManager;
+    public ImageData imageData;
+
+   
 
     void Start()
     {
         int randomIndex = Random.Range(0, stage.tasks.Length);
 
-        TaskData task = stage.tasks[randomIndex];
+
+    TaskData task = stage.tasks[randomIndex];
 
       
         // TaskData‚É“ü‚Á‚Ä‚¢‚éVerbData‚ğæ“¾
@@ -25,21 +30,36 @@ public class Stage01Manager : MonoBehaviour
        bool retcode =  answerManager.ReturnResult(task);
 
         //“ú–{Œê‚¾‚Á‚½‚ç`
-        makeSentenceJP(task);
-        ShowText(verb.hiragana);
+        string Textforshow = MakeSentenceJP(task);
+        ShowText(Textforshow);
     }
-    void makeSentenceJP(TaskData task)
+
+    void DummyImage()
     {
-        string frase;
-        //  objcet
-        frase = task.referenceObject.kanji;
 
-        //frase = task.
+        Image objectImage;
 
+    }
+    string MakeSentenceJP(TaskData task)
+    {
+        string phrase = "";
 
+        if (task.referenceObject != null)
+        {
+            phrase += task.referenceObject.kanji;
+        }
 
+        if (task.targetObject != null)
+        {
+            phrase += task.targetObject.kanji;
+        }
 
+        if (task.verb != null)
+        {
+            phrase += task.verb.kanji;
+        }
 
+        return phrase;
     }
 
     void ShowText(string question)
