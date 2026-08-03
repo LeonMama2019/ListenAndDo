@@ -37,6 +37,9 @@ public class TaskData : ScriptableObject
     [Header("オブジェクト画像")]
     public Sprite answerImage;
 
+    [Header("音声")]
+    public AudioClip voiceClip;
+
     [Header("確認する情報")]
     public InspectPropertyType inspectProperty;
 }

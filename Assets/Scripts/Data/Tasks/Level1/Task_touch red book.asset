@@ -21,5 +21,6 @@ MonoBehaviour:
   referenceAdjective: {fileID: 0}
   referenceSelector: {fileID: 0}
   place: {fileID: 0}
-  answerImage: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
+  answerImage: {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
+  voiceClip: {fileID: 0}
   inspectProperty: 0
