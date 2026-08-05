@@ -11,23 +11,32 @@ public class Stage01Manager : MonoBehaviour
     public SpriteRenderer object1;
     public SpriteRenderer object2;
     public VerbsController verbsController;
+    public TutorialManager tutorialManager;
+    private TaskData currentTask;
+
+    [Header("問題音声を再生するAudioSource")]
+    [SerializeField] private AudioSource voiceAudioSource;
+
 
     void Start()
     {
+
+        PlayerPrefs.SetInt("Stage01", 0);
         int randomIndex = Random.Range(0, stage.tasks.Length);
 
 
     TaskData task = stage.tasks[randomIndex];
+        currentTask = stage.tasks[randomIndex];
 
-      
+
         // TaskDataに入っているVerbDataを取得
         VerbData verb = task.verb;
-
       
-      
-     
 
-       bool retcode =  answerManager.ReturnResult(task);
+
+
+
+        bool retcode =  answerManager.ReturnResult(task);
 
         //日本語だったら～
         string Textforshow = MakeSentenceJP(task);
@@ -37,7 +46,15 @@ public class Stage01Manager : MonoBehaviour
         //　動詞
         verbsController.SetVerb(verb, task);
 
+        //音声
+        PlayCurrentVoice();
 
+
+        // チュートリアルの表示
+       if(!tutorialManager.IsTutorialCompleted("Stage01"))
+        {
+            tutorialManager.StartTutorial("Stage01");
+        }
     }
 
     //　ランダムで不正解側のイメージを取得
@@ -108,8 +125,31 @@ public class Stage01Manager : MonoBehaviour
 
     }
 
+    public void PlayCurrentVoice()
+    {
+        tutorialManager.StopAnimationSpeaker();
+        if (voiceAudioSource == null)
+        {
+            Debug.LogWarning("Voice Audio Sourceが設定されていません");
+            return;
+        }
 
+        if (currentTask == null)
+        {
+            Debug.LogWarning("currentTaskが設定されていません");
+            return;
+        }
 
+        if (currentTask.voiceClip == null)
+        {
+            Debug.LogWarning(
+                $"現在のTask「{currentTask.name}」にVoice Clipが設定されていません");
+            return;
+        }
 
+        voiceAudioSource.Stop();
+        voiceAudioSource.PlayOneShot(currentTask.voiceClip);
+    }
 
-}
+   
+  }

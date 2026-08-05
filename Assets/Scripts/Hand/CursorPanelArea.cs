@@ -5,15 +5,18 @@ public class CursorPanelArea : MonoBehaviour,
     IPointerEnterHandler,
     IPointerExitHandler
 {
-    [SerializeField] private HandListSelector hand;
+    [SerializeField] private HandListSelector handListSelector;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        hand.SetCursorEnabled(true);
+        if (handListSelector.IsHandSelected())
+        {
+            handListSelector.SetCursorEnabled(true);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        hand.SetCursorEnabled(false);
+        handListSelector.SetCursorEnabled(false);
     }
 }

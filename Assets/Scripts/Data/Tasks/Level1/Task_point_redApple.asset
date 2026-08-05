@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b85722ced994f174ab36ee458deb79d6, type: 3}
-  m_Name: Task_touch blue book
+  m_Name: Task_point_redApple
   m_EditorClassIdentifier: Assembly-CSharp::TaskData
-  verb: {fileID: 11400000, guid: e169761bd1c57e04795a40c0a6ff6215, type: 2}
-  targetObject: {fileID: 11400000, guid: 126f5b2c5d354a24a90f1cad0c165757, type: 2}
-  targetAdjective: {fileID: 11400000, guid: 7733c0da0b9bc5348b9f98b984d14e6a, type: 2}
+  verb: {fileID: 11400000, guid: 559a8d1ea583753468bea4c2bab8df7c, type: 2}
+  targetObject: {fileID: 11400000, guid: 87ab88d0ce629a142aef0b41cc38d4df, type: 2}
+  targetAdjective: {fileID: 11400000, guid: bd8832926f48eb246ad8a8c4fe1a31eb, type: 2}
   targetSelector: {fileID: 0}
   preposition: {fileID: 0}
   referenceObject: {fileID: 0}
   referenceAdjective: {fileID: 0}
   referenceSelector: {fileID: 0}
   place: {fileID: 0}
-  answerImage: {fileID: 976429924805457222, guid: 181930525f169bb449b9170eff44c6a0, type: 3}
-  voiceClip: {fileID: 8300000, guid: 897d432937c0bf749b97bc150a3c03d9, type: 3}
+  answerImage: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
+  voiceClip: {fileID: 0}
   inspectProperty: 0

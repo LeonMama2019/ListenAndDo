@@ -41,6 +41,11 @@ public class AnswerManager : MonoBehaviour
 
 
 
+    // ‚Ü‚¸ƒJ[ƒ\ƒ‹‚ª‰æ‘œ‚Ìã‚É~‚Ü‚Á‚½‚©‚ğ”»’è‚·‚é
+
+
+
+
 
 
 }
