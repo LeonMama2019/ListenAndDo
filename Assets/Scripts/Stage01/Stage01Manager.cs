@@ -17,7 +17,7 @@ public class Stage01Manager : MonoBehaviour
 
     [Header("–â‘è‰¹º‚ğÄ¶‚·‚éAudioSource")]
     [SerializeField] private AudioSource voiceAudioSource;
-
+    [SerializeField] private AnswerStage01 stage01Answer;
 
     private IEnumerator Start()
     {

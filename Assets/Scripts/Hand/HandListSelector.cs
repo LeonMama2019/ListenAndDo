@@ -165,26 +165,43 @@ public class HandListSelector : MonoBehaviour
             switch (currentIndex)
             {
                 case 0:
-                    handCursorAnimator.Play("Touch", 0, 0f);
+                    currentHandAction = "Touch";
+                    handCursorAnimator.Play(currentHandAction, 0, 0f);
                     break;
 
                 case 1:
-                    handCursorAnimator.Play("Hit", 0, 0f);
+                    currentHandAction = "Hit";
+                    handCursorAnimator.Play(currentHandAction, 0, 0f);
                     break;
 
                 case 2:
-                    handCursorAnimator.Play("Pick", 0, 0f);
+                    currentHandAction = "Pick";
+                    handCursorAnimator.Play(currentHandAction, 0, 0f);
                     break;
 
                 case 3:
-                    handCursorAnimator.Play("Point", 0, 0f);
+                    currentHandAction = "Point";
+                    handCursorAnimator.Play(currentHandAction, 0, 0f);
+                    break;
+
+                default:
+                    currentHandAction = "";
+                    Debug.LogWarning(
+                        $"currentIndex {currentIndex} に対応する動作がありません"
+                    );
                     break;
             }
         }
 
         PlayCurrentVoice();
     }
+    public string GetCurrentHandAction()
+    {
+        if (!handSelected)
+            return "";
 
+        return currentHandAction;
+    }
     private void PlayCurrentVoice()
     {
         if (handAudioSource == null)

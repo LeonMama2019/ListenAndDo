@@ -33,7 +33,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (stageName == "Stage01")
         {
-            tutorialStage01.onClickHand();
+            tutorialStage01.OnClickHand();
         }
     }
 

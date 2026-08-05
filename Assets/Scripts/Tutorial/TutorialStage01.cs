@@ -1,111 +1,123 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class TutorialStage01 : MonoBehaviour
 {
+    [Header("回答ボタン")]
+    [SerializeField] private Button object1Button;
+    [SerializeField] private Button object2Button;
 
+    [Header("HandList")]
+    [SerializeField] private GameObject handList;
+    [SerializeField] private Animator handListAnimator;
 
-    public Button object1Button;
-    public Button object2Button;
-   
-    public GameObject Handlist;
-    public Animator handListAnimator;
-    public Animator speakerAnimator;
+    [Header("Speaker")]
+    [SerializeField] private Animator speakerAnimator;
+
+    [Header("AnswerStage01")]
+    [SerializeField] private AnswerStage01 stage01Answer;
+
     [Header("チュートリアル音声を再生するAudioSource")]
     [SerializeField] private AudioSource voiceAudioSource;
 
-    [Header("Stage01のチュートリアル音声")]
+    [Header("HandListを促す音声")]
     [SerializeField] private AudioClip stage01VoiceClip;
+
+    [Header("Speakerを促す音声")]
     [SerializeField] private AudioClip stage01SpeakerClip;
-    public bool onButton = false;
+
+    private bool onButton = false;
     private int tutorialCompleted = 0;
+
     private Coroutine speakerStopCoroutine;
 
-    // オブジェクトの二つは無効状態にする
+    /// <summary>
+    /// HandListを選ぶように促すチュートリアル
+    /// </summary>
     public void StartTutorial()
     {
-        object1Button.interactable = false;
-        object2Button.interactable = false;
-        speakerAnimator.enabled = false;
-        Debug.Log("StartTutorialyobareta");
-        //音声.
-        // Stage01の音声を再生
-        if (voiceAudioSource != null && stage01VoiceClip != null)
+        if (object1Button != null)
+            object1Button.interactable = false;
+
+        if (object2Button != null)
+            object2Button.interactable = false;
+
+        Debug.Log("HandListチュートリアル開始");
+
+        PlayVoice(stage01VoiceClip);
+
+        if (handListAnimator != null)
         {
-            Debug.Log("StartTutorialkokoka?");
-            voiceAudioSource.Stop();
-            voiceAudioSource.PlayOneShot(stage01VoiceClip);
+            handListAnimator.enabled = true;
+
+            handListAnimator.ResetTrigger("Start");
+            handListAnimator.SetTrigger("Start");
         }
-        else
-        {
-            Debug.LogWarning("AudioSourceかStage01音声が設定されていません");
-        }
-
-        //枠のアニメーションを起動
-        handListAnimator.SetTrigger("Start");
-
-
     }
-    public bool SpeakerTutorial()
+
+    /// <summary>
+    /// Speakerを押すように促すチュートリアル
+    /// </summary>
+    public void SpeakerTutorial()
     {
-        speakerAnimator.enabled = true;
-        //スピーカーアニメーション
-        speakerAnimator.SetTrigger("Start");
+        Debug.Log("Speakerチュートリアル開始");
 
-      
-        // Stage01の音声を再生
-        if (voiceAudioSource != null && stage01SpeakerClip != null)
+        if (speakerAnimator != null)
         {
-            voiceAudioSource.Stop();
-            voiceAudioSource.PlayOneShot(stage01SpeakerClip);
-        }
-        else
-        {
-            Debug.LogWarning("AudioSourceかStage01音声が設定されていません");
-        }
-      
-                
-        return onButton;
+            speakerAnimator.enabled = true;
 
+            speakerAnimator.ResetTrigger("Start");
+            speakerAnimator.SetTrigger("Start");
+        }
 
+        PlayVoice(stage01SpeakerClip);
     }
+
+    /// <summary>
+    /// Speakerが押された時
+    /// </summary>
     public void OnClickButton()
     {
-        // 連打で重複処理されないようにする
-       // if (onButton)
-         //   return;
+        // 連打で何度も加算されるのを防ぐ
+        if (onButton)
+            return;
 
         onButton = true;
         tutorialCompleted++;
 
-        // 現在の1周が終わったところで停止する
+        // 現在のアニメーションを最後まで再生してから止める
+        if (speakerStopCoroutine != null)
+        {
+            StopCoroutine(speakerStopCoroutine);
+        }
+
         speakerStopCoroutine =
             StartCoroutine(StopSpeakerAfterCurrentLoop());
 
+      
+
         if (tutorialCompleted >= 2)
         {
-            OnHandListAnimationComplete();
+            OnTutorialComplete();
         }
     }
 
+    /// <summary>
+    /// Speakerアニメーションの現在の一周が
+    /// 終わってからAnimatorを止める
+    /// </summary>
     private IEnumerator StopSpeakerAfterCurrentLoop()
     {
         if (speakerAnimator == null)
             yield break;
 
-        // Animatorが最新状態になるまで1フレーム待つ
+        // Animatorの状態が更新されるまで待つ
         yield return null;
 
         AnimatorStateInfo stateInfo =
             speakerAnimator.GetCurrentAnimatorStateInfo(0);
 
-        /*
-         * normalizedTimeはループするたび、
-         * 0～1、1～2、2～3……と増える。
-         *
-         * 現在が2.4なら、3.0まで待つ。
-         */
         float finishTime =
             Mathf.Floor(stateInfo.normalizedTime) + 1f;
 
@@ -120,58 +132,67 @@ public class TutorialStage01 : MonoBehaviour
             yield return null;
         }
 
-        // 現在の1周が完全に終わってから停止
         speakerAnimator.enabled = false;
         speakerStopCoroutine = null;
     }
-    public void onClickHand()
+
+    /// <summary>
+    /// HandListが押された時
+    /// </summary>
+    public void OnClickHand()
     {
-        handListAnimator.enabled = false;
-        tutorialCompleted++;
-        if(tutorialCompleted == 2)
+        if (handListAnimator != null)
         {
-            OnHandListAnimationComplete();
-
+            handListAnimator.enabled = false;
         }
-     
 
-        StartCoroutine(DelayStart());
+        tutorialCompleted++;
 
-      
+        
+
+        // HandList操作後、3秒待ってSpeakerを促す
+        StartCoroutine(DelaySpeakerTutorial());
     }
-    private IEnumerator DelayStart()
+
+    private IEnumerator DelaySpeakerTutorial()
     {
         yield return new WaitForSeconds(3f);
 
-        // 3秒後に実行したい処理
-        Debug.Log("3秒経過！");
         SpeakerTutorial();
     }
 
-    //枠のアニメーションを起動したら
-    public  void OnHandListAnimationComplete()
+    /// <summary>
+    /// チュートリアル全体が完了した時
+    /// </summary>
+    private void OnTutorialComplete()
     {
-       
-        if (onButton)
-        {
+        if (!onButton)
+            return;
 
-            //オブジェクトの二つは有効状態にする
+        if (object1Button != null)
             object1Button.interactable = true;
+
+        if (object2Button != null)
             object2Button.interactable = true;
-            //
 
-            // チュートリアルが終了したことを記録する
-            PlayerPrefs.SetInt("Stage01", 1);
-            PlayerPrefs.Save();
+        PlayerPrefs.SetInt("Stage01", 1);
+        PlayerPrefs.Save();
 
-                    
-          
-        }
-
-
+        Debug.Log("Stage01チュートリアル完了");
     }
 
+    private void PlayVoice(AudioClip clip)
+    {
+        if (voiceAudioSource == null || clip == null)
+        {
+            Debug.LogWarning(
+                "AudioSourceまたはチュートリアル音声が設定されていません"
+            );
 
+            return;
+        }
 
-
+        voiceAudioSource.Stop();
+        voiceAudioSource.PlayOneShot(clip);
+    }
 }
