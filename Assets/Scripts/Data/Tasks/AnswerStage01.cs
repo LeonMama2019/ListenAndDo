@@ -6,7 +6,7 @@ public class Stage01Answer : MonoBehaviour
     [SerializeField] private GameObject object1;
     [SerializeField] private GameObject object2;
     public HandListSelector handListSelector;
-    public TutorialManager tutorialManager;
+    public TutorialStage01 tutorialStage01;
     private float stayTime = 0f;
     private string HandName;
     private bool tutorialStarted = false;
@@ -31,15 +31,23 @@ public class Stage01Answer : MonoBehaviour
             {
                 tutorialStarted = true;
 
-                tutorialManager.StartTutorial("Stage01");
+                Debug.Log("StartTutorialyonnderu");
+                tutorialStage01.StartTutorial();
             }
         }
-        else
+        else if(!isMouseOver)
         {
-           
-            
-            
-           // Debug.Log(HandName);
+            stayTime += Time.deltaTime;
+
+            if (stayTime >= 5f)
+            {
+                tutorialStarted = true;
+
+                tutorialStage01.SpeakerTutorial();
+            }
+
+
+            // Debug.Log(HandName);
         }
 
 
@@ -60,6 +68,7 @@ public class Stage01Answer : MonoBehaviour
 
         return col.OverlapPoint(mousePos);
     }
+
 
     //５秒以上カーソルを選んでいなかったらカーソルを選ぶ
 

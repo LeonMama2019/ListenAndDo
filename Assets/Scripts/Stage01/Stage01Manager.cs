@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 using UnityEngine.UI;
 
 public class Stage01Manager : MonoBehaviour
@@ -18,40 +19,42 @@ public class Stage01Manager : MonoBehaviour
     [SerializeField] private AudioSource voiceAudioSource;
 
 
-    void Start()
+    private IEnumerator Start()
     {
+        
 
-        PlayerPrefs.SetInt("Stage01", 0);
         int randomIndex = Random.Range(0, stage.tasks.Length);
 
+        TaskData task = stage.tasks[randomIndex];
+        currentTask = task;
 
-    TaskData task = stage.tasks[randomIndex];
-        currentTask = stage.tasks[randomIndex];
-
-
-        // TaskDataに入っているVerbDataを取得
         VerbData verb = task.verb;
-      
 
+        bool retcode = answerManager.ReturnResult(task);
 
-
-
-        bool retcode =  answerManager.ReturnResult(task);
-
-        //日本語だったら～
-        string Textforshow = MakeSentenceJP(task);
-        ShowText(Textforshow);     
+        string textForShow = MakeSentenceJP(task);
+        ShowText(textForShow);
 
         SetImages(task);
-        //　動詞
+
         verbsController.SetVerb(verb, task);
 
-        //音声
+        // 音声を再生
         PlayCurrentVoice();
 
+        // 音声が終わるまで待つ
+        if (voiceAudioSource != null)
+        {
+            while (voiceAudioSource.isPlaying)
+            {
 
-        // チュートリアルの表示
-       if(!tutorialManager.IsTutorialCompleted("Stage01"))
+                yield return null;
+            }
+            yield return new WaitForSeconds(2f);
+        }
+
+        // 音声終了後にチュートリアル開始
+        if (!tutorialManager.IsTutorialCompleted("Stage01"))
         {
             tutorialManager.StartTutorial("Stage01");
         }

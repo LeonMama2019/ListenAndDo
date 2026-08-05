@@ -27,6 +27,7 @@ public class TutorialManager : MonoBehaviour
 
         }
 
+
     }
     public void OnHandListAnimationComplete(string stageName)
     {

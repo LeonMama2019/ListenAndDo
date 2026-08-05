@@ -28,11 +28,12 @@ public class TutorialStage01 : MonoBehaviour
         object1Button.interactable = false;
         object2Button.interactable = false;
         speakerAnimator.enabled = false;
-
+        Debug.Log("StartTutorialyobareta");
         //音声.
         // Stage01の音声を再生
         if (voiceAudioSource != null && stage01VoiceClip != null)
         {
+            Debug.Log("StartTutorialkokoka?");
             voiceAudioSource.Stop();
             voiceAudioSource.PlayOneShot(stage01VoiceClip);
         }
