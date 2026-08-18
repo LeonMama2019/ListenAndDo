@@ -25,7 +25,7 @@ public class HandListSelector : MonoBehaviour
 
     // HandListには最初から0番目を表示する
     private int currentIndex = 0;
-
+    private string currentHandAction = "";
     // まだ手カーソルは選択されていない
     private bool handSelected = false;
     private bool cursorEnabled = false;
@@ -165,22 +165,22 @@ public class HandListSelector : MonoBehaviour
             switch (currentIndex)
             {
                 case 0:
-                    currentHandAction = "Touch";
+                    currentHandAction = "touch";
                     handCursorAnimator.Play(currentHandAction, 0, 0f);
                     break;
 
                 case 1:
-                    currentHandAction = "Hit";
+                    currentHandAction = "hit";
                     handCursorAnimator.Play(currentHandAction, 0, 0f);
                     break;
 
                 case 2:
-                    currentHandAction = "Pick";
+                    currentHandAction = "pick";
                     handCursorAnimator.Play(currentHandAction, 0, 0f);
                     break;
 
                 case 3:
-                    currentHandAction = "Point";
+                    currentHandAction = "point";
                     handCursorAnimator.Play(currentHandAction, 0, 0f);
                     break;
 

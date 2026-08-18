@@ -11,10 +11,11 @@ public class CircleConfirmEffect : MonoBehaviour
     [SerializeField] private GameObject okPanel;
 
     [Header("丸が完成するまでの時間")]
-    [SerializeField] private float drawDuration = 0.3f;
-
+    [SerializeField] private float drawDuration = 3.0f;
+    [Header("円を書き始めるまでの待ち時間")]
+[SerializeField] private float startDelay = 3.0f;
     [Header("丸完成後、OKを出すまでの待ち時間")]
-    [SerializeField] private float okDelay = 0.1f;
+    [SerializeField] private float okDelay = 1.1f;
 
     private Coroutine showCoroutine;
 
@@ -24,7 +25,7 @@ public class CircleConfirmEffect : MonoBehaviour
         circleImage.fillAmount = 0f;
         circleImage.gameObject.SetActive(false);
 
-        okPanel.SetActive(false);
+       
     }
 
     /// <summary>
@@ -43,15 +44,22 @@ public class CircleConfirmEffect : MonoBehaviour
 
     private IEnumerator ShowCircleCoroutine()
     {
+        if (circleImage == null || okPanel == null)
+        {
+            Debug.LogWarning("Circle ImageまたはOK Panelが設定されていません");
+            showCoroutine = null;
+            yield break;
+        }
+
         // 最初の状態に戻す
         okPanel.SetActive(false);
 
         circleImage.gameObject.SetActive(true);
         circleImage.fillAmount = 0f;
+        yield return new WaitForSeconds(startDelay);
 
         float elapsedTime = 0f;
 
-        // 丸を徐々に表示
         while (elapsedTime < drawDuration)
         {
             elapsedTime += Time.deltaTime;
@@ -62,13 +70,11 @@ public class CircleConfirmEffect : MonoBehaviour
             yield return null;
         }
 
-        // 確実に丸を完成させる
         circleImage.fillAmount = 1f;
 
-        // 少し待つ
         yield return new WaitForSeconds(okDelay);
 
-        // OK？を表示
+        // 丸が完成してからOKを表示
         okPanel.SetActive(true);
 
         showCoroutine = null;

@@ -41,9 +41,7 @@ public class TutorialStage01 : MonoBehaviour
             object1Button.interactable = false;
 
         if (object2Button != null)
-            object2Button.interactable = false;
-
-        Debug.Log("HandListチュートリアル開始");
+            object2Button.interactable = false;      
 
         PlayVoice(stage01VoiceClip);
 
@@ -178,7 +176,7 @@ public class TutorialStage01 : MonoBehaviour
         PlayerPrefs.SetInt("Stage01", 1);
         PlayerPrefs.Save();
 
-        Debug.Log("Stage01チュートリアル完了");
+      
     }
 
     private void PlayVoice(AudioClip clip)
@@ -195,4 +193,16 @@ public class TutorialStage01 : MonoBehaviour
         voiceAudioSource.Stop();
         voiceAudioSource.PlayOneShot(clip);
     }
+    public void EndTutorial()
+    {
+      
+     
+        if (object1Button != null)
+            object1Button.interactable = true;
+
+        if (object2Button != null)
+            object2Button.interactable = true;
+        handListAnimator.enabled = false;
+    }
+
 }

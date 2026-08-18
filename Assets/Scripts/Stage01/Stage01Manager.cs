@@ -14,7 +14,9 @@ public class Stage01Manager : MonoBehaviour
     public VerbsController verbsController;
     public TutorialManager tutorialManager;
     private TaskData currentTask;
-
+    private int SpeakerClickCount = 0;
+    string textForShow;
+    [SerializeField] private GameObject Panel;
     [Header("–â‘è‰¹º‚ðÄ¶‚·‚éAudioSource")]
     [SerializeField] private AudioSource voiceAudioSource;
     [SerializeField] private AnswerStage01 stage01Answer;
@@ -32,12 +34,15 @@ public class Stage01Manager : MonoBehaviour
 
         bool retcode = answerManager.ReturnResult(task);
 
-        string textForShow = MakeSentenceJP(task);
-        ShowText(textForShow);
-
+        textForShow = MakeSentenceJP(task);
+        
         SetImages(task);
+        
+
+
 
         verbsController.SetVerb(verb, task);
+        stage01Answer.SetTask(currentTask);
 
         // ‰¹º‚ðÄ¶
         PlayCurrentVoice();
@@ -123,6 +128,7 @@ public class Stage01Manager : MonoBehaviour
 
     void ShowText(string question)
     {
+        Panel.SetActive(true);
 
         QuestionText.text = question;
 
@@ -152,7 +158,12 @@ public class Stage01Manager : MonoBehaviour
 
         voiceAudioSource.Stop();
         voiceAudioSource.PlayOneShot(currentTask.voiceClip);
+       
+        SpeakerClickCount++;
+        if (SpeakerClickCount >= 4)
+        {
+            ShowText(textForShow);
+        }
     }
-
    
   }
