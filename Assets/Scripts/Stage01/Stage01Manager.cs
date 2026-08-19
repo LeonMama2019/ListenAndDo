@@ -11,8 +11,7 @@ public class Stage01Manager : MonoBehaviour
     public ImageData imageData;
     public SpriteRenderer object1;
     public SpriteRenderer object2;
-    public VerbsController verbsController;
-    public TutorialManager tutorialManager;
+    public VerbsController verbsController; 
     private TaskData currentTask;
     private int SpeakerClickCount = 0;
     string textForShow;
@@ -58,11 +57,6 @@ public class Stage01Manager : MonoBehaviour
             yield return new WaitForSeconds(2f);
         }
 
-        // 音声終了後にチュートリアル開始
-        if (!tutorialManager.IsTutorialCompleted("Stage01"))
-        {
-            tutorialManager.StartTutorial("Stage01");
-        }
     }
 
     //　ランダムで不正解側のイメージを取得
@@ -136,7 +130,7 @@ public class Stage01Manager : MonoBehaviour
 
     public void PlayCurrentVoice()
     {
-        tutorialManager.StopAnimationSpeaker();
+      
         if (voiceAudioSource == null)
         {
             Debug.LogWarning("Voice Audio Sourceが設定されていません");

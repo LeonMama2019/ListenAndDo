@@ -21,7 +21,7 @@ public class HandListSelector : MonoBehaviour
     [Header("手ごとの音声")]
     [SerializeField] private AudioClip[] handVoiceClips;
 
-    [SerializeField] private TutorialManager tutorialManager;
+
 
     // HandListには最初から0番目を表示する
     private int currentIndex = 0;
@@ -98,16 +98,8 @@ public class HandListSelector : MonoBehaviour
 
            
         }
-        else if(currentIndex >= handSprites.Length - 1)
-        {
-            if (tutorialManager != null)
-            {
-                Debug.Log("HandListのアニメーションが完了しました");
-                tutorialManager.OnHandListAnimationComplete("Stage01");
-            }
-
-        }
-
+      
+        Debug.Log("iru?");
         ShowCurrentHand();
         PlayCurrentAnimation();
         SetCursorEnabled(true);
@@ -166,29 +158,22 @@ public class HandListSelector : MonoBehaviour
             {
                 case 0:
                     currentHandAction = "touch";
-                    handCursorAnimator.Play(currentHandAction, 0, 0f);
+                    handCursorAnimator.Play("Touch", 0, 0f);
                     break;
 
                 case 1:
                     currentHandAction = "hit";
-                    handCursorAnimator.Play(currentHandAction, 0, 0f);
+                    handCursorAnimator.Play("Hit", 0, 0f);
                     break;
 
                 case 2:
                     currentHandAction = "pick";
-                    handCursorAnimator.Play(currentHandAction, 0, 0f);
+                    handCursorAnimator.Play("Pick", 0, 0f);
                     break;
 
                 case 3:
                     currentHandAction = "point";
-                    handCursorAnimator.Play(currentHandAction, 0, 0f);
-                    break;
-
-                default:
-                    currentHandAction = "";
-                    Debug.LogWarning(
-                        $"currentIndex {currentIndex} に対応する動作がありません"
-                    );
+                    handCursorAnimator.Play("Point", 0, 0f);
                     break;
             }
         }
