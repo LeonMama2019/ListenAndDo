@@ -16,7 +16,7 @@ public class AnswerStage01 : MonoBehaviour
     [SerializeField] private CircleConfirmEffect judge2Effect;
 
     [Header("チュートリアル開始までの時間")]
-    [SerializeField] private float waitTime = 5f; 
+    [SerializeField] private float waitTime = 6f; 
 
     // HandList用タイマー
     private float handTutorialTime = 0f;
@@ -107,9 +107,16 @@ public class AnswerStage01 : MonoBehaviour
                     tutorialStage01.StartTutorial();
                 }
             }
+
+        }
+        else if (handSelected)
+        {
+            //handを選んでいるところ
+            return;
         }
         else
         {
+           
             handTutorialTime = 0f;
 
             /*
@@ -123,6 +130,7 @@ public class AnswerStage01 : MonoBehaviour
             {
                 handTutorialShown = false;
             }
+      
         }
     }
 

@@ -99,7 +99,7 @@ public class HandListSelector : MonoBehaviour
            
         }
       
-        Debug.Log("iru?");
+      
         ShowCurrentHand();
         PlayCurrentAnimation();
         SetCursorEnabled(true);
