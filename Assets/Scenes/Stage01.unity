@@ -156,7 +156,6 @@ MonoBehaviour:
   object1: {fileID: 1265914332}
   object2: {fileID: 1130757191}
   verbsController: {fileID: 97473510}
-  tutorialManager: {fileID: 1266962201}
   Panel: {fileID: 1839019137}
   voiceAudioSource: {fileID: 1942821817}
   stage01Answer: {fileID: 579584489}
@@ -638,6 +637,7 @@ MonoBehaviour:
   judge2Effect: {fileID: 1906337313}
   waitTime: 5
   SpeakerClickCount: 0
+  HandPanel: {fileID: 1380375803}
 --- !u!1 &688371901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,7 +1484,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2b219b65335e7494cb805030196ab77a, type: 3}
   - {fileID: 8300000, guid: 18ac64859703e3747ba8e65700400ba8, type: 3}
   - {fileID: 8300000, guid: 3e2ed709371c81b4ab7e6e867b4cc764, type: 3}
-  tutorialManager: {fileID: 1266962201}
 --- !u!114 &1380375806
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,8 +16,8 @@ public class AnswerStage01 : MonoBehaviour
     [SerializeField] private CircleConfirmEffect judge2Effect;
 
     [Header("チュートリアル開始までの時間")]
-    [SerializeField] private float waitTime = 6f; 
-
+    [SerializeField] private float waitTime = 6f;
+       
     // HandList用タイマー
     private float handTutorialTime = 0f;
     private TaskData currentTask;
@@ -32,6 +32,9 @@ public class AnswerStage01 : MonoBehaviour
     private bool handTutorialStartedByAnswer = false;
     public int SpeakerClickCount;
     private GameObject previousMouseOverObject = null;
+
+    //ハンド選択中
+    public GameObject HandPanel;
 
     private void Update()
     {
@@ -109,9 +112,10 @@ public class AnswerStage01 : MonoBehaviour
             }
 
         }
-        else if (handSelected)
+        else if (!IsMouseOverHandPanel())
         {
             //handを選んでいるところ
+            handTutorialTime = 0f;
             return;
         }
         else
@@ -147,18 +151,19 @@ public class AnswerStage01 : MonoBehaviour
             speakerTutorialTime += Time.deltaTime;
 
             if (speakerTutorialTime >= waitTime &&
-                !speakerTutorialShown)
+                !speakerTutorialShown && !IsMouseOverHandPanel())
             {
                 speakerTutorialShown = true;
 
-                Debug.Log(
-                    "Speakerチュートリアル開始"
-                );
-
+               
                 if (tutorialStage01 != null)
                 {
                     tutorialStage01.SpeakerTutorial();
                 }
+            }
+            else if (IsMouseOverHandPanel())
+            {
+                speakerTutorialTime = 0f;
             }
 
         }
@@ -331,5 +336,23 @@ public class AnswerStage01 : MonoBehaviour
     {
         currentTask = task;
     }
-  
+
+    private bool IsMouseOverHandPanel()
+    {
+        if (HandPanel == null)
+            return false;
+
+        RectTransform rectTransform =
+            HandPanel.GetComponent<RectTransform>();
+
+        if (rectTransform == null)
+            return false;
+
+        return RectTransformUtility.RectangleContainsScreenPoint(
+            rectTransform,
+            Input.mousePosition,
+            null
+        );
+    }
+
 }
