@@ -9,32 +9,29 @@ public class AnswerStage01 : MonoBehaviour
     [SerializeField] private SpriteRenderer object2Renderer;
     [SerializeField] private GameObject judge1;
     [SerializeField] private GameObject judge2;
+
     [Header("参照")]
     [SerializeField] private HandListSelector handListSelector;
     [SerializeField] private TutorialStage01 tutorialStage01;
+    [SerializeField] private TutorialManager tutorialManager;
     [SerializeField] private CircleConfirmEffect judge1Effect;
     [SerializeField] private CircleConfirmEffect judge2Effect;
 
-    [Header("チュートリアル開始までの時間")]
-    [SerializeField] private float waitTime = 6f;
-       
-    // HandList用タイマー
-    private float handTutorialTime = 0f;
+    [Header("ヒントを出すまでの時間")]
+    [SerializeField] private float handHintWaitTime = 6f;
+    [SerializeField] private float speakerHintWaitTime = 6f;
+
+    [Header("Hand選択エリア")]
+    [SerializeField] private GameObject HandPanel;
+
     private TaskData currentTask;
-    // Speaker用タイマー
-    private float speakerTutorialTime = 0f;
+    private GameObject previousPointedObject;
 
-    // 同じ状態で何度も呼ばないためのフラグ
-    private bool handTutorialShown = false;
-    private bool speakerTutorialShown = false;
-
-    // AnswerStage01からHandチュートリアルを開始したか
-    private bool handTutorialStartedByAnswer = false;
-    public int SpeakerClickCount;
-    private GameObject previousMouseOverObject = null;
-
-    //ハンド選択中
-    public GameObject HandPanel;
+    private float handHintTimer;
+    private float speakerHintTimer;
+    private bool handHintShown;
+    private bool speakerHintShown;
+    private bool previousHandSelected;
 
     private void Update()
     {
@@ -42,317 +39,267 @@ public class AnswerStage01 : MonoBehaviour
             return;
 
         bool handSelected = handListSelector.IsHandSelected();
+        bool overObject1 = IsPointerOverObject(object1);
+        bool overObject2 = IsPointerOverObject(object2);
+        bool pointerOverAnswerObject = overObject1 || overObject2;
+        bool pointerOverHandPanel = IsPointerOverHandPanel();
 
-        bool overObject1 = IsMouseOverObject(object1);
-        bool overObject2 = IsMouseOverObject(object2);
-
-        bool isMouseOverObject =
-            overObject1 || overObject2;
-
-        // 今マウスが乗っているオブジェクト
-        GameObject currentMouseOverObject = null;
-
+        GameObject pointedObject = null;
         if (overObject1)
-        {
-            currentMouseOverObject = object1;
-        }
+            pointedObject = object1;
         else if (overObject2)
+            pointedObject = object2;
+
+        // Hand が正しく選択されている時だけ回答判定する。
+        if (pointedObject != null && pointedObject != previousPointedObject)
         {
-            currentMouseOverObject = object2;
+            Judge(pointedObject);
+        }
+        previousPointedObject = pointedObject;
+
+        // Hand を選んだ瞬間は Hand ヒントを終了し、
+        // Speaker 用の「放置時間」をゼロから数え始める。
+        if (handSelected && !previousHandSelected)
+        {
+            handHintTimer = 0f;
+            handHintShown = false;
+            speakerHintTimer = 0f;
+            speakerHintShown = false;
+            tutorialStage01?.StopHandHint();
         }
 
-        // 新しくオブジェクトの上に乗った瞬間だけ判定
-        if (currentMouseOverObject != null &&
-            currentMouseOverObject != previousMouseOverObject)
+        // Hand を選び直した／解除した場合も Speaker タイマーをリセットする。
+        if (!handSelected && previousHandSelected)
         {
-            Judge(currentMouseOverObject);
+            speakerHintTimer = 0f;
+            speakerHintShown = false;
+            tutorialStage01?.StopSpeakerHintAfterCurrentLoop();
         }
 
-        previousMouseOverObject = currentMouseOverObject;
-
-        // 手を選んだらチュートリアル終了
-        if (handTutorialStartedByAnswer && handSelected)
+        if (ShouldRunTutorialHints())
         {
-            OnHandSelected();
+            CheckHandHint(handSelected, pointerOverAnswerObject);
+            CheckSpeakerHint(handSelected, pointerOverAnswerObject, pointerOverHandPanel);
+        }
+        else
+        {
+            ResetHintTimers();
         }
 
-        CheckHandTutorial(
-            handSelected,
-            isMouseOverObject
-        );
-
-        CheckSpeakerTutorial(
-            handSelected,
-            isMouseOverObject
-        );
+        previousHandSelected = handSelected;
     }
 
     /// <summary>
-    /// 手を選んでいない状態で、
-    /// 回答画像にマウスを置き続けた時のチュートリアル
+    /// 初回プレイ中だけ補助ヒントを出す。
+    /// TutorialManager が未設定の場合は、既存Sceneとの互換性のため有効扱いにする。
     /// </summary>
-    private void CheckHandTutorial(
-        bool handSelected,
-        bool isMouseOverObject)
+    private bool ShouldRunTutorialHints()
     {
-        if (!handSelected && isMouseOverObject)
+        return tutorialManager == null || tutorialManager.IsStage01TutorialActive();
+    }
+
+    /// <summary>
+    /// Hand未選択のまま回答オブジェクトを指し続けたら
+    /// 「先にHandを選んでね」のヒントを出す。
+    /// </summary>
+    private void CheckHandHint(bool handSelected, bool pointerOverAnswerObject)
+    {
+        if (handSelected)
         {
-            handTutorialTime += Time.deltaTime;
-
-            if (handTutorialTime >= waitTime &&
-                !handTutorialShown)
-            {
-                handTutorialShown = true;
-                handTutorialStartedByAnswer = true;
-
-                if (tutorialStage01 != null)
-                {
-                    tutorialStage01.StartTutorial();
-                }
-            }
-
-        }
-        else if (!IsMouseOverHandPanel())
-        {
-            //handを選んでいるところ
-            handTutorialTime = 0f;
+            handHintTimer = 0f;
             return;
         }
-        else
-        {
-           
-            handTutorialTime = 0f;
 
-            /*
-             * 一度開始済みの場合は、
-             * ここでShownをfalseに戻さない。
-             *
-             * 戻すと、手を選ぶ前にマウスを少し外しただけで
-             * 再びチュートリアルが開始されるため。
-             */
-            if (!handTutorialStartedByAnswer)
-            {
-                handTutorialShown = false;
-            }
-      
+        if (!pointerOverAnswerObject)
+        {
+            handHintTimer = 0f;
+            return;
+        }
+
+        if (handHintShown)
+            return;
+
+        handHintTimer += Time.deltaTime;
+
+        if (handHintTimer >= handHintWaitTime)
+        {
+            handHintShown = true;
+            tutorialStage01?.ShowHandHint();
         }
     }
 
     /// <summary>
-    /// 手を選択済みで、
-    /// 回答画像の外にマウスがある時のSpeakerチュートリアル
+    /// Hand選択後、回答もHandの選び直しもせず放置されたら
+    /// 「問題をもう一回聞く？」のSpeakerヒントを出す。
     /// </summary>
-    private void CheckSpeakerTutorial(
+    private void CheckSpeakerHint(
         bool handSelected,
-        bool isMouseOverObject)
+        bool pointerOverAnswerObject,
+        bool pointerOverHandPanel)
     {
-        if (handSelected && !isMouseOverObject)
+        if (!handSelected)
         {
-            speakerTutorialTime += Time.deltaTime;
-
-            if (speakerTutorialTime >= waitTime &&
-                !speakerTutorialShown && !IsMouseOverHandPanel())
-            {
-                speakerTutorialShown = true;
-
-               
-                if (tutorialStage01 != null)
-                {
-                    tutorialStage01.SpeakerTutorial();
-                }
-            }
-            else if (IsMouseOverHandPanel())
-            {
-                speakerTutorialTime = 0f;
-            }
-
+            speakerHintTimer = 0f;
+            speakerHintShown = false;
+            return;
         }
-        else
+
+        // 回答しようとしている最中やHandを選び直している最中は放置扱いにしない。
+        if (pointerOverAnswerObject || pointerOverHandPanel)
         {
-            speakerTutorialTime = 0f;
-            speakerTutorialShown = false;
+            speakerHintTimer = 0f;
+            return;
+        }
+
+        if (speakerHintShown)
+            return;
+
+        speakerHintTimer += Time.deltaTime;
+
+        if (speakerHintTimer >= speakerHintWaitTime)
+        {
+            speakerHintShown = true;
+            tutorialStage01?.ShowSpeakerHint();
         }
     }
-   
+
+    private void ResetHintTimers()
+    {
+        handHintTimer = 0f;
+        speakerHintTimer = 0f;
+        handHintShown = false;
+        speakerHintShown = false;
+    }
 
     /// <summary>
-    /// HandListSelectorで手を選択した時に呼ぶ
+    /// HandListSelector から呼べる互換メソッド。
     /// </summary>
     public void OnHandSelected()
     {
-        /*
-         * 通常のTutorialStage01から始まった場合は
-         * 何もしない。
-         */
-        if (!handTutorialStartedByAnswer)
-            return;
-
-        Debug.Log(
-            "AnswerStage01から開始したHandチュートリアルを終了"
-        );
-
-        if (tutorialStage01 != null)
-        {
-            tutorialStage01.EndTutorial();
-        }
-
-        handTutorialStartedByAnswer = false;
-        handTutorialTime = 0f;
-        handTutorialShown = false;
+        handHintTimer = 0f;
+        handHintShown = false;
+        speakerHintTimer = 0f;
+        speakerHintShown = false;
+        tutorialStage01?.StopHandHint();
     }
 
-    private bool IsMouseOverObject(
-        GameObject obj)
+    private bool IsPointerOverObject(GameObject obj)
     {
         if (obj == null || Camera.main == null)
             return false;
 
-        Collider2D col =
-            obj.GetComponent<Collider2D>();
-
+        Collider2D col = obj.GetComponent<Collider2D>();
         if (col == null)
         {
-            Debug.LogWarning(
-                obj.name +
-                " にCollider2Dがありません"
-            );
-
+            Debug.LogWarning(obj.name + " にCollider2Dがありません");
             return false;
         }
 
-        Vector2 mousePosition =
-            Camera.main.ScreenToWorldPoint(
-                Input.mousePosition
-            );
-        
+        Vector2 screenPosition;
 
-        return col.OverlapPoint(mousePosition);
+        // タッチ中はタッチ位置を使う。PC/WebGLではマウス位置を使う。
+        if (Input.touchCount > 0)
+            screenPosition = Input.GetTouch(0).position;
+        else
+            screenPosition = Input.mousePosition;
+
+        Vector2 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+        return col.OverlapPoint(worldPosition);
     }
+
     private void Judge(GameObject target)
     {
         if (currentTask == null)
             return;
 
-        bool isCorrect = IsCorrectHand(currentTask);
-
-        if (!isCorrect)
+        if (!IsCorrectHand(currentTask))
         {
             Debug.Log("手が違います");
             return;
         }
+
+        bool correctTarget =
+            (target == object1 && object1Renderer != null && object1Renderer.sprite == currentTask.answerImage) ||
+            (target == object2 && object2Renderer != null && object2Renderer.sprite == currentTask.answerImage);
+
+        if (!correctTarget)
+            return;
+
+        if (target == object1)
+        {
+            if (judge1 != null) judge1.SetActive(true);
+            if (judge2 != null) judge2.SetActive(false);
+            judge1Effect?.ShowCircleAndConfirm();
+        }
         else
         {
-            if (target == object1 && object1Renderer.sprite == currentTask.answerImage)
-            {
-
-                judge1.SetActive(true);
-                judge2.SetActive(false);
-
-                judge1Effect.ShowCircleAndConfirm();
-            }
-            else if (target == object2 && object2Renderer.sprite == currentTask.answerImage)
-            {
-                judge1.SetActive(false);
-                judge2.SetActive(true);
-
-                judge2Effect.ShowCircleAndConfirm();
-            }
-            
-
+            if (judge1 != null) judge1.SetActive(false);
+            if (judge2 != null) judge2.SetActive(true);
+            judge2Effect?.ShowCircleAndConfirm();
         }
 
-       
+        // 正解できた時点で Stage01 の初回チュートリアルは完了。
+        if (tutorialManager != null && tutorialManager.IsStage01TutorialActive())
+        {
+            tutorialManager.CompleteStage01Tutorial();
+        }
     }
+
     public void OnObjectClicked()
     {
-        string handname = handListSelector.GetCurrentHandAction();
-
-        if (currentTask == null)
-        {
-            Debug.LogWarning("currentTaskが設定されていません");
+        if (currentTask == null || handListSelector == null)
             return;
-        }
 
-        if (handname == "")
-        {
+        string handName = handListSelector.GetCurrentHandAction();
+        if (string.IsNullOrEmpty(handName))
             return;
-        }
 
-        bool isCorrect = IsCorrectHand(currentTask);
+        GameObject target = null;
+        if (IsPointerOverObject(object1)) target = object1;
+        else if (IsPointerOverObject(object2)) target = object2;
 
-        bool overObject1 = IsMouseOverObject(object1);
-        bool overObject2 = IsMouseOverObject(object2);
-
-        if (isCorrect)
-        {
-            if (overObject1)
-            {
-                judge1.SetActive(true);
-                judge1Effect.ShowCircleAndConfirm();
-            }
-            else if (overObject2)
-            {
-                judge2.SetActive(true);
-                judge2Effect.ShowCircleAndConfirm();
-            }
-
-            Debug.Log("正解です！");
-        }
-        else
-        {
-            Debug.Log("不正解です！");
-        }
+        if (target != null)
+            Judge(target);
     }
 
-    private bool IsCorrectHand(
-        TaskData task)
+    private bool IsCorrectHand(TaskData task)
     {
-        if (task == null ||
-            task.verb == null ||
-            handListSelector == null)
-        {
+        if (task == null || task.verb == null || handListSelector == null)
             return false;
-        }
 
-        string selectedHandAction =
-            handListSelector
-                .GetCurrentHandAction();
+        string selectedHandAction = handListSelector.GetCurrentHandAction();
+        string correctVerbName = task.verb.name.Replace("Verb_", "");
 
-        string correctVerbName =
-            task.verb.name.Replace(
-                "Verb_",
-                ""
-            );
-
-        Debug.Log(
-            $"選択した手：{selectedHandAction} / " +
-            $"正解の動詞：{correctVerbName}"
-        );
-
-        return selectedHandAction ==
-               correctVerbName;
+        Debug.Log($"選択した手：{selectedHandAction} / 正解の動詞：{correctVerbName}");
+        return selectedHandAction == correctVerbName;
     }
+
     public void SetTask(TaskData task)
     {
         currentTask = task;
+        previousPointedObject = null;
+        ResetHintTimers();
     }
 
-    private bool IsMouseOverHandPanel()
+    private bool IsPointerOverHandPanel()
     {
         if (HandPanel == null)
             return false;
 
-        RectTransform rectTransform =
-            HandPanel.GetComponent<RectTransform>();
-
+        RectTransform rectTransform = HandPanel.GetComponent<RectTransform>();
         if (rectTransform == null)
             return false;
 
+        Vector2 screenPosition;
+        if (Input.touchCount > 0)
+            screenPosition = Input.GetTouch(0).position;
+        else
+            screenPosition = Input.mousePosition;
+
         return RectTransformUtility.RectangleContainsScreenPoint(
             rectTransform,
-            Input.mousePosition,
+            screenPosition,
             null
         );
     }
-
 }
