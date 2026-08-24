@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using System.Collections;
 using UnityEngine.UI;
 
 public class Stage01Manager : MonoBehaviour
@@ -11,56 +10,60 @@ public class Stage01Manager : MonoBehaviour
     public ImageData imageData;
     public SpriteRenderer object1;
     public SpriteRenderer object2;
-    public VerbsController verbsController; 
+    public VerbsController verbsController;
+
     private TaskData currentTask;
     private int SpeakerClickCount = 0;
-    string textForShow;
+    private string textForShow;
+
     [SerializeField] private GameObject Panel;
-    [Header("–â‘è‰¹º‚ğÄ¶‚·‚éAudioSource")]
+
+    [Header("å•é¡ŒéŸ³å£°ã‚’å†ç”Ÿã™ã‚‹AudioSource")]
     [SerializeField] private AudioSource voiceAudioSource;
     [SerializeField] private AnswerStage01 stage01Answer;
 
-    private IEnumerator Start()
+    private void Start()
     {
-        
-
-        int randomIndex = Random.Range(0, stage.tasks.Length);
-
-        TaskData task = stage.tasks[randomIndex];
-        currentTask = task;
-
-        VerbData verb = task.verb;
-
-        bool retcode = answerManager.ReturnResult(task);
-
-        textForShow = MakeSentenceJP(task);
-        
-        SetImages(task);
-        
-
-
-
-        verbsController.SetVerb(verb, task);
-        stage01Answer.SetTask(currentTask);
-
-        // ‰¹º‚ğÄ¶
-        PlayCurrentVoice();
-
-        // ‰¹º‚ªI‚í‚é‚Ü‚Å‘Ò‚Â
-        if (voiceAudioSource != null)
-        {
-            while (voiceAudioSource.isPlaying)
-            {
-
-                yield return null;
-            }
-            yield return new WaitForSeconds(2f);
-        }
-
+        ShowNextQuestion();
     }
 
-    //@ƒ‰ƒ“ƒ_ƒ€‚Å•s³‰ğ‘¤‚ÌƒCƒ[ƒW‚ğæ“¾
-    Sprite GetRandomWrongImage(Sprite answer)
+    /// <summary>
+    /// æ–°ã—ã„å•é¡Œã‚’é¸ã³ã€ç”»åƒãƒ»å‹•è©ãƒ»æ­£è§£åˆ¤å®šç”¨Taskãƒ»éŸ³å£°ã‚’æ›´æ–°ã™ã‚‹ã€‚
+    /// åˆå›ã‚‚2å•ç›®ä»¥é™ã‚‚ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã‚’ä½¿ã†ã€‚
+    /// </summary>
+    public void ShowNextQuestion()
+    {
+        if (stage == null || stage.tasks == null || stage.tasks.Length == 0)
+        {
+            Debug.LogWarning("Stage01Manager: StageDataã«å•é¡ŒãŒã‚ã‚Šã¾ã›ã‚“");
+            return;
+        }
+
+        int randomIndex = Random.Range(0, stage.tasks.Length);
+        currentTask = stage.tasks[randomIndex];
+
+        VerbData verb = currentTask.verb;
+
+        answerManager.ReturnResult(currentTask);
+
+        textForShow = MakeSentenceJP(currentTask);
+        SetImages(currentTask);
+
+        verbsController.SetVerb(verb, currentTask);
+        stage01Answer.SetTask(currentTask);
+
+        SpeakerClickCount = 0;
+
+        if (Panel != null)
+        {
+            Panel.SetActive(false);
+        }
+
+        PlayCurrentVoice();
+    }
+
+    // ãƒ©ãƒ³ãƒ€ãƒ ã§ä¸æ­£è§£å´ã®ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’å–å¾—
+    private Sprite GetRandomWrongImage(Sprite answer)
     {
         Sprite randomSprite;
 
@@ -68,13 +71,13 @@ public class Stage01Manager : MonoBehaviour
         {
             int index = Random.Range(0, imageData.answerImages.Length);
             randomSprite = imageData.answerImages[index];
-
-        } while (randomSprite == answer);
+        }
+        while (randomSprite == answer);
 
         return randomSprite;
     }
 
-    void SetImages(TaskData task)
+    private void SetImages(TaskData task)
     {
         Sprite answer = task.answerImage;
         Sprite wrong = GetRandomWrongImage(answer);
@@ -91,17 +94,17 @@ public class Stage01Manager : MonoBehaviour
             object1.sprite = wrong;
             object2.sprite = answer;
         }
-
-     
     }
-    string MakeSentenceJP(TaskData task)
+
+    private string MakeSentenceJP(TaskData task)
     {
         string phrase = "";
-        if(task.targetAdjective != null)
+
+        if (task.targetAdjective != null)
         {
             phrase += task.targetAdjective.kanji;
         }
-           
+
         if (task.referenceObject != null)
         {
             phrase += task.referenceObject.kanji;
@@ -120,44 +123,40 @@ public class Stage01Manager : MonoBehaviour
         return phrase;
     }
 
-    void ShowText(string question)
+    private void ShowText(string question)
     {
         Panel.SetActive(true);
-
         QuestionText.text = question;
-
     }
 
     public void PlayCurrentVoice()
     {
-      
         if (voiceAudioSource == null)
         {
-            Debug.LogWarning("Voice Audio Source‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogWarning("Voice Audio SourceãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“");
             return;
         }
 
         if (currentTask == null)
         {
-            Debug.LogWarning("currentTask‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogWarning("currentTaskãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“");
             return;
         }
 
         if (currentTask.voiceClip == null)
         {
-            Debug.LogWarning(
-                $"Œ»İ‚ÌTasku{currentTask.name}v‚ÉVoice Clip‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogWarning($"ç¾åœ¨ã®Taskã€Œ{currentTask.name}ã€ã«Voice ClipãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“");
             return;
         }
 
         voiceAudioSource.Stop();
         voiceAudioSource.PlayOneShot(currentTask.voiceClip);
-       
+
         SpeakerClickCount++;
+
         if (SpeakerClickCount >= 4)
         {
             ShowText(textForShow);
         }
     }
-   
-  }
+}
