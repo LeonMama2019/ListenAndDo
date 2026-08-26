@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -32,6 +33,9 @@ public class AnswerStage01 : MonoBehaviour
     private bool speakerTutorialShown = false;
     private bool handTutorialStartedByAnswer = false;
     private bool isAnswerProcessing = false;
+
+    private float questionStartTime;
+    private int attemptNumber = 0;
 
     public int SpeakerClickCount;
     private GameObject previousMouseOverObject = null;
@@ -175,23 +179,91 @@ public class AnswerStage01 : MonoBehaviour
 
     private void Judge(GameObject target)
     {
-        if (currentTask == null || isAnswerProcessing)
+        if (currentTask == null || isAnswerProcessing || target == null)
             return;
 
-        if (!IsCorrectHand(currentTask))
+        bool isCorrectHand = IsCorrectHand(currentTask);
+        bool isCorrectObject = IsCorrectObject(target);
+        bool isCorrect = isCorrectHand && isCorrectObject;
+
+        RecordAnswer(target, isCorrect);
+
+        if (!isCorrectHand)
         {
             Debug.Log("手が違います");
             return;
         }
 
-        if (target == object1 && object1Renderer.sprite == currentTask.answerImage)
+        if (!isCorrectObject)
+        {
+            Debug.Log("オブジェクトが違います");
+            return;
+        }
+
+        if (target == object1)
         {
             CorrectAnswer(judge1, judge1Effect);
         }
-        else if (target == object2 && object2Renderer.sprite == currentTask.answerImage)
+        else if (target == object2)
         {
             CorrectAnswer(judge2, judge2Effect);
         }
+    }
+
+    private bool IsCorrectObject(GameObject target)
+    {
+        if (currentTask == null || currentTask.answerImage == null)
+            return false;
+
+        if (target == object1 && object1Renderer != null)
+            return object1Renderer.sprite == currentTask.answerImage;
+
+        if (target == object2 && object2Renderer != null)
+            return object2Renderer.sprite == currentTask.answerImage;
+
+        return false;
+    }
+
+    private void RecordAnswer(GameObject target, bool isCorrect)
+    {
+        float objectSelectedAt = Time.realtimeSinceStartup;
+        attemptNumber++;
+
+        AnswerLogEntry entry = new AnswerLogEntry
+        {
+            questionId = currentTask.name,
+            attemptNumber = attemptNumber,
+            correctObject = GetSpriteName(currentTask.answerImage),
+            selectedObject = GetSelectedObjectName(target),
+            correctHand = currentTask.verb != null
+                ? currentTask.verb.name.Replace("Verb_", "")
+                : string.Empty,
+            selectedHand = handListSelector != null
+                ? handListSelector.GetCurrentHandAction()
+                : string.Empty,
+            isCorrect = isCorrect,
+            objectSelectionTime = objectSelectedAt - questionStartTime,
+            answerTime = Time.realtimeSinceStartup - questionStartTime,
+            answeredAt = DateTime.Now.ToString("o")
+        };
+
+        AnswerLogManager.AddAnswer(entry);
+    }
+
+    private string GetSelectedObjectName(GameObject target)
+    {
+        if (target == object1 && object1Renderer != null)
+            return GetSpriteName(object1Renderer.sprite);
+
+        if (target == object2 && object2Renderer != null)
+            return GetSpriteName(object2Renderer.sprite);
+
+        return target != null ? target.name : string.Empty;
+    }
+
+    private string GetSpriteName(Sprite sprite)
+    {
+        return sprite != null ? sprite.name : string.Empty;
     }
 
     private void CorrectAnswer(GameObject judge, CircleConfirmEffect effect)
@@ -267,28 +339,22 @@ public class AnswerStage01 : MonoBehaviour
         if (currentTask == null || isAnswerProcessing)
             return;
 
-        string handname = handListSelector.GetCurrentHandAction();
+        GameObject target = null;
 
-        if (handname == "")
+        if (IsMouseOverObject(object1))
+        {
+            target = object1;
+        }
+        else if (IsMouseOverObject(object2))
+        {
+            target = object2;
+        }
+
+        // Update側ですでに同じ選択を処理している場合は二重記録しない。
+        if (target == null || target == previousMouseOverObject)
             return;
 
-        bool overObject1 = IsMouseOverObject(object1);
-        bool overObject2 = IsMouseOverObject(object2);
-
-        if (!IsCorrectHand(currentTask))
-        {
-            Debug.Log("不正解です！");
-            return;
-        }
-
-        if (overObject1 && object1Renderer.sprite == currentTask.answerImage)
-        {
-            CorrectAnswer(judge1, judge1Effect);
-        }
-        else if (overObject2 && object2Renderer.sprite == currentTask.answerImage)
-        {
-            CorrectAnswer(judge2, judge2Effect);
-        }
+        Judge(target);
     }
 
     private bool IsCorrectHand(TaskData task)
@@ -309,6 +375,10 @@ public class AnswerStage01 : MonoBehaviour
     public void SetTask(TaskData task)
     {
         currentTask = task;
+        questionStartTime = Time.realtimeSinceStartup;
+        attemptNumber = 0;
+
+        Debug.Log("回答時間の計測を開始しました: " + currentTask.name);
     }
 
     private bool IsMouseOverHandPanel()
