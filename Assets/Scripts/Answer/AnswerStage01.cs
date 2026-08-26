@@ -182,6 +182,14 @@ public class AnswerStage01 : MonoBehaviour
         if (currentTask == null || isAnswerProcessing || target == null)
             return;
 
+        string selectedHand = handListSelector != null
+            ? handListSelector.GetCurrentHandAction()
+            : string.Empty;
+
+        // 手が未選択のホバーは回答ではなく、チュートリアル判定だけに使う。
+        if (string.IsNullOrEmpty(selectedHand))
+            return;
+
         bool isCorrectHand = IsCorrectHand(currentTask);
         bool isCorrectObject = IsCorrectObject(target);
         bool isCorrect = isCorrectHand && isCorrectObject;
