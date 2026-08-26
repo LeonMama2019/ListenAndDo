@@ -635,7 +635,9 @@ MonoBehaviour:
   tutorialStage01: {fileID: 1266962202}
   judge1Effect: {fileID: 1630326316}
   judge2Effect: {fileID: 1906337313}
+  stage01Manager: {fileID: 97473508}
   waitTime: 5
+  nextQuestionDelay: 2
   SpeakerClickCount: 0
   HandPanel: {fileID: 1380375803}
 --- !u!1 &688371901
