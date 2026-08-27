@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class AnswerStage01 : MonoBehaviour
@@ -17,6 +19,11 @@ public class AnswerStage01 : MonoBehaviour
     [SerializeField] private CircleConfirmEffect judge1Effect;
     [SerializeField] private CircleConfirmEffect judge2Effect;
 
+    [Header("正解演出後、次の問題までの時間")]
+    [SerializeField] private float nextQuestionDelay = 2f;
+
+    private Stage01Manager stage01Manager;
+
     [Header("ヒントを出すまでの時間")]
     [SerializeField] private float handHintWaitTime = 6f;
     [SerializeField] private float speakerHintWaitTime = 6f;
@@ -32,10 +39,13 @@ public class AnswerStage01 : MonoBehaviour
     private bool handHintShown;
     private bool speakerHintShown;
     private bool previousHandSelected;
+    private bool isAnswerProcessing;
+    private float questionStartTime;
+    private int attemptNumber;
 
     private void Update()
     {
-        if (handListSelector == null)
+        if (handListSelector == null || isAnswerProcessing)
             return;
 
         bool handSelected = handListSelector.IsHandSelected();
@@ -209,45 +219,154 @@ public class AnswerStage01 : MonoBehaviour
 
     private void Judge(GameObject target)
     {
-        if (currentTask == null)
+        if (currentTask == null || isAnswerProcessing || target == null)
             return;
 
-        if (!IsCorrectHand(currentTask))
+        string selectedHand = handListSelector != null
+            ? handListSelector.GetCurrentHandAction()
+            : string.Empty;
+
+        // Hand未選択のホバーは回答として記録しない。
+        if (string.IsNullOrEmpty(selectedHand))
+            return;
+
+        bool correctHand = IsCorrectHand(currentTask);
+        bool correctTarget = IsCorrectObject(target);
+        bool isCorrect = correctHand && correctTarget;
+
+        RecordAnswer(target, isCorrect);
+
+        if (!correctHand)
         {
             Debug.Log("手が違います");
             return;
         }
 
-        bool correctTarget =
-            (target == object1 && object1Renderer != null && object1Renderer.sprite == currentTask.answerImage) ||
-            (target == object2 && object2Renderer != null && object2Renderer.sprite == currentTask.answerImage);
-
         if (!correctTarget)
+        {
+            Debug.Log("オブジェクトが違います");
             return;
+        }
+
+        isAnswerProcessing = true;
+
+        CircleConfirmEffect selectedEffect;
 
         if (target == object1)
         {
             if (judge1 != null) judge1.SetActive(true);
             if (judge2 != null) judge2.SetActive(false);
-            judge1Effect?.ShowCircleAndConfirm();
+            selectedEffect = judge1Effect;
         }
         else
         {
             if (judge1 != null) judge1.SetActive(false);
             if (judge2 != null) judge2.SetActive(true);
-            judge2Effect?.ShowCircleAndConfirm();
+            selectedEffect = judge2Effect;
         }
 
-        // 正解できた時点で Stage01 の初回チュートリアルは完了。
         if (tutorialManager != null && tutorialManager.IsStage01TutorialActive())
         {
             tutorialManager.CompleteStage01Tutorial();
+        }
+
+        if (selectedEffect != null)
+        {
+            selectedEffect.ShowCircleAndConfirm(OnCorrectEffectComplete);
+        }
+        else
+        {
+            OnCorrectEffectComplete();
+        }
+    }
+
+    private bool IsCorrectObject(GameObject target)
+    {
+        if (currentTask == null || currentTask.answerImage == null)
+            return false;
+
+        if (target == object1 && object1Renderer != null)
+            return object1Renderer.sprite == currentTask.answerImage;
+
+        if (target == object2 && object2Renderer != null)
+            return object2Renderer.sprite == currentTask.answerImage;
+
+        return false;
+    }
+
+    private void RecordAnswer(GameObject target, bool isCorrect)
+    {
+        float selectedAt = Time.realtimeSinceStartup;
+        attemptNumber++;
+
+        AnswerLogEntry entry = new AnswerLogEntry
+        {
+            questionId = currentTask.name,
+            attemptNumber = attemptNumber,
+            correctObject = GetSpriteName(currentTask.answerImage),
+            selectedObject = GetSelectedObjectName(target),
+            correctHand = currentTask.verb != null
+                ? currentTask.verb.name.Replace("Verb_", "")
+                : string.Empty,
+            selectedHand = handListSelector != null
+                ? handListSelector.GetCurrentHandAction()
+                : string.Empty,
+            isCorrect = isCorrect,
+            objectSelectionTime = selectedAt - questionStartTime,
+            answerTime = Time.realtimeSinceStartup - questionStartTime,
+            answeredAt = DateTime.Now.ToString("o")
+        };
+
+        AnswerLogManager.AddAnswer(entry);
+    }
+
+    private string GetSelectedObjectName(GameObject target)
+    {
+        if (target == object1 && object1Renderer != null)
+            return GetSpriteName(object1Renderer.sprite);
+
+        if (target == object2 && object2Renderer != null)
+            return GetSpriteName(object2Renderer.sprite);
+
+        return target != null ? target.name : string.Empty;
+    }
+
+    private string GetSpriteName(Sprite sprite)
+    {
+        return sprite != null ? sprite.name : string.Empty;
+    }
+
+    private void OnCorrectEffectComplete()
+    {
+        StartCoroutine(NextQuestionCoroutine());
+    }
+
+    private IEnumerator NextQuestionCoroutine()
+    {
+        yield return new WaitForSeconds(nextQuestionDelay);
+
+        judge1Effect?.ResetEffect();
+        judge2Effect?.ResetEffect();
+
+        if (judge1 != null) judge1.SetActive(false);
+        if (judge2 != null) judge2.SetActive(false);
+
+        previousPointedObject = null;
+        isAnswerProcessing = false;
+
+        if (stage01Manager != null)
+        {
+            stage01Manager.ShowNextQuestion();
+        }
+        else
+        {
+            Debug.LogWarning("AnswerStage01: Stage01Managerが設定されていません");
         }
     }
 
     public void OnObjectClicked()
     {
-        if (currentTask == null || handListSelector == null)
+        if (currentTask == null || handListSelector == null || isAnswerProcessing)
             return;
 
         string handName = handListSelector.GetCurrentHandAction();
@@ -258,7 +377,7 @@ public class AnswerStage01 : MonoBehaviour
         if (IsPointerOverObject(object1)) target = object1;
         else if (IsPointerOverObject(object2)) target = object2;
 
-        if (target != null)
+        if (target != null && target != previousPointedObject)
             Judge(target);
     }
 
@@ -274,10 +393,18 @@ public class AnswerStage01 : MonoBehaviour
         return selectedHandAction == correctVerbName;
     }
 
+    public void SetStageManager(Stage01Manager manager)
+    {
+        stage01Manager = manager;
+    }
+
     public void SetTask(TaskData task)
     {
         currentTask = task;
         previousPointedObject = null;
+        isAnswerProcessing = false;
+        attemptNumber = 0;
+        questionStartTime = Time.realtimeSinceStartup;
         ResetHintTimers();
     }
 
