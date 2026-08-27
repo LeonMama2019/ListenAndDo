@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b85722ced994f174ab36ee458deb79d6, type: 3}
+  m_Name: Task_hit_redApple
+  m_EditorClassIdentifier: Assembly-CSharp::TaskData
+  verb: {fileID: 11400000, guid: c74add4b2092d6744819e283d787c9a1, type: 2}
+  targetObject: {fileID: 11400000, guid: 87ab88d0ce629a142aef0b41cc38d4df, type: 2}
+  targetAdjective: {fileID: 11400000, guid: bd8832926f48eb246ad8a8c4fe1a31eb, type: 2}
+  targetSelector: {fileID: 0}
+  preposition: {fileID: 0}
+  referenceObject: {fileID: 0}
+  referenceAdjective: {fileID: 0}
+  referenceSelector: {fileID: 0}
+  place: {fileID: 0}
+  answerImage: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
+  voiceClip: {fileID: 8300000, guid: 2b219b65335e7494cb805030196ab77a, type: 3}
+  inspectProperty: 0
