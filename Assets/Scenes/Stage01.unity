@@ -1488,10 +1488,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStage01
   object1Button: {fileID: 0}
   object2Button: {fileID: 0}
-  handList: {fileID: 0}
+  handList: {fileID: 1380375803}
   handListAnimator: {fileID: 1380375809}
   speakerAnimator: {fileID: 1942821819}
-  stage01Answer: {fileID: 0}
+  darkPanel: {fileID: 519757093}
+  stage01Answer: {fileID: 579584489}
   voiceAudioSource: {fileID: 1942821817}
   stage01VoiceClip: {fileID: 8300000, guid: fd06033643822414db0c607b5c2f1348, type: 3}
   stage01SpeakerClip: {fileID: 8300000, guid: d157871eb0b75524ca653a301d2bce88, type: 3}
