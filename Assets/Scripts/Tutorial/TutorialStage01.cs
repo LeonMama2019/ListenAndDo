@@ -37,19 +37,18 @@ public class TutorialStage01 : MonoBehaviour
         StartFirstTutorial();
     }
 
-    /// <summary>
-    /// Stage01初回はDarkPanelを表示するだけ。
-    /// Hand選択でDarkPanelを消す。
-    /// 6秒後に出る操作ヒントとは別処理。
-    /// </summary>
     private void StartFirstTutorial()
     {
+        // TEST中：初回済み判定を一時的に無効化。
+        // 本番時はこのブロックのコメントを外す。
+        /*
         if (PlayerPrefs.GetInt("Stage01FirstTutorial", 0) == 1)
         {
             if (darkPanel != null)
                 darkPanel.SetActive(false);
             return;
         }
+        */
 
         firstTutorialActive = true;
 
@@ -57,9 +56,6 @@ public class TutorialStage01 : MonoBehaviour
             darkPanel.SetActive(true);
     }
 
-    /// <summary>
-    /// 6秒操作しなかった時に呼ばれる既存のHandヒント。
-    /// </summary>
     public void StartTutorial()
     {
         if (firstTutorialActive)
@@ -81,10 +77,6 @@ public class TutorialStage01 : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 6秒操作しなかった時に呼ばれる既存のSpeakerヒント。
-    /// 初回DarkPanel処理とは無関係。
-    /// </summary>
     public void SpeakerTutorial()
     {
         if (firstTutorialActive)
@@ -128,11 +120,6 @@ public class TutorialStage01 : MonoBehaviour
         speakerAnimator.transform.localScale = Vector3.one;
     }
 
-    /// <summary>
-    /// Handを選択した時。
-    /// 初回ならDarkPanelを消して初回チュートリアルを完了する。
-    /// 通常時は既存のHandヒントを終了する。
-    /// </summary>
     public void OnClickHand()
     {
         if (firstTutorialActive)
@@ -142,6 +129,8 @@ public class TutorialStage01 : MonoBehaviour
             if (darkPanel != null)
                 darkPanel.SetActive(false);
 
+            // TEST中でも完了値は保存しておく。
+            // 上の判定を戻せば、そのまま本番の「初回だけ」に戻る。
             PlayerPrefs.SetInt("Stage01FirstTutorial", 1);
             PlayerPrefs.Save();
             return;
