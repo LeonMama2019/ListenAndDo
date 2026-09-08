@@ -36,10 +36,6 @@ public class TutorialStage01 : MonoBehaviour
 
     private Coroutine speakerStopCoroutine;
 
-    /// <summary>
-    /// Stage01の最初にSpeakerを押してもらうチュートリアル。
-    /// Stage01のチュートリアルが未完了の時だけ実行する。
-    /// </summary>
     public void StartTutorial()
     {
         if (PlayerPrefs.GetInt("Stage01", 0) == 1)
@@ -47,14 +43,12 @@ public class TutorialStage01 : MonoBehaviour
             if (darkPanel != null)
                 darkPanel.SetActive(false);
 
+            SetAnswerInputEnabled(true);
             return;
         }
 
-        if (object1Button != null)
-            object1Button.interactable = false;
-
-        if (object2Button != null)
-            object2Button.interactable = false;
+        // DarkPanel表示中は回答オブジェクトを触れないようにする
+        SetAnswerInputEnabled(false);
 
         if (darkPanel != null)
             darkPanel.SetActive(true);
@@ -63,9 +57,6 @@ public class TutorialStage01 : MonoBehaviour
         SpeakerTutorial();
     }
 
-    /// <summary>
-    /// Speakerを押すように促すチュートリアル
-    /// </summary>
     public void SpeakerTutorial()
     {
         Debug.Log("Speakerチュートリアル開始");
@@ -73,25 +64,31 @@ public class TutorialStage01 : MonoBehaviour
         if (speakerAnimator != null)
         {
             speakerAnimator.enabled = true;
-            speakerAnimator.ResetTrigger("Start");
-            speakerAnimator.SetTrigger("Start");
+            speakerAnimator.Rebind();
+            speakerAnimator.Update(0f);
+
+            // Controller上の実際のState名を直接再生する
+            speakerAnimator.Play("SpeakerClip", 0, 0f);
+        }
+        else
+        {
+            Debug.LogWarning("Speaker Animatorが設定されていません");
         }
 
         PlayVoice(stage01SpeakerClip);
     }
 
-    /// <summary>
-    /// Speakerが押された時
-    /// </summary>
     public void OnClickButton()
     {
-        // 最初のSpeakerチュートリアル中なら、クリックでDarkPanelを消す
         if (firstSpeakerTutorialActive)
         {
             firstSpeakerTutorialActive = false;
 
             if (darkPanel != null)
                 darkPanel.SetActive(false);
+
+            // DarkPanelが消えたら回答オブジェクトを再び有効にする
+            SetAnswerInputEnabled(true);
 
             if (speakerStopCoroutine != null)
                 StopCoroutine(speakerStopCoroutine);
@@ -100,7 +97,6 @@ public class TutorialStage01 : MonoBehaviour
             return;
         }
 
-        // 既存チュートリアル用。連打で何度も加算されるのを防ぐ
         if (onButton)
             return;
 
@@ -116,10 +112,6 @@ public class TutorialStage01 : MonoBehaviour
             OnTutorialComplete();
     }
 
-    /// <summary>
-    /// Speakerアニメーションの現在の一周が
-    /// 終わってからAnimatorを止める
-    /// </summary>
     private IEnumerator StopSpeakerAfterCurrentLoop()
     {
         if (speakerAnimator == null)
@@ -144,9 +136,6 @@ public class TutorialStage01 : MonoBehaviour
         speakerStopCoroutine = null;
     }
 
-    /// <summary>
-    /// HandListが押された時
-    /// </summary>
     public void OnClickHand()
     {
         if (handListAnimator != null)
@@ -162,22 +151,28 @@ public class TutorialStage01 : MonoBehaviour
         SpeakerTutorial();
     }
 
-    /// <summary>
-    /// チュートリアル全体が完了した時
-    /// </summary>
     private void OnTutorialComplete()
     {
         if (!onButton)
             return;
 
-        if (object1Button != null)
-            object1Button.interactable = true;
-
-        if (object2Button != null)
-            object2Button.interactable = true;
+        SetAnswerInputEnabled(true);
 
         PlayerPrefs.SetInt("Stage01", 1);
         PlayerPrefs.Save();
+    }
+
+    private void SetAnswerInputEnabled(bool enabled)
+    {
+        if (object1Button != null)
+            object1Button.interactable = enabled;
+
+        if (object2Button != null)
+            object2Button.interactable = enabled;
+
+        // 回答判定側も止める。Button以外のCollider入力にも効かせる。
+        if (stage01Answer != null)
+            stage01Answer.enabled = enabled;
     }
 
     private void PlayVoice(AudioClip clip)
@@ -194,11 +189,7 @@ public class TutorialStage01 : MonoBehaviour
 
     public void EndTutorial()
     {
-        if (object1Button != null)
-            object1Button.interactable = true;
-
-        if (object2Button != null)
-            object2Button.interactable = true;
+        SetAnswerInputEnabled(true);
 
         if (handListAnimator != null)
             handListAnimator.enabled = false;
