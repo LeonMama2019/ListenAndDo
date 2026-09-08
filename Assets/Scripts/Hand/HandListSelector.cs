@@ -21,12 +21,11 @@ public class HandListSelector : MonoBehaviour
     [Header("手ごとの音声")]
     [SerializeField] private AudioClip[] handVoiceClips;
 
+    [Header("Stage01 Tutorial")]
+    [SerializeField] private TutorialStage01 tutorialStage01;
 
-
-    // HandListには最初から0番目を表示する
     private int currentIndex = 0;
     private string currentHandAction = "";
-    // まだ手カーソルは選択されていない
     private bool handSelected = false;
     private bool cursorEnabled = false;
 
@@ -45,16 +44,11 @@ public class HandListSelector : MonoBehaviour
 
         if (handCursorImage != null)
         {
-            handCursorImage.rectTransform.sizeDelta =
-                new Vector2(50f, 50f);
+            handCursorImage.rectTransform.sizeDelta = new Vector2(50f, 50f);
         }
 
-        // HandListには0番目の手を表示
         ShowCurrentHand();
-
-        // ただし、手カーソルはまだ使わない
         SetCursorEnabled(false);
-
         handSelected = false;
     }
 
@@ -74,10 +68,7 @@ public class HandListSelector : MonoBehaviour
         if (handSprites == null || handSprites.Length == 0)
             return;
 
-        /*
-         * 初回クリックでは、
-         * 今HandListに表示されている0番目を選択する。
-         */
+        // 初回クリック = Handを実際に選択した瞬間
         if (!handSelected)
         {
             handSelected = true;
@@ -86,20 +77,20 @@ public class HandListSelector : MonoBehaviour
             PlayCurrentAnimation();
             SetCursorEnabled(true);
 
+            // Hand選択が成立した瞬間にDarkPanelを消す
+            if (tutorialStage01 != null)
+                tutorialStage01.OnClickHand();
+            else
+                Debug.LogWarning("HandListSelector: TutorialStage01が設定されていません");
+
             return;
         }
 
-        // 2回目以降は次の手へ進む
         currentIndex++;
 
         if (currentIndex >= handSprites.Length)
-        {
             currentIndex = 0;
 
-           
-        }
-      
-      
         ShowCurrentHand();
         PlayCurrentAnimation();
         SetCursorEnabled(true);
@@ -108,39 +99,27 @@ public class HandListSelector : MonoBehaviour
     public string GetCurrentHandName()
     {
         if (!handSelected)
-        {
             return "";
-        }
 
-        if (handSprites == null ||
-            currentIndex < 0 ||
-            currentIndex >= handSprites.Length)
-        {
+        if (handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
             return "";
-        }
 
         return handSprites[currentIndex].name;
     }
 
     private void ShowCurrentHand()
     {
-        if (handSprites == null ||
-            currentIndex < 0 ||
-            currentIndex >= handSprites.Length)
-        {
+        if (handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
             return;
-        }
 
         Sprite selectedSprite = handSprites[currentIndex];
 
-        // HandList側の画像
         if (handImage != null)
         {
             handImage.sprite = selectedSprite;
             handImage.preserveAspect = true;
         }
 
-        // マウスについてくる手カーソル側の画像
         if (handCursorImage != null)
         {
             handCursorImage.sprite = selectedSprite;
@@ -160,17 +139,14 @@ public class HandListSelector : MonoBehaviour
                     currentHandAction = "touch";
                     handCursorAnimator.Play("Touch", 0, 0f);
                     break;
-
                 case 1:
                     currentHandAction = "hit";
                     handCursorAnimator.Play("Hit", 0, 0f);
                     break;
-
                 case 2:
                     currentHandAction = "pick";
                     handCursorAnimator.Play("Pick", 0, 0f);
                     break;
-
                 case 3:
                     currentHandAction = "point";
                     handCursorAnimator.Play("Point", 0, 0f);
@@ -180,6 +156,7 @@ public class HandListSelector : MonoBehaviour
 
         PlayCurrentVoice();
     }
+
     public string GetCurrentHandAction()
     {
         if (!handSelected)
@@ -187,6 +164,7 @@ public class HandListSelector : MonoBehaviour
 
         return currentHandAction;
     }
+
     private void PlayCurrentVoice()
     {
         if (handAudioSource == null)
@@ -195,14 +173,9 @@ public class HandListSelector : MonoBehaviour
             return;
         }
 
-        if (handVoiceClips == null ||
-            currentIndex < 0 ||
-            currentIndex >= handVoiceClips.Length)
+        if (handVoiceClips == null || currentIndex < 0 || currentIndex >= handVoiceClips.Length)
         {
-            Debug.LogWarning(
-                $"currentIndex {currentIndex} に対応する音声がありません"
-            );
-
+            Debug.LogWarning($"currentIndex {currentIndex} に対応する音声がありません");
             return;
         }
 
@@ -210,10 +183,7 @@ public class HandListSelector : MonoBehaviour
 
         if (clip == null)
         {
-            Debug.LogWarning(
-                $"Hand Voice ClipsのElement {currentIndex}が未設定です"
-            );
-
+            Debug.LogWarning($"Hand Voice ClipsのElement {currentIndex}が未設定です");
             return;
         }
 
@@ -226,12 +196,8 @@ public class HandListSelector : MonoBehaviour
         if (!handSelected)
             return null;
 
-        if (handSprites == null ||
-            currentIndex < 0 ||
-            currentIndex >= handSprites.Length)
-        {
+        if (handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
             return null;
-        }
 
         return handSprites[currentIndex];
     }
@@ -249,11 +215,8 @@ public class HandListSelector : MonoBehaviour
         cursorEnabled = enabled;
 
         if (handCursorImage != null)
-        {
             handCursorImage.enabled = enabled;
-        }
 
-        // 手カーソル中だけ通常マウスを隠す
         Cursor.visible = !enabled;
     }
 
