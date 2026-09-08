@@ -54,6 +54,14 @@ public class TutorialStage01 : MonoBehaviour
 
         if (darkPanel != null)
             darkPanel.SetActive(true);
+
+        // 初回チュートリアル開始時にHandListをPulseさせる。
+        if (handListAnimator != null)
+        {
+            handListAnimator.enabled = true;
+            handListAnimator.Play("HandListPulse", 0, 0f);
+            handListAnimator.Update(0f);
+        }
     }
 
     public void StartTutorial()
@@ -128,6 +136,12 @@ public class TutorialStage01 : MonoBehaviour
 
             if (darkPanel != null)
                 darkPanel.SetActive(false);
+
+            if (handListAnimator != null)
+            {
+                handListAnimator.enabled = false;
+                handListAnimator.transform.localScale = Vector3.one;
+            }
 
             // TEST中でも完了値は保存しておく。
             // 上の判定を戻せば、そのまま本番の「初回だけ」に戻る。
