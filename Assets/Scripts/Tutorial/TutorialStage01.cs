@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +39,7 @@ public class TutorialStage01 : MonoBehaviour
 
     /// <summary>
     /// Stage01に初めて入った時だけ行うチュートリアル。
+    /// HandListをアニメーションさせ、HandListが選択されるまでDarkPanelを表示する。
     /// 6秒後に出る操作ヒントとは完全に別処理。
     /// </summary>
     private void StartFirstTutorial()
@@ -59,7 +59,7 @@ public class TutorialStage01 : MonoBehaviour
         if (darkPanel != null)
             darkPanel.SetActive(true);
 
-        StartSpeakerAnimation();
+        StartHandListAnimation();
     }
 
     /// <summary>
@@ -78,17 +78,27 @@ public class TutorialStage01 : MonoBehaviour
             object2Button.interactable = false;
 
         PlayVoice(stage01VoiceClip);
+        StartHandListAnimation();
+    }
 
-        if (handListAnimator != null)
+    private void StartHandListAnimation()
+    {
+        if (handListAnimator == null)
         {
-            handListAnimator.enabled = true;
-            handListAnimator.ResetTrigger("Start");
-            handListAnimator.SetTrigger("Start");
+            Debug.LogWarning("HandList Animatorが設定されていません");
+            return;
         }
+
+        handListAnimator.enabled = true;
+        handListAnimator.Rebind();
+        handListAnimator.Update(0f);
+        handListAnimator.ResetTrigger("Start");
+        handListAnimator.SetTrigger("Start");
     }
 
     /// <summary>
     /// 6秒操作しなかった時などに呼ばれる既存のSpeakerヒント。
+    /// Speakerは初回チュートリアルには関係しない。
     /// </summary>
     public void SpeakerTutorial()
     {
@@ -116,32 +126,16 @@ public class TutorialStage01 : MonoBehaviour
     }
 
     /// <summary>
-    /// Speakerクリック時。
-    /// 初回チュートリアルなら、その場でアニメーションを止めてDarkPanelを消す。
-    /// 通常の6秒ヒントならSpeakerアニメーションだけ止める。
+    /// Speakerクリック時。初回チュートリアルには何もしない。
+    /// 6秒後のSpeakerヒントが出ている場合だけ、そのアニメーションを止める。
     /// </summary>
     public void OnClickButton()
     {
-        if (firstTutorialActive)
-        {
-            firstTutorialActive = false;
-            StopSpeakerAnimationImmediately();
-
-            if (darkPanel != null)
-                darkPanel.SetActive(false);
-
-            SetAnswerInputEnabled(true);
-
-            PlayerPrefs.SetInt("Stage01FirstTutorial", 1);
-            PlayerPrefs.Save();
+        if (!hintSpeakerActive)
             return;
-        }
 
-        if (hintSpeakerActive)
-        {
-            hintSpeakerActive = false;
-            StopSpeakerAnimationImmediately();
-        }
+        hintSpeakerActive = false;
+        StopSpeakerAnimationImmediately();
     }
 
     private void StopSpeakerAnimationImmediately()
@@ -154,12 +148,31 @@ public class TutorialStage01 : MonoBehaviour
     }
 
     /// <summary>
-    /// HandListが選択された時。既存の6秒ヒントを終了する。
+    /// HandListが選択された時。
+    /// 初回ならHandListアニメーション停止、DarkPanel OFF、回答操作を解禁する。
+    /// 通常の6秒Handヒントの場合は従来通りヒントを終了する。
     /// </summary>
     public void OnClickHand()
     {
         if (handListAnimator != null)
+        {
             handListAnimator.enabled = false;
+            handListAnimator.transform.localScale = Vector3.one;
+        }
+
+        if (firstTutorialActive)
+        {
+            firstTutorialActive = false;
+
+            if (darkPanel != null)
+                darkPanel.SetActive(false);
+
+            SetAnswerInputEnabled(true);
+
+            PlayerPrefs.SetInt("Stage01FirstTutorial", 1);
+            PlayerPrefs.Save();
+            return;
+        }
 
         if (object1Button != null)
             object1Button.interactable = true;
