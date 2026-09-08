@@ -15,7 +15,7 @@ public class TutorialStage01 : MonoBehaviour
     [Header("Speaker")]
     [SerializeField] private Animator speakerAnimator;
 
-    [Header("Speakerチュートリアル")]
+    [Header("初回チュートリアル")]
     [SerializeField] private GameObject darkPanel;
 
     [Header("AnswerStage01")]
@@ -30,15 +30,21 @@ public class TutorialStage01 : MonoBehaviour
     [Header("Speakerを促す音声")]
     [SerializeField] private AudioClip stage01SpeakerClip;
 
-    private bool onButton = false;
-    private int tutorialCompleted = 0;
-    private bool firstSpeakerTutorialActive = false;
+    private bool firstTutorialActive = false;
+    private bool hintSpeakerActive = false;
 
-    private Coroutine speakerStopCoroutine;
-
-    public void StartTutorial()
+    private void Start()
     {
-        if (PlayerPrefs.GetInt("Stage01", 0) == 1)
+        StartFirstTutorial();
+    }
+
+    /// <summary>
+    /// Stage01に初めて入った時だけ行うチュートリアル。
+    /// 6秒後に出る操作ヒントとは完全に別処理。
+    /// </summary>
+    private void StartFirstTutorial()
+    {
+        if (PlayerPrefs.GetInt("Stage01FirstTutorial", 0) == 1)
         {
             if (darkPanel != null)
                 darkPanel.SetActive(false);
@@ -47,119 +53,119 @@ public class TutorialStage01 : MonoBehaviour
             return;
         }
 
-        // DarkPanel表示中は回答オブジェクトを触れないようにする
+        firstTutorialActive = true;
         SetAnswerInputEnabled(false);
 
         if (darkPanel != null)
             darkPanel.SetActive(true);
 
-        firstSpeakerTutorialActive = true;
-        SpeakerTutorial();
+        StartSpeakerAnimation();
     }
 
+    /// <summary>
+    /// 6秒操作しなかった時などに呼ばれる既存のHandヒント。
+    /// 初回チュートリアルとは別。
+    /// </summary>
+    public void StartTutorial()
+    {
+        if (firstTutorialActive)
+            return;
+
+        if (object1Button != null)
+            object1Button.interactable = false;
+
+        if (object2Button != null)
+            object2Button.interactable = false;
+
+        PlayVoice(stage01VoiceClip);
+
+        if (handListAnimator != null)
+        {
+            handListAnimator.enabled = true;
+            handListAnimator.ResetTrigger("Start");
+            handListAnimator.SetTrigger("Start");
+        }
+    }
+
+    /// <summary>
+    /// 6秒操作しなかった時などに呼ばれる既存のSpeakerヒント。
+    /// </summary>
     public void SpeakerTutorial()
     {
-        Debug.Log("Speakerチュートリアル開始");
+        if (firstTutorialActive)
+            return;
 
-        if (speakerAnimator != null)
-        {
-            speakerAnimator.enabled = true;
-            speakerAnimator.Rebind();
-            speakerAnimator.Update(0f);
-
-            // Controller上の実際のState名を直接再生する
-            speakerAnimator.Play("SpeakerClip", 0, 0f);
-        }
-        else
-        {
-            Debug.LogWarning("Speaker Animatorが設定されていません");
-        }
-
+        hintSpeakerActive = true;
+        StartSpeakerAnimation();
         PlayVoice(stage01SpeakerClip);
     }
 
+    private void StartSpeakerAnimation()
+    {
+        if (speakerAnimator == null)
+        {
+            Debug.LogWarning("Speaker Animatorが設定されていません");
+            return;
+        }
+
+        speakerAnimator.enabled = true;
+        speakerAnimator.Rebind();
+        speakerAnimator.Update(0f);
+        speakerAnimator.Play("SpeakerClip", 0, 0f);
+        speakerAnimator.Update(0f);
+    }
+
+    /// <summary>
+    /// Speakerクリック時。
+    /// 初回チュートリアルなら、その場でアニメーションを止めてDarkPanelを消す。
+    /// 通常の6秒ヒントならSpeakerアニメーションだけ止める。
+    /// </summary>
     public void OnClickButton()
     {
-        if (firstSpeakerTutorialActive)
+        if (firstTutorialActive)
         {
-            firstSpeakerTutorialActive = false;
+            firstTutorialActive = false;
+            StopSpeakerAnimationImmediately();
 
             if (darkPanel != null)
                 darkPanel.SetActive(false);
 
-            // DarkPanelが消えたら回答オブジェクトを再び有効にする
             SetAnswerInputEnabled(true);
 
-            if (speakerStopCoroutine != null)
-                StopCoroutine(speakerStopCoroutine);
-
-            speakerStopCoroutine = StartCoroutine(StopSpeakerAfterCurrentLoop());
+            PlayerPrefs.SetInt("Stage01FirstTutorial", 1);
+            PlayerPrefs.Save();
             return;
         }
 
-        if (onButton)
-            return;
-
-        onButton = true;
-        tutorialCompleted++;
-
-        if (speakerStopCoroutine != null)
-            StopCoroutine(speakerStopCoroutine);
-
-        speakerStopCoroutine = StartCoroutine(StopSpeakerAfterCurrentLoop());
-
-        if (tutorialCompleted >= 2)
-            OnTutorialComplete();
+        if (hintSpeakerActive)
+        {
+            hintSpeakerActive = false;
+            StopSpeakerAnimationImmediately();
+        }
     }
 
-    private IEnumerator StopSpeakerAfterCurrentLoop()
+    private void StopSpeakerAnimationImmediately()
     {
         if (speakerAnimator == null)
-            yield break;
-
-        yield return null;
-
-        AnimatorStateInfo stateInfo = speakerAnimator.GetCurrentAnimatorStateInfo(0);
-        float finishTime = Mathf.Floor(stateInfo.normalizedTime) + 1f;
-
-        while (speakerAnimator.enabled)
-        {
-            stateInfo = speakerAnimator.GetCurrentAnimatorStateInfo(0);
-
-            if (stateInfo.normalizedTime >= finishTime)
-                break;
-
-            yield return null;
-        }
+            return;
 
         speakerAnimator.enabled = false;
-        speakerStopCoroutine = null;
+        speakerAnimator.transform.localScale = Vector3.one;
     }
 
+    /// <summary>
+    /// HandListが選択された時。既存の6秒ヒントを終了する。
+    /// </summary>
     public void OnClickHand()
     {
         if (handListAnimator != null)
             handListAnimator.enabled = false;
 
-        tutorialCompleted++;
-        StartCoroutine(DelaySpeakerTutorial());
-    }
+        if (object1Button != null)
+            object1Button.interactable = true;
 
-    private IEnumerator DelaySpeakerTutorial()
-    {
-        yield return new WaitForSeconds(3f);
-        SpeakerTutorial();
-    }
-
-    private void OnTutorialComplete()
-    {
-        if (!onButton)
-            return;
-
-        SetAnswerInputEnabled(true);
-
-        PlayerPrefs.SetInt("Stage01", 1);
-        PlayerPrefs.Save();
+        if (object2Button != null)
+            object2Button.interactable = true;
     }
 
     private void SetAnswerInputEnabled(bool enabled)
@@ -170,7 +176,6 @@ public class TutorialStage01 : MonoBehaviour
         if (object2Button != null)
             object2Button.interactable = enabled;
 
-        // 回答判定側も止める。Button以外のCollider入力にも効かせる。
         if (stage01Answer != null)
             stage01Answer.enabled = enabled;
     }
@@ -189,12 +194,16 @@ public class TutorialStage01 : MonoBehaviour
 
     public void EndTutorial()
     {
-        SetAnswerInputEnabled(true);
+        if (firstTutorialActive)
+            return;
+
+        if (object1Button != null)
+            object1Button.interactable = true;
+
+        if (object2Button != null)
+            object2Button.interactable = true;
 
         if (handListAnimator != null)
             handListAnimator.enabled = false;
-
-        if (darkPanel != null)
-            darkPanel.SetActive(false);
     }
 }
