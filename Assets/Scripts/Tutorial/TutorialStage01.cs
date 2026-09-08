@@ -15,6 +15,9 @@ public class TutorialStage01 : MonoBehaviour
     [Header("Speaker")]
     [SerializeField] private Animator speakerAnimator;
 
+    [Header("Speakerチュートリアル")]
+    [SerializeField] private GameObject darkPanel;
+
     [Header("AnswerStage01")]
     [SerializeField] private AnswerStage01 stage01Answer;
 
@@ -29,29 +32,35 @@ public class TutorialStage01 : MonoBehaviour
 
     private bool onButton = false;
     private int tutorialCompleted = 0;
+    private bool firstSpeakerTutorialActive = false;
 
     private Coroutine speakerStopCoroutine;
 
     /// <summary>
-    /// HandListを選ぶように促すチュートリアル
+    /// Stage01の最初にSpeakerを押してもらうチュートリアル。
+    /// Stage01のチュートリアルが未完了の時だけ実行する。
     /// </summary>
     public void StartTutorial()
     {
+        if (PlayerPrefs.GetInt("Stage01", 0) == 1)
+        {
+            if (darkPanel != null)
+                darkPanel.SetActive(false);
+
+            return;
+        }
+
         if (object1Button != null)
             object1Button.interactable = false;
 
         if (object2Button != null)
-            object2Button.interactable = false;      
+            object2Button.interactable = false;
 
-        PlayVoice(stage01VoiceClip);
+        if (darkPanel != null)
+            darkPanel.SetActive(true);
 
-        if (handListAnimator != null)
-        {
-            handListAnimator.enabled = true;
-
-            handListAnimator.ResetTrigger("Start");
-            handListAnimator.SetTrigger("Start");
-        }
+        firstSpeakerTutorialActive = true;
+        SpeakerTutorial();
     }
 
     /// <summary>
@@ -64,7 +73,6 @@ public class TutorialStage01 : MonoBehaviour
         if (speakerAnimator != null)
         {
             speakerAnimator.enabled = true;
-
             speakerAnimator.ResetTrigger("Start");
             speakerAnimator.SetTrigger("Start");
         }
@@ -77,28 +85,35 @@ public class TutorialStage01 : MonoBehaviour
     /// </summary>
     public void OnClickButton()
     {
-        // 連打で何度も加算されるのを防ぐ
+        // 最初のSpeakerチュートリアル中なら、クリックでDarkPanelを消す
+        if (firstSpeakerTutorialActive)
+        {
+            firstSpeakerTutorialActive = false;
+
+            if (darkPanel != null)
+                darkPanel.SetActive(false);
+
+            if (speakerStopCoroutine != null)
+                StopCoroutine(speakerStopCoroutine);
+
+            speakerStopCoroutine = StartCoroutine(StopSpeakerAfterCurrentLoop());
+            return;
+        }
+
+        // 既存チュートリアル用。連打で何度も加算されるのを防ぐ
         if (onButton)
             return;
 
         onButton = true;
         tutorialCompleted++;
 
-        // 現在のアニメーションを最後まで再生してから止める
         if (speakerStopCoroutine != null)
-        {
             StopCoroutine(speakerStopCoroutine);
-        }
 
-        speakerStopCoroutine =
-            StartCoroutine(StopSpeakerAfterCurrentLoop());
-
-      
+        speakerStopCoroutine = StartCoroutine(StopSpeakerAfterCurrentLoop());
 
         if (tutorialCompleted >= 2)
-        {
             OnTutorialComplete();
-        }
     }
 
     /// <summary>
@@ -110,19 +125,14 @@ public class TutorialStage01 : MonoBehaviour
         if (speakerAnimator == null)
             yield break;
 
-        // Animatorの状態が更新されるまで待つ
         yield return null;
 
-        AnimatorStateInfo stateInfo =
-            speakerAnimator.GetCurrentAnimatorStateInfo(0);
-
-        float finishTime =
-            Mathf.Floor(stateInfo.normalizedTime) + 1f;
+        AnimatorStateInfo stateInfo = speakerAnimator.GetCurrentAnimatorStateInfo(0);
+        float finishTime = Mathf.Floor(stateInfo.normalizedTime) + 1f;
 
         while (speakerAnimator.enabled)
         {
-            stateInfo =
-                speakerAnimator.GetCurrentAnimatorStateInfo(0);
+            stateInfo = speakerAnimator.GetCurrentAnimatorStateInfo(0);
 
             if (stateInfo.normalizedTime >= finishTime)
                 break;
@@ -140,22 +150,15 @@ public class TutorialStage01 : MonoBehaviour
     public void OnClickHand()
     {
         if (handListAnimator != null)
-        {
             handListAnimator.enabled = false;
-        }
 
         tutorialCompleted++;
-
-        
-
-        // HandList操作後、3秒待ってSpeakerを促す
         StartCoroutine(DelaySpeakerTutorial());
     }
 
     private IEnumerator DelaySpeakerTutorial()
     {
         yield return new WaitForSeconds(3f);
-
         SpeakerTutorial();
     }
 
@@ -175,34 +178,32 @@ public class TutorialStage01 : MonoBehaviour
 
         PlayerPrefs.SetInt("Stage01", 1);
         PlayerPrefs.Save();
-
-      
     }
 
     private void PlayVoice(AudioClip clip)
     {
         if (voiceAudioSource == null || clip == null)
         {
-            Debug.LogWarning(
-                "AudioSourceまたはチュートリアル音声が設定されていません"
-            );
-
+            Debug.LogWarning("AudioSourceまたはチュートリアル音声が設定されていません");
             return;
         }
 
         voiceAudioSource.Stop();
         voiceAudioSource.PlayOneShot(clip);
     }
+
     public void EndTutorial()
     {
-      
-     
         if (object1Button != null)
             object1Button.interactable = true;
 
         if (object2Button != null)
             object2Button.interactable = true;
-        handListAnimator.enabled = false;
-    }
 
+        if (handListAnimator != null)
+            handListAnimator.enabled = false;
+
+        if (darkPanel != null)
+            darkPanel.SetActive(false);
+    }
 }
