@@ -23,19 +23,33 @@ public class Stage01Manager : MonoBehaviour
     [SerializeField] private AudioSource voiceAudioSource;
     [SerializeField] private AnswerStage01 stage01Answer;
 
-    [Header("問題を読み上げるまでの待ち時間")]
+    [Header("Hand選択後、問題を開始するまでの待ち時間")]
     [SerializeField] private float voiceDelay = 3f;
 
-    private Coroutine voiceDelayCoroutine;
+    private Coroutine startQuestionCoroutine;
 
     private void Start()
     {
+        // Stage01はチュートリアル。問題はHandを選択するまで開始しない。
+    }
+
+    public void StartQuestionsAfterHandSelected()
+    {
+        if (startQuestionCoroutine != null)
+            StopCoroutine(startQuestionCoroutine);
+
+        startQuestionCoroutine = StartCoroutine(StartQuestionsAfterDelay());
+    }
+
+    private IEnumerator StartQuestionsAfterDelay()
+    {
+        yield return new WaitForSeconds(voiceDelay);
+        startQuestionCoroutine = null;
         ShowNextQuestion();
     }
 
     /// <summary>
     /// 新しい問題を選び、画像・動詞・正解判定用Task・音声を更新する。
-    /// 初回も2問目以降もこのメソッドを使う。
     /// </summary>
     public void ShowNextQuestion()
     {
@@ -61,35 +75,22 @@ public class Stage01Manager : MonoBehaviour
         SpeakerClickCount = 0;
 
         if (Panel != null)
-        {
             Panel.SetActive(false);
-        }
 
-        if (voiceDelayCoroutine != null)
-            StopCoroutine(voiceDelayCoroutine);
-
-        voiceDelayCoroutine = StartCoroutine(PlayCurrentVoiceAfterDelay());
-    }
-
-    private IEnumerator PlayCurrentVoiceAfterDelay()
-    {
-        yield return new WaitForSeconds(voiceDelay);
-        voiceDelayCoroutine = null;
+        // 1問目はHand選択から3秒後にここへ来る。
+        // 2問目以降は正解演出後にShowNextQuestion()が呼ばれるため即読み上げる。
         PlayCurrentVoice();
     }
 
-    // ランダムで不正解側のイメージを取得
     private Sprite GetRandomWrongImage(Sprite answer)
     {
         Sprite randomSprite;
-
         do
         {
             int index = Random.Range(0, imageData.answerImages.Length);
             randomSprite = imageData.answerImages[index];
         }
         while (randomSprite == answer);
-
         return randomSprite;
     }
 
@@ -97,7 +98,6 @@ public class Stage01Manager : MonoBehaviour
     {
         Sprite answer = task.answerImage;
         Sprite wrong = GetRandomWrongImage(answer);
-
         bool answerLeft = Random.Range(0, 2) == 0;
 
         if (answerLeft)
@@ -115,27 +115,10 @@ public class Stage01Manager : MonoBehaviour
     private string MakeSentenceJP(TaskData task)
     {
         string phrase = "";
-
-        if (task.targetAdjective != null)
-        {
-            phrase += task.targetAdjective.kanji;
-        }
-
-        if (task.referenceObject != null)
-        {
-            phrase += task.referenceObject.kanji;
-        }
-
-        if (task.targetObject != null)
-        {
-            phrase += task.targetObject.kanji;
-        }
-
-        if (task.verb != null)
-        {
-            phrase += task.verb.kanji;
-        }
-
+        if (task.targetAdjective != null) phrase += task.targetAdjective.kanji;
+        if (task.referenceObject != null) phrase += task.referenceObject.kanji;
+        if (task.targetObject != null) phrase += task.targetObject.kanji;
+        if (task.verb != null) phrase += task.verb.kanji;
         return phrase;
     }
 
@@ -152,13 +135,11 @@ public class Stage01Manager : MonoBehaviour
             Debug.LogWarning("Voice Audio Sourceが設定されていません");
             return;
         }
-
         if (currentTask == null)
         {
             Debug.LogWarning("currentTaskが設定されていません");
             return;
         }
-
         if (currentTask.voiceClip == null)
         {
             Debug.LogWarning($"現在のTask「{currentTask.name}」にVoice Clipが設定されていません");
@@ -169,10 +150,7 @@ public class Stage01Manager : MonoBehaviour
         voiceAudioSource.PlayOneShot(currentTask.voiceClip);
 
         SpeakerClickCount++;
-
         if (SpeakerClickCount >= 4)
-        {
             ShowText(textForShow);
-        }
     }
 }
