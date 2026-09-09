@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b85722ced994f174ab36ee458deb79d6, type: 3}
   m_Name: Task_hit_
   m_EditorClassIdentifier: Assembly-CSharp::TaskData
-  verb: {fileID: 0}
-  targetObject: {fileID: 0}
+  verb: {fileID: 11400000, guid: c74add4b2092d6744819e283d787c9a1, type: 2}
+  targetObject: {fileID: 11400000, guid: 670a62a346238e747a705df93fdd9fe7, type: 2}
   targetAdjective: {fileID: 0}
   targetSelector: {fileID: 0}
   preposition: {fileID: 0}
@@ -21,6 +21,6 @@ MonoBehaviour:
   referenceAdjective: {fileID: 0}
   referenceSelector: {fileID: 0}
   place: {fileID: 0}
-  answerImage: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
-  voiceClip: {fileID: 0}
+  answerImage: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
+  voiceClip: {fileID: 8300000, guid: ed9a9f9db0f2d9a4fadb7f3d75352fd8, type: 3}
   inspectProperty: 0
