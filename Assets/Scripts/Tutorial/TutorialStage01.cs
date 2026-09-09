@@ -23,7 +23,7 @@ public class TutorialStage01 : MonoBehaviour
     [Header("チュートリアル音声を再生するAudioSource")]
     [SerializeField] private AudioSource voiceAudioSource;
 
-    [Header("HandListを促す音声")]
+    [Header("HandListを促す音声（touchhand）")]
     [SerializeField] private AudioClip stage01VoiceClip;
 
     [Header("Speakerを促す音声")]
@@ -39,7 +39,6 @@ public class TutorialStage01 : MonoBehaviour
 
     private void StartOpeningTutorial()
     {
-        // Stage01自体をチュートリアルとして扱うため、毎回必ず開始する。
         openingTutorialActive = true;
 
         if (darkPanel != null)
@@ -51,6 +50,9 @@ public class TutorialStage01 : MonoBehaviour
             handListAnimator.Play("HandListPulse", 0, 0f);
             handListAnimator.Update(0f);
         }
+
+        // Stage01開始時に「Handを選択して」の音声を再生する。
+        PlayVoice(stage01VoiceClip);
     }
 
     public void StartTutorial()
@@ -131,6 +133,13 @@ public class TutorialStage01 : MonoBehaviour
                 handListAnimator.enabled = false;
                 handListAnimator.transform.localScale = Vector3.one;
             }
+
+            // Handを選択した瞬間を起点に、3秒後に1問目を開始する。
+            Stage01Manager manager = FindFirstObjectByType<Stage01Manager>();
+            if (manager != null)
+                manager.StartQuestionsAfterHandSelected();
+            else
+                Debug.LogWarning("TutorialStage01: Stage01Managerが見つかりません");
 
             return;
         }
