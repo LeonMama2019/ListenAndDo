@@ -13,6 +13,7 @@ public class TutorialStage02 : MonoBehaviour
     [SerializeField] private AudioClip selectHitVoiceClip;
 
     private bool openingTutorialActive = false;
+    private Vector3 originalHandListScale = Vector3.one;
 
     private void Start()
     {
@@ -28,6 +29,10 @@ public class TutorialStage02 : MonoBehaviour
 
         if (handListAnimator != null)
         {
+            // Stage02に入った時点のHandListサイズを保存する。
+            // チュートリアル中だけ大小させ、終了時には必ずこのサイズへ戻す。
+            originalHandListScale = handListAnimator.transform.localScale;
+
             handListAnimator.enabled = true;
             handListAnimator.Play("HandListPulse", 0, 0f);
             handListAnimator.Update(0f);
@@ -54,7 +59,7 @@ public class TutorialStage02 : MonoBehaviour
         if (handListAnimator != null)
         {
             handListAnimator.enabled = false;
-            handListAnimator.transform.localScale = Vector3.one;
+            handListAnimator.transform.localScale = originalHandListScale;
         }
 
         Stage02Manager manager = FindFirstObjectByType<Stage02Manager>();
