@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -21,6 +22,11 @@ public class Stage01Manager : MonoBehaviour
     [Header("問題音声を再生するAudioSource")]
     [SerializeField] private AudioSource voiceAudioSource;
     [SerializeField] private AnswerStage01 stage01Answer;
+
+    [Header("問題を読み上げるまでの待ち時間")]
+    [SerializeField] private float voiceDelay = 3f;
+
+    private Coroutine voiceDelayCoroutine;
 
     private void Start()
     {
@@ -59,6 +65,16 @@ public class Stage01Manager : MonoBehaviour
             Panel.SetActive(false);
         }
 
+        if (voiceDelayCoroutine != null)
+            StopCoroutine(voiceDelayCoroutine);
+
+        voiceDelayCoroutine = StartCoroutine(PlayCurrentVoiceAfterDelay());
+    }
+
+    private IEnumerator PlayCurrentVoiceAfterDelay()
+    {
+        yield return new WaitForSeconds(voiceDelay);
+        voiceDelayCoroutine = null;
         PlayCurrentVoice();
     }
 
