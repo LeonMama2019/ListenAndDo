@@ -128,8 +128,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 97473509}
-  - component: {fileID: 97473508}
   - component: {fileID: 97473510}
+  - component: {fileID: 97473511}
   m_Layer: 0
   m_Name: StageManager
   m_TagString: Untagged
@@ -137,29 +137,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &97473508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 97473507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 051d13f4aa09e4e4c971d5ccf42ecf72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Stage01Manager
-  stage: {fileID: 11400000, guid: 5b6b8dffe42290145bf22c3e59a52b9d, type: 2}
-  QuestionText: {fileID: 1027360007}
-  answerManager: {fileID: 579584487}
-  imageData: {fileID: 11400000, guid: f6438c500f0aa6e4eb50549e3b36dfae, type: 2}
-  object1: {fileID: 1265914332}
-  object2: {fileID: 1130757191}
-  verbsController: {fileID: 97473510}
-  Panel: {fileID: 1839019137}
-  voiceAudioSource: {fileID: 1942821817}
-  stage01Answer: {fileID: 579584489}
-  voiceDelay: 3
 --- !u!4 &97473509
 Transform:
   m_ObjectHideFlags: 0
@@ -172,8 +149,7 @@ Transform:
   m_LocalPosition: {x: 1.08257, y: -0.36974, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1266962200}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &97473510
@@ -188,6 +164,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3b265c1fa7be414a936f133bf97c68d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VerbsController
+--- !u!114 &97473511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97473507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa0b924437f5947a27f6a9ad30512b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Stage02Manager
 --- !u!1 &248019797
 GameObject:
   m_ObjectHideFlags: 0
@@ -838,27 +826,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 579584485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4b312f145217a24b95fc690af1be510, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a4fb064f644f7a478450dc7e93b84b0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnswerStage01
-  object1: {fileID: 1265914331}
-  object2: {fileID: 1130757190}
-  object1Renderer: {fileID: 1265914332}
-  object2Renderer: {fileID: 1130757191}
-  judge1: {fileID: 1630326314}
-  judge2: {fileID: 1906337311}
-  handListSelector: {fileID: 1380375805}
-  tutorialStage01: {fileID: 1266962202}
-  judge1Effect: {fileID: 1630326316}
-  judge2Effect: {fileID: 1906337313}
-  stage01Manager: {fileID: 97473508}
-  waitTime: 5
-  nextQuestionDelay: 2
-  totalQuestions: 5
-  TutorialFinishPanel: {fileID: 1994643866}
-  finishPanelDuration: 5
-  SpeakerClickCount: 0
-  HandPanel: {fileID: 1380375803}
+  m_EditorClassIdentifier: Assembly-CSharp::AnswerStage02
 --- !u!1 &688371901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,7 +1186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83bb6ff9bbfad6e408289aeb1e4d4855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stage01ObjectClick
-  answerStage01: {fileID: 579584489}
+  answerStage01: {fileID: 0}
 --- !u!1 &1203676982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1467,75 +1437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83bb6ff9bbfad6e408289aeb1e4d4855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stage01ObjectClick
-  answerStage01: {fileID: 579584489}
---- !u!1 &1266962199
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1266962200}
-  - component: {fileID: 1266962201}
-  - component: {fileID: 1266962202}
-  m_Layer: 0
-  m_Name: TutorialManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1266962200
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1266962199}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 97473509}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1266962201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1266962199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96c6029713339774c8b1652921d0be09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
-  tutorialStage01: {fileID: 1266962202}
---- !u!114 &1266962202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1266962199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45382b88d545e9d46a654592fae3d9e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialStage01
-  object1Button: {fileID: 0}
-  object2Button: {fileID: 0}
-  handList: {fileID: 1380375803}
-  handListAnimator: {fileID: 1380375809}
-  speakerAnimator: {fileID: 1942821819}
-  darkPanel: {fileID: 519757093}
-  stage01Answer: {fileID: 579584489}
-  voiceAudioSource: {fileID: 1942821817}
-  stage01VoiceClip: {fileID: 8300000, guid: fd06033643822414db0c607b5c2f1348, type: 3}
-  stage01SpeakerClip: {fileID: 8300000, guid: d157871eb0b75524ca653a301d2bce88, type: 3}
+  answerStage01: {fileID: 0}
 --- !u!1 &1380375803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1603,7 +1505,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2b219b65335e7494cb805030196ab77a, type: 3}
   - {fileID: 8300000, guid: 18ac64859703e3747ba8e65700400ba8, type: 3}
   - {fileID: 8300000, guid: 3e2ed709371c81b4ab7e6e867b4cc764, type: 3}
-  tutorialStage01: {fileID: 1266962202}
+  tutorialStage01: {fileID: 0}
 --- !u!114 &1380375806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2290,7 +2192,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 97473508}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Stage01Manager, Assembly-CSharp
         m_MethodName: PlayCurrentVoice
         m_Mode: 1
@@ -2302,7 +2204,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1266962201}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
         m_MethodName: StopAnimationSpeaker
         m_Mode: 1
