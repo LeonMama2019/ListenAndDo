@@ -176,6 +176,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02aa0b924437f5947a27f6a9ad30512b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stage02Manager
+  stage: {fileID: 11400000, guid: 9fb4f1d1a2ff7cd4e88468448271d61c, type: 2}
+  QuestionText: {fileID: 1027360007}
+  answerManager: {fileID: 579584487}
+  imageData: {fileID: 11400000, guid: f6438c500f0aa6e4eb50549e3b36dfae, type: 2}
+  object1: {fileID: 1265914332}
+  object2: {fileID: 1130757191}
+  verbsController: {fileID: 97473510}
+  Panel: {fileID: 1839019137}
+  voiceAudioSource: {fileID: 1942821817}
+  stage02Answer: {fileID: 579584489}
+  voiceDelay: 3
 --- !u!1 &248019797
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,7 +825,8 @@ Transform:
   m_LocalPosition: {x: 631.82837, y: 722.7429, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1167714024}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &579584489
@@ -829,6 +841,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a4fb064f644f7a478450dc7e93b84b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnswerStage02
+  object1: {fileID: 1265914331}
+  object2: {fileID: 1130757190}
+  object1Renderer: {fileID: 1265914332}
+  object2Renderer: {fileID: 1130757191}
+  judge1: {fileID: 1630326314}
+  judge2: {fileID: 1906337311}
+  handListSelector: {fileID: 1380375805}
+  judge1Effect: {fileID: 1630326316}
+  judge2Effect: {fileID: 1906337313}
+  stage02Manager: {fileID: 97473511}
+  nextQuestionDelay: 2
 --- !u!1 &688371901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,6 +1210,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stage01ObjectClick
   answerStage01: {fileID: 0}
+--- !u!1 &1167714022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1167714024}
+  - component: {fileID: 1167714023}
+  m_Layer: 0
+  m_Name: Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1167714023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167714022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff417c5d6136154c847d5ff44860417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialStage02
+  darkPanel: {fileID: 519757093}
+  handListAnimator: {fileID: 1380375809}
+  voiceAudioSource: {fileID: 1942821817}
+  selectHitVoiceClip: {fileID: 8300000, guid: 2b219b65335e7494cb805030196ab77a, type: 3}
+--- !u!4 &1167714024
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167714022}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 579584488}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1203676982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1476,8 +1547,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -347.5, y: -64}
-  m_SizeDelta: {x: -755, y: -381}
+  m_AnchoredPosition: {x: -321, y: -51.834366}
+  m_SizeDelta: {x: -702, y: -356.6687}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1380375805
 MonoBehaviour:
@@ -1506,6 +1577,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 18ac64859703e3747ba8e65700400ba8, type: 3}
   - {fileID: 8300000, guid: 3e2ed709371c81b4ab7e6e867b4cc764, type: 3}
   tutorialStage01: {fileID: 0}
+  tutorialStage02: {fileID: 1167714023}
 --- !u!114 &1380375806
 MonoBehaviour:
   m_ObjectHideFlags: 0
