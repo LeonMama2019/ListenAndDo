@@ -24,15 +24,15 @@ public class HandListSelector : MonoBehaviour
     [Header("Stage01 Tutorial")]
     [SerializeField] private TutorialStage01 tutorialStage01;
 
+    [Header("Stage02 Tutorial")]
+    [SerializeField] private TutorialStage02 tutorialStage02;
+
     private int currentIndex = 0;
     private string currentHandAction = "";
     private bool handSelected = false;
     private bool cursorEnabled = false;
 
-    public bool IsHandSelected()
-    {
-        return handSelected;
-    }
+    public bool IsHandSelected() => handSelected;
 
     private void Start()
     {
@@ -43,9 +43,7 @@ public class HandListSelector : MonoBehaviour
         }
 
         if (handCursorImage != null)
-        {
             handCursorImage.rectTransform.sizeDelta = new Vector2(50f, 50f);
-        }
 
         ShowCurrentHand();
         SetCursorEnabled(false);
@@ -54,72 +52,62 @@ public class HandListSelector : MonoBehaviour
 
     private void Update()
     {
-        if (!cursorEnabled)
-            return;
-
-        if (handCursorImage == null)
-            return;
-
+        if (!cursorEnabled || handCursorImage == null) return;
         handCursorImage.rectTransform.position = Input.mousePosition;
     }
 
     public void NextHand()
     {
-        if (handSprites == null || handSprites.Length == 0)
-            return;
+        if (handSprites == null || handSprites.Length == 0) return;
 
-        // 初回クリック = Handを実際に選択した瞬間
+        // 初回クリックでは現在表示中のHandを選択する。
         if (!handSelected)
         {
             handSelected = true;
-
             ShowCurrentHand();
             PlayCurrentAnimation();
             SetCursorEnabled(true);
 
-            // Hand選択が成立した瞬間にDarkPanelを消す
             if (tutorialStage01 != null)
                 tutorialStage01.OnClickHand();
-            else
-                Debug.LogWarning("HandListSelector: TutorialStage01が設定されていません");
 
+            NotifyStage02Tutorial();
             return;
         }
 
         currentIndex++;
-
         if (currentIndex >= handSprites.Length)
             currentIndex = 0;
 
         ShowCurrentHand();
         PlayCurrentAnimation();
         SetCursorEnabled(true);
+        NotifyStage02Tutorial();
+    }
+
+    private void NotifyStage02Tutorial()
+    {
+        if (tutorialStage02 != null)
+            tutorialStage02.OnHandChanged(currentHandAction);
     }
 
     public string GetCurrentHandName()
     {
-        if (!handSelected)
+        if (!handSelected || handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
             return "";
-
-        if (handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
-            return "";
-
         return handSprites[currentIndex].name;
     }
 
     private void ShowCurrentHand()
     {
-        if (handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
-            return;
+        if (handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length) return;
 
         Sprite selectedSprite = handSprites[currentIndex];
-
         if (handImage != null)
         {
             handImage.sprite = selectedSprite;
             handImage.preserveAspect = true;
         }
-
         if (handCursorImage != null)
         {
             handCursorImage.sprite = selectedSprite;
@@ -132,7 +120,6 @@ public class HandListSelector : MonoBehaviour
         if (handCursorAnimator != null)
         {
             handCursorAnimator.enabled = true;
-
             switch (currentIndex)
             {
                 case 0:
@@ -151,6 +138,9 @@ public class HandListSelector : MonoBehaviour
                     currentHandAction = "point";
                     handCursorAnimator.Play("Point", 0, 0f);
                     break;
+                default:
+                    currentHandAction = "";
+                    break;
             }
         }
 
@@ -159,9 +149,7 @@ public class HandListSelector : MonoBehaviour
 
     public string GetCurrentHandAction()
     {
-        if (!handSelected)
-            return "";
-
+        if (!handSelected) return "";
         return currentHandAction;
     }
 
@@ -172,7 +160,6 @@ public class HandListSelector : MonoBehaviour
             Debug.LogWarning("Hand Audio Sourceが設定されていません");
             return;
         }
-
         if (handVoiceClips == null || currentIndex < 0 || currentIndex >= handVoiceClips.Length)
         {
             Debug.LogWarning($"currentIndex {currentIndex} に対応する音声がありません");
@@ -180,7 +167,6 @@ public class HandListSelector : MonoBehaviour
         }
 
         AudioClip clip = handVoiceClips[currentIndex];
-
         if (clip == null)
         {
             Debug.LogWarning($"Hand Voice ClipsのElement {currentIndex}が未設定です");
@@ -193,30 +179,21 @@ public class HandListSelector : MonoBehaviour
 
     public Sprite GetSelectedHand()
     {
-        if (!handSelected)
+        if (!handSelected || handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
             return null;
-
-        if (handSprites == null || currentIndex < 0 || currentIndex >= handSprites.Length)
-            return null;
-
         return handSprites[currentIndex];
     }
 
     public int GetSelectedIndex()
     {
-        if (!handSelected)
-            return -1;
-
+        if (!handSelected) return -1;
         return currentIndex;
     }
 
     public void SetCursorEnabled(bool enabled)
     {
         cursorEnabled = enabled;
-
-        if (handCursorImage != null)
-            handCursorImage.enabled = enabled;
-
+        if (handCursorImage != null) handCursorImage.enabled = enabled;
         Cursor.visible = !enabled;
     }
 
