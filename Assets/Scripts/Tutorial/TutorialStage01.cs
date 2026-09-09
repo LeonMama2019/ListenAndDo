@@ -14,7 +14,7 @@ public class TutorialStage01 : MonoBehaviour
     [Header("Speaker")]
     [SerializeField] private Animator speakerAnimator;
 
-    [Header("初回チュートリアル")]
+    [Header("Stage01 チュートリアル")]
     [SerializeField] private GameObject darkPanel;
 
     [Header("AnswerStage01")]
@@ -29,33 +29,22 @@ public class TutorialStage01 : MonoBehaviour
     [Header("Speakerを促す音声")]
     [SerializeField] private AudioClip stage01SpeakerClip;
 
-    private bool firstTutorialActive = false;
+    private bool openingTutorialActive = false;
     private bool hintSpeakerActive = false;
 
     private void Start()
     {
-        StartFirstTutorial();
+        StartOpeningTutorial();
     }
 
-    private void StartFirstTutorial()
+    private void StartOpeningTutorial()
     {
-        // TEST中：初回済み判定を一時的に無効化。
-        // 本番時はこのブロックのコメントを外す。
-        /*
-        if (PlayerPrefs.GetInt("Stage01FirstTutorial", 0) == 1)
-        {
-            if (darkPanel != null)
-                darkPanel.SetActive(false);
-            return;
-        }
-        */
-
-        firstTutorialActive = true;
+        // Stage01自体をチュートリアルとして扱うため、毎回必ず開始する。
+        openingTutorialActive = true;
 
         if (darkPanel != null)
             darkPanel.SetActive(true);
 
-        // 初回チュートリアル開始時にHandListをPulseさせる。
         if (handListAnimator != null)
         {
             handListAnimator.enabled = true;
@@ -66,7 +55,7 @@ public class TutorialStage01 : MonoBehaviour
 
     public void StartTutorial()
     {
-        if (firstTutorialActive)
+        if (openingTutorialActive)
             return;
 
         if (object1Button != null)
@@ -87,7 +76,7 @@ public class TutorialStage01 : MonoBehaviour
 
     public void SpeakerTutorial()
     {
-        if (firstTutorialActive)
+        if (openingTutorialActive)
             return;
 
         hintSpeakerActive = true;
@@ -130,9 +119,9 @@ public class TutorialStage01 : MonoBehaviour
 
     public void OnClickHand()
     {
-        if (firstTutorialActive)
+        if (openingTutorialActive)
         {
-            firstTutorialActive = false;
+            openingTutorialActive = false;
 
             if (darkPanel != null)
                 darkPanel.SetActive(false);
@@ -143,10 +132,6 @@ public class TutorialStage01 : MonoBehaviour
                 handListAnimator.transform.localScale = Vector3.one;
             }
 
-            // TEST中でも完了値は保存しておく。
-            // 上の判定を戻せば、そのまま本番の「初回だけ」に戻る。
-            PlayerPrefs.SetInt("Stage01FirstTutorial", 1);
-            PlayerPrefs.Save();
             return;
         }
 
@@ -174,7 +159,7 @@ public class TutorialStage01 : MonoBehaviour
 
     public void EndTutorial()
     {
-        if (firstTutorialActive)
+        if (openingTutorialActive)
             return;
 
         if (object1Button != null)
