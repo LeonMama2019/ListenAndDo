@@ -159,6 +159,7 @@ MonoBehaviour:
   Panel: {fileID: 1839019137}
   voiceAudioSource: {fileID: 1942821817}
   stage01Answer: {fileID: 579584489}
+  voiceDelay: 3
 --- !u!4 &97473509
 Transform:
   m_ObjectHideFlags: 0
@@ -2349,7 +2350,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1994643867
 RectTransform:
   m_ObjectHideFlags: 0
