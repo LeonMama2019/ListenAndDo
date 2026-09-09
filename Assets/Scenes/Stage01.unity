@@ -854,6 +854,9 @@ MonoBehaviour:
   stage01Manager: {fileID: 97473508}
   waitTime: 5
   nextQuestionDelay: 2
+  totalQuestions: 5
+  TutorialFinishPanel: {fileID: 1994643866}
+  finishPanelDuration: 5
   SpeakerClickCount: 0
   HandPanel: {fileID: 1380375803}
 --- !u!1 &688371901
