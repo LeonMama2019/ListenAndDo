@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class AnswerStage01 : MonoBehaviour
 {
@@ -28,53 +30,47 @@ public class AnswerStage01 : MonoBehaviour
     [Header("Stage01 終了")]
     [SerializeField] private int totalQuestions = 5;
     [SerializeField] private GameObject TutorialFinishPanel;
+    [SerializeField] private float finishPanelDuration = 5f;
 
     private int completedQuestions = 0;
     private float handTutorialTime = 0f;
     private TaskData currentTask;
     private float speakerTutorialTime = 0f;
-
     private bool handTutorialShown = false;
     private bool speakerTutorialShown = false;
     private bool handTutorialStartedByAnswer = false;
     private bool isAnswerProcessing = false;
-
+    private bool finishPanelActive = false;
     private float questionStartTime;
     private int attemptNumber = 0;
-
     public int SpeakerClickCount;
     private GameObject previousMouseOverObject = null;
-
     public GameObject HandPanel;
 
     private void Start()
     {
-        if (TutorialFinishPanel != null)
-            TutorialFinishPanel.SetActive(false);
+        if (TutorialFinishPanel != null) TutorialFinishPanel.SetActive(false);
     }
 
     private void Update()
     {
-        if (handListSelector == null || isAnswerProcessing)
+        if (finishPanelActive)
+        {
+            if (Input.GetMouseButtonDown(0)) LoadTopScene();
             return;
+        }
 
+        if (handListSelector == null || isAnswerProcessing) return;
         bool handSelected = handListSelector.IsHandSelected();
         bool overObject1 = IsMouseOverObject(object1);
         bool overObject2 = IsMouseOverObject(object2);
         bool isMouseOverObject = overObject1 || overObject2;
-
         GameObject currentMouseOverObject = null;
         if (overObject1) currentMouseOverObject = object1;
         else if (overObject2) currentMouseOverObject = object2;
-
-        if (currentMouseOverObject != null && currentMouseOverObject != previousMouseOverObject)
-            Judge(currentMouseOverObject);
-
+        if (currentMouseOverObject != null && currentMouseOverObject != previousMouseOverObject) Judge(currentMouseOverObject);
         previousMouseOverObject = currentMouseOverObject;
-
-        if (handTutorialStartedByAnswer && handSelected)
-            OnHandSelected();
-
+        if (handTutorialStartedByAnswer && handSelected) OnHandSelected();
         CheckHandTutorial(handSelected, isMouseOverObject);
         CheckSpeakerTutorial(handSelected, isMouseOverObject);
     }
@@ -91,16 +87,8 @@ public class AnswerStage01 : MonoBehaviour
                 if (tutorialStage01 != null) tutorialStage01.StartTutorial();
             }
         }
-        else if (!IsMouseOverHandPanel())
-        {
-            handTutorialTime = 0f;
-            return;
-        }
-        else
-        {
-            handTutorialTime = 0f;
-            if (!handTutorialStartedByAnswer) handTutorialShown = false;
-        }
+        else if (!IsMouseOverHandPanel()) { handTutorialTime = 0f; return; }
+        else { handTutorialTime = 0f; if (!handTutorialStartedByAnswer) handTutorialShown = false; }
     }
 
     private void CheckSpeakerTutorial(bool handSelected, bool isMouseOverObject)
@@ -115,11 +103,7 @@ public class AnswerStage01 : MonoBehaviour
             }
             else if (IsMouseOverHandPanel()) speakerTutorialTime = 0f;
         }
-        else
-        {
-            speakerTutorialTime = 0f;
-            speakerTutorialShown = false;
-        }
+        else { speakerTutorialTime = 0f; speakerTutorialShown = false; }
     }
 
     public void OnHandSelected()
@@ -145,14 +129,11 @@ public class AnswerStage01 : MonoBehaviour
         if (currentTask == null || isAnswerProcessing || target == null) return;
         string selectedHand = handListSelector != null ? handListSelector.GetCurrentHandAction() : string.Empty;
         if (string.IsNullOrEmpty(selectedHand)) return;
-
         bool isCorrectHand = IsCorrectHand(currentTask);
         bool isCorrectObject = IsCorrectObject(target);
         bool isCorrect = isCorrectHand && isCorrectObject;
         RecordAnswer(target, isCorrect);
-
         if (!isCorrectHand || !isCorrectObject) return;
-
         if (target == object1) CorrectAnswer(judge1, judge1Effect);
         else if (target == object2) CorrectAnswer(judge2, judge2Effect);
     }
@@ -171,16 +152,12 @@ public class AnswerStage01 : MonoBehaviour
         attemptNumber++;
         AnswerLogEntry entry = new AnswerLogEntry
         {
-            questionId = currentTask.name,
-            attemptNumber = attemptNumber,
-            correctObject = GetSpriteName(currentTask.answerImage),
-            selectedObject = GetSelectedObjectName(target),
+            questionId = currentTask.name, attemptNumber = attemptNumber,
+            correctObject = GetSpriteName(currentTask.answerImage), selectedObject = GetSelectedObjectName(target),
             correctHand = currentTask.verb != null ? currentTask.verb.name.Replace("Verb_", "") : string.Empty,
             selectedHand = handListSelector != null ? handListSelector.GetCurrentHandAction() : string.Empty,
-            isCorrect = isCorrect,
-            objectSelectionTime = objectSelectedAt - questionStartTime,
-            answerTime = Time.realtimeSinceStartup - questionStartTime,
-            answeredAt = DateTime.Now.ToString("o")
+            isCorrect = isCorrect, objectSelectionTime = objectSelectedAt - questionStartTime,
+            answerTime = Time.realtimeSinceStartup - questionStartTime, answeredAt = DateTime.Now.ToString("o")
         };
         AnswerLogManager.AddAnswer(entry);
     }
@@ -199,28 +176,21 @@ public class AnswerStage01 : MonoBehaviour
         if (isAnswerProcessing) return;
         isAnswerProcessing = true;
         completedQuestions++;
-
         judge1.SetActive(judge == judge1);
         judge2.SetActive(judge == judge2);
-
         if (effect != null) effect.ShowCircleAndConfirm(OnCorrectImageShown);
         else OnCorrectImageShown();
     }
 
-    private void OnCorrectImageShown()
-    {
-        StartCoroutine(NextQuestionCoroutine());
-    }
+    private void OnCorrectImageShown() { StartCoroutine(NextQuestionCoroutine()); }
 
     private IEnumerator NextQuestionCoroutine()
     {
         yield return new WaitForSeconds(nextQuestionDelay);
-
         if (judge1Effect != null) judge1Effect.ResetEffect();
         if (judge2Effect != null) judge2Effect.ResetEffect();
         if (judge1 != null) judge1.SetActive(false);
         if (judge2 != null) judge2.SetActive(false);
-
         previousMouseOverObject = null;
         handTutorialTime = 0f;
         speakerTutorialTime = 0f;
@@ -229,15 +199,38 @@ public class AnswerStage01 : MonoBehaviour
         if (completedQuestions >= totalQuestions)
         {
             if (TutorialFinishPanel != null)
+            {
                 TutorialFinishPanel.SetActive(true);
+                finishPanelActive = true;
+                StartCoroutine(ReturnToTopAfterDelay());
+            }
             else
+            {
                 Debug.LogWarning("AnswerStage01: TutorialFinishPanelが設定されていません");
+                LoadTopScene();
+            }
             yield break;
         }
 
         isAnswerProcessing = false;
         if (stage01Manager != null) stage01Manager.ShowNextQuestion();
         else Debug.LogWarning("AnswerStage01: Stage01Managerが設定されていません");
+    }
+
+    private IEnumerator ReturnToTopAfterDelay()
+    {
+        yield return new WaitForSeconds(finishPanelDuration);
+        LoadTopScene();
+    }
+
+    public void OnFinishPanelClicked() { LoadTopScene(); }
+
+    private void LoadTopScene()
+    {
+        if (!finishPanelActive && completedQuestions < totalQuestions) return;
+        finishPanelActive = false;
+        StopAllCoroutines();
+        SceneManager.LoadScene("Top");
     }
 
     public void OnObjectClicked()
@@ -253,9 +246,7 @@ public class AnswerStage01 : MonoBehaviour
     private bool IsCorrectHand(TaskData task)
     {
         if (task == null || task.verb == null || handListSelector == null) return false;
-        string selectedHandAction = handListSelector.GetCurrentHandAction();
-        string correctVerbName = task.verb.name.Replace("Verb_", "");
-        return selectedHandAction == correctVerbName;
+        return handListSelector.GetCurrentHandAction() == task.verb.name.Replace("Verb_", "");
     }
 
     public void SetTask(TaskData task)
