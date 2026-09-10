@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b85722ced994f174ab36ee458deb79d6, type: 3}
-  m_Name: Task_point_yellowbook
+  m_Name: Task_point_box
   m_EditorClassIdentifier: Assembly-CSharp::TaskData
   verb: {fileID: 11400000, guid: 559a8d1ea583753468bea4c2bab8df7c, type: 2}
-  targetObject: {fileID: 11400000, guid: 126f5b2c5d354a24a90f1cad0c165757, type: 2}
-  targetAdjective: {fileID: 11400000, guid: 232b1e9c06eefcb4d9f7849bb9984d3f, type: 2}
+  targetObject: {fileID: 11400000, guid: 670a62a346238e747a705df93fdd9fe7, type: 2}
+  targetAdjective: {fileID: 0}
   targetSelector: {fileID: 0}
   preposition: {fileID: 0}
   referenceObject: {fileID: 0}
   referenceAdjective: {fileID: 0}
   referenceSelector: {fileID: 0}
   place: {fileID: 0}
-  answerImage: {fileID: -6190948392007208175, guid: 9ecf57176de8d384aa072f23b9f65f54, type: 3}
-  voiceClip: {fileID: 8300000, guid: e0ff660b9355cee4b884a9fde036958d, type: 3}
+  answerImage: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
+  voiceClip: {fileID: 8300000, guid: 44122d260023ad843bb9e947576a2377, type: 3}
   inspectProperty: 1
