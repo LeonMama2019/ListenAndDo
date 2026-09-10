@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b85722ced994f174ab36ee458deb79d6, type: 3}
+  m_Name: Task_pick_spoon
+  m_EditorClassIdentifier: Assembly-CSharp::TaskData
+  verb: {fileID: 11400000, guid: 581bccdca3c917e4389edf5cc65ec318, type: 2}
+  targetObject: {fileID: 11400000, guid: a848418511515284e91d27c674b15248, type: 2}
+  targetAdjective: {fileID: 0}
+  targetSelector: {fileID: 0}
+  preposition: {fileID: 0}
+  referenceObject: {fileID: 0}
+  referenceAdjective: {fileID: 0}
+  referenceSelector: {fileID: 0}
+  place: {fileID: 0}
+  answerImage: {fileID: -3411414237561161789, guid: f309ca4fd1b43db44a8f2c4b0e14f8c6, type: 3}
+  voiceClip: {fileID: 8300000, guid: a0bfa05f83401c047873b62acd56d774, type: 3}
+  inspectProperty: 1
