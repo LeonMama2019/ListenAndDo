@@ -1242,7 +1242,7 @@ MonoBehaviour:
   darkPanel: {fileID: 519757093}
   handListAnimator: {fileID: 1380375809}
   voiceAudioSource: {fileID: 1942821817}
-  selectHitVoiceClip: {fileID: 8300000, guid: 2b219b65335e7494cb805030196ab77a, type: 3}
+  selectHitVoiceClip: {fileID: 8300000, guid: 68eef7fd70012204581f780ad7f64cd3, type: 3}
 --- !u!4 &1167714024
 Transform:
   m_ObjectHideFlags: 0
