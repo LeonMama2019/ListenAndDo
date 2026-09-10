@@ -31,8 +31,6 @@ public class HandListSelector : MonoBehaviour
     private string currentHandAction = "";
     private bool handSelected = false;
     private bool cursorEnabled = false;
-    private bool waitingForMouseMoveAfterReset = false;
-    private Vector3 mousePositionAtReset;
 
     public bool IsHandSelected() => handSelected;
 
@@ -55,17 +53,6 @@ public class HandListSelector : MonoBehaviour
     private void Update()
     {
         if (!cursorEnabled || handCursorImage == null) return;
-
-        if (waitingForMouseMoveAfterReset)
-        {
-            // 答えた直後は手カーソルを中央に置いておき、
-            // 実際のマウスが動いたら通常の追従へ戻す。
-            if ((Input.mousePosition - mousePositionAtReset).sqrMagnitude < 1f)
-                return;
-
-            waitingForMouseMoveAfterReset = false;
-        }
-
         handCursorImage.rectTransform.position = Input.mousePosition;
     }
 
@@ -206,20 +193,8 @@ public class HandListSelector : MonoBehaviour
     public void SetCursorEnabled(bool enabled)
     {
         cursorEnabled = enabled;
-        if (!enabled) waitingForMouseMoveAfterReset = false;
         if (handCursorImage != null) handCursorImage.enabled = enabled;
         Cursor.visible = !enabled;
-    }
-
-    // Stage共通：回答後、次の問題に移る前に手カーソルを画面中央へ戻す。
-    // OSカーソルは動かさず、ユーザーがマウスを動かした瞬間から再び追従する。
-    public void ResetCursorToScreenCenter()
-    {
-        if (!cursorEnabled || handCursorImage == null) return;
-
-        handCursorImage.rectTransform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
-        mousePositionAtReset = Input.mousePosition;
-        waitingForMouseMoveAfterReset = true;
     }
 
     private void OnDisable()
