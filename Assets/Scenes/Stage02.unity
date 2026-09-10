@@ -244,7 +244,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u304A\u308F\u308A"
+  m_text: "\u304A\u308F\u308A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d9e1773461deae5498bc86801ee4633c, type: 2}
   m_sharedMaterial: {fileID: -975139962867787368, guid: d9e1773461deae5498bc86801ee4633c, type: 2}
@@ -852,6 +852,9 @@ MonoBehaviour:
   judge2Effect: {fileID: 1906337313}
   stage02Manager: {fileID: 97473511}
   nextQuestionDelay: 2
+  totalQuestions: 5
+  TutorialFinishPanel: {fileID: 0}
+  finishPanelDuration: 5
 --- !u!1 &688371901
 GameObject:
   m_ObjectHideFlags: 0
@@ -2327,7 +2330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1994643867
 RectTransform:
   m_ObjectHideFlags: 0
