@@ -212,6 +212,7 @@ public class AnswerStage01 : MonoBehaviour
             yield break;
         }
 
+        if (handListSelector != null) handListSelector.ResetCursorToScreenCenter();
         isAnswerProcessing = false;
         if (stage01Manager != null) stage01Manager.ShowNextQuestion();
         else Debug.LogWarning("AnswerStage01: Stage01Managerが設定されていません");
