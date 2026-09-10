@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AnswerStage02 : MonoBehaviour
 {
@@ -21,14 +22,34 @@ public class AnswerStage02 : MonoBehaviour
     [Header("正解IMG表示後、次の問題までの時間")]
     [SerializeField] private float nextQuestionDelay = 2f;
 
+    [Header("Stage02 終了")]
+    [SerializeField] private int totalQuestions = 5;
+    [SerializeField] private GameObject TutorialFinishPanel;
+    [SerializeField] private float finishPanelDuration = 5f;
+
     private TaskData currentTask;
     private bool isAnswerProcessing = false;
     private GameObject previousMouseOverObject = null;
     private float questionStartTime;
     private int attemptNumber = 0;
+    private int completedQuestions = 0;
+    private bool finishPanelActive = false;
+
+    private void Start()
+    {
+        if (TutorialFinishPanel != null)
+            TutorialFinishPanel.SetActive(false);
+    }
 
     private void Update()
     {
+        if (finishPanelActive)
+        {
+            if (Input.GetMouseButtonDown(0))
+                LoadTopScene();
+            return;
+        }
+
         if (handListSelector == null || isAnswerProcessing)
             return;
 
@@ -114,7 +135,10 @@ public class AnswerStage02 : MonoBehaviour
 
     private void CorrectAnswer(GameObject judge, CircleConfirmEffect effect)
     {
+        if (isAnswerProcessing) return;
+
         isAnswerProcessing = true;
+        completedQuestions++;
 
         if (judge1 != null) judge1.SetActive(judge == judge1);
         if (judge2 != null) judge2.SetActive(judge == judge2);
@@ -138,12 +162,49 @@ public class AnswerStage02 : MonoBehaviour
         if (judge2 != null) judge2.SetActive(false);
 
         previousMouseOverObject = null;
+
+        if (completedQuestions >= totalQuestions)
+        {
+            if (TutorialFinishPanel != null)
+            {
+                TutorialFinishPanel.SetActive(true);
+                finishPanelActive = true;
+                StartCoroutine(ReturnToTopAfterDelay());
+            }
+            else
+            {
+                Debug.LogWarning("AnswerStage02: TutorialFinishPanelが設定されていません");
+                LoadTopScene();
+            }
+            yield break;
+        }
+
         isAnswerProcessing = false;
 
         if (stage02Manager != null)
             stage02Manager.ShowNextQuestion();
         else
             Debug.LogWarning("AnswerStage02: Stage02Managerが設定されていません");
+    }
+
+    private IEnumerator ReturnToTopAfterDelay()
+    {
+        yield return new WaitForSeconds(finishPanelDuration);
+        LoadTopScene();
+    }
+
+    public void OnFinishPanelClicked()
+    {
+        LoadTopScene();
+    }
+
+    private void LoadTopScene()
+    {
+        if (!finishPanelActive && completedQuestions < totalQuestions) return;
+
+        finishPanelActive = false;
+        StopAllCoroutines();
+        SceneManager.LoadScene("Top");
     }
 
     public void SetTask(TaskData task)
