@@ -179,6 +179,7 @@ public class AnswerStage02 : MonoBehaviour
             yield break;
         }
 
+        if (handListSelector != null) handListSelector.ResetCursorToScreenCenter();
         isAnswerProcessing = false;
 
         if (stage02Manager != null)
