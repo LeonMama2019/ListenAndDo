@@ -79,7 +79,11 @@ public class AnswerStage05 : MonoBehaviour
     private bool IsCorrectHand(TaskData task)
     {
         if (task == null || task.verb == null || handListSelector == null) return false;
-        return handListSelector.GetCurrentHandAction() == task.verb.name.Replace("Verb_", "");
+        return string.Equals(
+            handListSelector.GetCurrentHandAction(),
+            task.verb.name.Replace("Verb_", ""),
+            StringComparison.OrdinalIgnoreCase
+        );
     }
 
     private bool IsCorrectObject(GameObject target)
