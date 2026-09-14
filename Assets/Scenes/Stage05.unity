@@ -1148,7 +1148,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1167714024}
-  - component: {fileID: 1167714025}
   m_Layer: 0
   m_Name: Tutorial
   m_TagString: Untagged
@@ -1171,22 +1170,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 579584488}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1167714025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167714022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b6a1d4b87cb85641adee6a168e6a7d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialStage04
-  darkPanel: {fileID: 0}
-  handListAnimator: {fileID: 1380375809}
-  voiceAudioSource: {fileID: 1942821817}
-  selectPointVoiceClip: {fileID: 8300000, guid: 8ca0e3d69eef42248bb96ce24ad62146, type: 3}
 --- !u!1 &1203676982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1508,7 +1491,7 @@ MonoBehaviour:
   tutorialStage01: {fileID: 0}
   tutorialStage02: {fileID: 0}
   tutorialStage03: {fileID: 0}
-  tutorialStage04: {fileID: 1167714025}
+  tutorialStage04: {fileID: 0}
 --- !u!114 &1380375806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1824,7 +1807,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1839019138
 RectTransform:
   m_ObjectHideFlags: 0
