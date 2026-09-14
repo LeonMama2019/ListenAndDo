@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Stage05Manager : MonoBehaviour
 {
-    [Header("Stage05で混ぜるLevel")]
+    [Header("Stage05で混ぜるLevel（Touch / Hit）")]
     [SerializeField] private StageData level1;
     [SerializeField] private StageData level2;
-    [SerializeField] private StageData level3;
-    [SerializeField] private StageData level4;
 
     public TextMeshProUGUI QuestionText;
     public AnswerManager answerManager;
@@ -37,8 +35,6 @@ public class Stage05Manager : MonoBehaviour
         questionPool.Clear();
         AddTasks(level1);
         AddTasks(level2);
-        AddTasks(level3);
-        AddTasks(level4);
     }
 
     private void AddTasks(StageData level)
@@ -54,7 +50,7 @@ public class Stage05Manager : MonoBehaviour
     {
         if (questionPool.Count == 0)
         {
-            Debug.LogWarning("Stage05Manager: Level1〜4に問題がありません");
+            Debug.LogWarning("Stage05Manager: Level1〜2に問題がありません");
             return;
         }
 
