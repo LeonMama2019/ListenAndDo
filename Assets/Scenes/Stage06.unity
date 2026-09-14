@@ -1478,10 +1478,14 @@ MonoBehaviour:
   handSprites:
   - {fileID: 8403215288983880825, guid: a43d8495c0f3df74ea16dc4721d341f5, type: 3}
   - {fileID: -59066101396820148, guid: e60e6ee35e3b69b498c7f0baafab16a1, type: 3}
+  - {fileID: -195602406138073655, guid: d6dc35eefd0f4474988dcde14b0e8839, type: 3}
+  - {fileID: 2598405713278941328, guid: d8c752201a0b2eb4e80a0e4d4d801403, type: 3}
   handAudioSource: {fileID: 1942821817}
   handVoiceClips:
   - {fileID: 8300000, guid: a88a7ba190f2e3f41a2f20f6a4f59bd7, type: 3}
   - {fileID: 8300000, guid: 2b219b65335e7494cb805030196ab77a, type: 3}
+  - {fileID: 8300000, guid: 18ac64859703e3747ba8e65700400ba8, type: 3}
+  - {fileID: 8300000, guid: 3e2ed709371c81b4ab7e6e867b4cc764, type: 3}
   tutorialStage01: {fileID: 0}
   tutorialStage02: {fileID: 0}
   tutorialStage03: {fileID: 0}
