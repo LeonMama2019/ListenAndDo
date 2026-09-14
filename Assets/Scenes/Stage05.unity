@@ -173,10 +173,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 97473507}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb6c953170dd98a48a6af3f199812c28, type: 3}
+  m_Script: {fileID: 11500000, guid: db72619df62360648b694dfb3261533d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Stage04Manager
-  stage: {fileID: 11400000, guid: 76300fc5adf81724dbd5af2011b9790c, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::Stage05Manager
+  level1: {fileID: 11400000, guid: 5b6b8dffe42290145bf22c3e59a52b9d, type: 2}
+  level2: {fileID: 11400000, guid: 9fb4f1d1a2ff7cd4e88468448271d61c, type: 2}
+  level3: {fileID: 11400000, guid: 4dd66c44beab2db49983b8f93ae67c65, type: 2}
+  level4: {fileID: 11400000, guid: 76300fc5adf81724dbd5af2011b9790c, type: 2}
   QuestionText: {fileID: 1027360007}
   answerManager: {fileID: 579584487}
   imageData: {fileID: 11400000, guid: f6438c500f0aa6e4eb50549e3b36dfae, type: 2}
@@ -185,8 +188,7 @@ MonoBehaviour:
   verbsController: {fileID: 97473510}
   Panel: {fileID: 1839019137}
   voiceAudioSource: {fileID: 1942821817}
-  stage04Answer: {fileID: 579584489}
-  voiceDelay: 3
+  stage05Answer: {fileID: 0}
 --- !u!1 &248019797
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,9 +764,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 579584485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d931edb9731b1b48b7f77ff5b0af981, type: 3}
+  m_Script: {fileID: 11500000, guid: d9dabd1c43094b84fbc18ce7cf32926c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnswerStage04
+  m_EditorClassIdentifier: Assembly-CSharp::AnswerStage05
   object1: {fileID: 1265914331}
   object2: {fileID: 1130757190}
   object1Renderer: {fileID: 1265914332}
@@ -774,10 +776,10 @@ MonoBehaviour:
   handListSelector: {fileID: 1380375805}
   judge1Effect: {fileID: 1630326316}
   judge2Effect: {fileID: 1906337313}
-  stage04Manager: {fileID: 97473511}
+  stage05Manager: {fileID: 97473511}
   nextQuestionDelay: 2
-  totalQuestions: 5
-  TutorialFinishPanel: {fileID: 1994643866}
+  totalQuestions: 7
+  FinishPanel: {fileID: 1994643866}
   finishPanelDuration: 5
 --- !u!1 &688371901
 GameObject:
