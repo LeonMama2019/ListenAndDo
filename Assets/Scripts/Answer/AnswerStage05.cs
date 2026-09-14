@@ -51,27 +51,67 @@ public class AnswerStage05 : MonoBehaviour
         GameObject currentMouseOverObject = null;
         if (IsMouseOverObject(object1)) currentMouseOverObject = object1;
         else if (IsMouseOverObject(object2)) currentMouseOverObject = object2;
-        if (currentMouseOverObject != null && currentMouseOverObject != previousMouseOverObject) Judge(currentMouseOverObject);
+        if (currentMouseOverObject != null && currentMouseOverObject != previousMouseOverObject)
+        {
+            Debug.Log($"[Stage05 DEBUG] Collider entered: {currentMouseOverObject.name}");
+            Judge(currentMouseOverObject);
+        }
         previousMouseOverObject = currentMouseOverObject;
     }
 
     private bool IsMouseOverObject(GameObject obj)
     {
-        if (obj == null || Camera.main == null) return false;
+        if (obj == null)
+        {
+            Debug.LogWarning("[Stage05 DEBUG] Object reference is null");
+            return false;
+        }
+        if (Camera.main == null)
+        {
+            Debug.LogWarning("[Stage05 DEBUG] Camera.main is null");
+            return false;
+        }
         Collider2D col = obj.GetComponent<Collider2D>();
-        if (col == null) return false;
+        if (col == null)
+        {
+            Debug.LogWarning($"[Stage05 DEBUG] Collider2D missing: {obj.name}");
+            return false;
+        }
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         return col.OverlapPoint(mousePosition);
     }
 
     private void Judge(GameObject target)
     {
-        if (currentTask == null || target == null || isAnswerProcessing) return;
-        string selectedHand = handListSelector.GetCurrentHandAction();
-        if (string.IsNullOrEmpty(selectedHand)) return;
-        bool isCorrect = IsCorrectHand(currentTask) && IsCorrectObject(target);
+        if (currentTask == null)
+        {
+            Debug.LogWarning("[Stage05 DEBUG] currentTask is null");
+            return;
+        }
+        if (target == null || isAnswerProcessing) return;
+
+        string selectedHand = handListSelector != null ? handListSelector.GetCurrentHandAction() : string.Empty;
+        string correctHand = currentTask.verb != null ? currentTask.verb.name.Replace("Verb_", "") : "<null>";
+        bool handMatch = IsCorrectHand(currentTask);
+        bool objectMatch = IsCorrectObject(target);
+
+        Debug.Log(
+            $"[Stage05 DEBUG] Target={target.name} | " +
+            $"SelectedHand='{selectedHand}' | CorrectHand='{correctHand}' | HandMatch={handMatch} | " +
+            $"SelectedSprite='{GetSelectedObjectName(target)}' | CorrectSprite='{GetSpriteName(currentTask.answerImage)}' | ObjectMatch={objectMatch}"
+        );
+
+        if (string.IsNullOrEmpty(selectedHand))
+        {
+            Debug.LogWarning("[Stage05 DEBUG] No hand selected");
+            return;
+        }
+
+        bool isCorrect = handMatch && objectMatch;
         RecordAnswer(target, isCorrect);
         if (!isCorrect) return;
+
+        Debug.Log($"[Stage05 DEBUG] CORRECT -> showing judge for {target.name}");
         if (target == object1) CorrectAnswer(judge1, judge1Effect);
         else if (target == object2) CorrectAnswer(judge2, judge2Effect);
     }
@@ -127,6 +167,7 @@ public class AnswerStage05 : MonoBehaviour
         if (isAnswerProcessing) return;
         isAnswerProcessing = true;
         completedQuestions++;
+        Debug.Log($"[Stage05 DEBUG] CorrectAnswer called | judge={(judge != null ? judge.name : "null")} | effect={(effect != null ? effect.name : "null")}");
         if (judge1 != null) judge1.SetActive(judge == judge1);
         if (judge2 != null) judge2.SetActive(judge == judge2);
         if (effect != null) effect.ShowCircleAndConfirm(OnCorrectImageShown);
@@ -186,5 +227,6 @@ public class AnswerStage05 : MonoBehaviour
         currentTask = task;
         questionStartTime = Time.realtimeSinceStartup;
         attemptNumber = 0;
+        Debug.Log($"[Stage05 DEBUG] SetTask: {(task != null ? task.name : "null")} | Verb={(task != null && task.verb != null ? task.verb.name : "null")} | AnswerImage={(task != null && task.answerImage != null ? task.answerImage.name : "null")}");
     }
 }
