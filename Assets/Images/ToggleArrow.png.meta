@@ -1,0 +1,548 @@
+fileFormatVersion: 2
+guid: b0f8463ac29eea64c957fdf264c4a1b6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7968585673818393489
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_0"
+  - first:
+      213: 1286417033751920279
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_1"
+  - first:
+      213: 3925475553279574955
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_2"
+  - first:
+      213: -8184296583014710524
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_3"
+  - first:
+      213: 5624648311149079305
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_4"
+  - first:
+      213: 3114190142042483560
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_5"
+  - first:
+      213: 2551858681306749528
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_6"
+  - first:
+      213: 68546155392144807
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_7"
+  - first:
+      213: 9175985340981576471
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_8"
+  - first:
+      213: -4956860328201499703
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_9"
+  - first:
+      213: 2895481722851347330
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_10"
+  - first:
+      213: -5925867148178096222
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_11"
+  - first:
+      213: -2428711686381034164
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_12"
+  - first:
+      213: 5407553550783862481
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_13"
+  - first:
+      213: 355974724600459563
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_14"
+  - first:
+      213: -1094163727962906014
+    second: "ChatGPT Image 2026\u5E749\u670817\u65E5 09_44_30_15"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ToggleArrow1_0
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 416
+        width: 130
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19b4632737a169e60800000000000000
+      internalID: 7968585673818393489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow2_0
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 416
+        width: 134
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79e7bc9f9754ad110800000000000000
+      internalID: 1286417033751920279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow3_0
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 415
+        width: 136
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba385b7b7371a7630800000000000000
+      internalID: 3925475553279574955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow4_0
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 415
+        width: 135
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40307f8be998b6e80800000000000000
+      internalID: -8184296583014710524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow5_0
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 438
+        width: 90
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90baa8c96d3ce0e40800000000000000
+      internalID: 5624648311149079305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow6_0
+      rect:
+        serializedVersion: 2
+        x: 1354
+        y: 436
+        width: 95
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86b277b3f63d73b20800000000000000
+      internalID: 3114190142042483560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow7_0
+      rect:
+        serializedVersion: 2
+        x: 1595
+        y: 435
+        width: 100
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85a194843f50a6320800000000000000
+      internalID: 2551858681306749528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow8_0
+      rect:
+        serializedVersion: 2
+        x: 1846
+        y: 437
+        width: 94
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a51eda7d5683f000800000000000000
+      internalID: 68546155392144807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow1_1
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 207
+        width: 153
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71306691d06a75f70800000000000000
+      internalID: 9175985340981576471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow2_1
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 203
+        width: 167
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cbc2584bc1b53bb0800000000000000
+      internalID: -4956860328201499703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow3_1
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 203
+        width: 163
+        height: 133
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28bc0383941de2820800000000000000
+      internalID: 2895481722851347330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow4_1
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 201
+        width: 160
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2afffaea93713cda0800000000000000
+      internalID: -5925867148178096222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow5_1
+      rect:
+        serializedVersion: 2
+        x: 1102
+        y: 203
+        width: 127
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c452b6fc69b7b4ed0800000000000000
+      internalID: -2428711686381034164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow6_1
+      rect:
+        serializedVersion: 2
+        x: 1339
+        y: 228
+        width: 120
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d6df52dd4d7b0b40800000000000000
+      internalID: 5407553550783862481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow7_1
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 225
+        width: 120
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b21f3d0402da0f400800000000000000
+      internalID: 355974724600459563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToggleArrow8_1
+      rect:
+        serializedVersion: 2
+        x: 1836
+        y: 231
+        width: 113
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26267a4f2efb0d0f0800000000000000
+      internalID: -1094163727962906014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: b63c2af63a122d84cba63ee19ce05e39
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":8.0,"y":2.0},"gridSpriteSize":{"x":245.0,"y":218.0},"gridSpriteOffset":{"x":55.0,"y":168.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      ToggleArrow1_0: 7968585673818393489
+      ToggleArrow1_1: 9175985340981576471
+      ToggleArrow2_0: 1286417033751920279
+      ToggleArrow2_1: -4956860328201499703
+      ToggleArrow3_0: 3925475553279574955
+      ToggleArrow3_1: 2895481722851347330
+      ToggleArrow4_0: -8184296583014710524
+      ToggleArrow4_1: -5925867148178096222
+      ToggleArrow5_0: 5624648311149079305
+      ToggleArrow5_1: -2428711686381034164
+      ToggleArrow6_0: 3114190142042483560
+      ToggleArrow6_1: 5407553550783862481
+      ToggleArrow7_0: 2551858681306749528
+      ToggleArrow7_1: 355974724600459563
+      ToggleArrow8_0: 68546155392144807
+      ToggleArrow8_1: -1094163727962906014
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
