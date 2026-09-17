@@ -22,7 +22,7 @@ public class LevelResultHistory
 }
 
 /// <summary>
-/// Level1〜7の結果をPlayerPrefsへ保存する。
+/// Level1〜8の結果をPlayerPrefsへ保存する。
 /// 最新結果はレベル別キー、全プレイ履歴はJSONで保持する。
 /// </summary>
 public static class LevelResultStore
@@ -57,7 +57,7 @@ public static class LevelResultStore
 
         EnsureCurrentSession();
 
-        if (activeLevel < 1 || activeLevel > 7)
+        if (activeLevel < 1 || activeLevel > 8)
             return;
 
         if (entry.attemptNumber == 1)
@@ -78,14 +78,14 @@ public static class LevelResultStore
     {
         EnsureCurrentSession();
 
-        if (activeLevel >= 1 && activeLevel <= 7)
+        if (activeLevel >= 1 && activeLevel <= 8)
             replayCount++;
     }
 
     public static bool TryGetLatest(int level, out LevelResultRecord result)
     {
         result = null;
-        if (level < 1 || level > 7)
+        if (level < 1 || level > 8)
             return false;
 
         string prefix = GetLevelKey(level);
@@ -127,7 +127,7 @@ public static class LevelResultStore
 
     public static void ClearAllResults()
     {
-        for (int level = 1; level <= 7; level++)
+        for (int level = 1; level <= 8; level++)
         {
             string prefix = GetLevelKey(level);
             PlayerPrefs.DeleteKey(prefix + ".QuestionCount");
@@ -177,7 +177,7 @@ public static class LevelResultStore
 
     private static void CompleteSession()
     {
-        if (activeLevel < 1 || activeLevel > 7 || questionCount <= 0)
+        if (activeLevel < 1 || activeLevel > 8 || questionCount <= 0)
             return;
 
         LevelResultRecord result = new LevelResultRecord
