@@ -287,7 +287,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1540603727}
-  - {fileID: 1487298260}
   - {fileID: 1428671602}
   m_Father: {fileID: 1080619715}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -937,12 +936,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 378989103}
+  m_Father: {fileID: 1540603727}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 419.9251, y: -82}
-  m_SizeDelta: {x: 695.8502, y: 132.92}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 617.7532, y: 82.9207}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1487298261
 MonoBehaviour:
@@ -1148,7 +1147,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1487298260}
   m_Father: {fileID: 378989103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1225,8 +1225,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResultAccordion
   levels:
   - toggleButton: {fileID: 1428671605}
-    detail: {fileID: 1487298259}
+    detail: {fileID: 1540603726}
     arrowText: {fileID: 1428671603}
+    levelRoot: {fileID: 378989103}
+    closedHeight: 50
+    openHeight: 183
   - toggleButton: {fileID: 0}
     detail: {fileID: 0}
     arrowText: {fileID: 0}
