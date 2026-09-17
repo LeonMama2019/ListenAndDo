@@ -82,6 +82,9 @@ public class Stage05Manager : MonoBehaviour
         bool answerLeft = Random.Range(0, 2) == 0;
         object1.sprite = answerLeft ? answer : wrong;
         object2.sprite = answerLeft ? wrong : answer;
+
+        SpriteDisplayNormalizer.Normalize(object1);
+        SpriteDisplayNormalizer.Normalize(object2);
     }
 
     private string MakeSentenceJP(TaskData task)
