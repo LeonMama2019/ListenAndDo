@@ -667,9 +667,15 @@ RectTransform:
   - {fileID: 1839019138}
   - {fileID: 1942821814}
   - {fileID: 519757094}
+<<<<<<< HEAD
   - {fileID: 1679911146}
   - {fileID: 1380375804}
   - {fileID: 1203676983}
+=======
+  - {fileID: 1203676983}
+  - {fileID: 1679911146}
+  - {fileID: 1380375804}
+>>>>>>> 5ce2b02716f788d4f43b99de2b4a241d4b1db164
   - {fileID: 1994643867}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
