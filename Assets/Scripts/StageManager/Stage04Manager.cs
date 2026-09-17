@@ -106,6 +106,7 @@ public class Stage04Manager : MonoBehaviour
         voiceAudioSource.Stop();
         voiceAudioSource.PlayOneShot(currentTask.voiceClip);
         speakerClickCount++;
+        LevelResultStore.RecordSpeakerReplay();
         if (speakerClickCount >= 4) ShowText(textForShow);
     }
 }
