@@ -1504,10 +1504,10 @@ MonoBehaviour:
     levelRoot: {fileID: 378989103}
     closedHeight: 50
     openHeight: 183
-  - toggleButton: {fileID: 0}
-    detail: {fileID: 0}
+  - toggleButton: {fileID: 547610991}
+    detail: {fileID: 963259627}
     arrowText: {fileID: 0}
-    levelRoot: {fileID: 0}
+    levelRoot: {fileID: 492792420}
     closedHeight: 50
     openHeight: 183
   - toggleButton: {fileID: 0}
