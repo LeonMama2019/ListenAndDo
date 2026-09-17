@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class HandListSelector : MonoBehaviour
 {
@@ -42,8 +44,43 @@ public class HandListSelector : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+            LogUiRaycastTargets();
+
         if (!cursorEnabled || handCursorImage == null) return;
         handCursorImage.rectTransform.position = Input.mousePosition;
+    }
+
+    private void LogUiRaycastTargets()
+    {
+        if (EventSystem.current == null)
+        {
+            Debug.LogWarning("UI Raycast診断: EventSystemがありません");
+            return;
+        }
+
+        PointerEventData pointer = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, results);
+
+        if (results.Count == 0)
+        {
+            Debug.LogWarning("UI Raycast診断: クリック位置でUIが検出されませんでした");
+            return;
+        }
+
+        string names = string.Empty;
+        int count = Mathf.Min(results.Count, 5);
+        for (int i = 0; i < count; i++)
+        {
+            if (i > 0) names += " → ";
+            names += results[i].gameObject.name;
+        }
+
+        Debug.Log("UI Raycast診断（手前から）: " + names);
     }
 
     public void NextHand()
