@@ -173,9 +173,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 97473507}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8222141b6ac24584ab6b859419a980cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a4d03c0b62e4d22a86fb3aca31a0801, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Stage06Manager
+  m_EditorClassIdentifier: Assembly-CSharp::Stage08Manager
   level1: {fileID: 11400000, guid: 5b6b8dffe42290145bf22c3e59a52b9d, type: 2}
   level2: {fileID: 11400000, guid: 9fb4f1d1a2ff7cd4e88468448271d61c, type: 2}
   level3: {fileID: 11400000, guid: 4dd66c44beab2db49983b8f93ae67c65, type: 2}
@@ -764,9 +764,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 579584485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d757e19d7e78e04f8e99f0440350c76, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d8a7bf96f5c4b25a5d6d8e6dc4a0802, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnswerStage06
+  m_EditorClassIdentifier: Assembly-CSharp::AnswerStage08
   object1: {fileID: 1265914331}
   object2: {fileID: 1130757190}
   object1Renderer: {fileID: 1265914332}
@@ -776,7 +776,7 @@ MonoBehaviour:
   handListSelector: {fileID: 1380375805}
   judge1Effect: {fileID: 1630326316}
   judge2Effect: {fileID: 1906337313}
-  stage06Manager: {fileID: 97473511}
+  stage08Manager: {fileID: 97473511}
   nextQuestionDelay: 2
   totalQuestions: 7
   FinishPanel: {fileID: 1994643866}
@@ -2178,8 +2178,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Stage05Manager, Assembly-CSharp
+      - m_Target: {fileID: 97473511}
+        m_TargetAssemblyTypeName: Stage08Manager, Assembly-CSharp
         m_MethodName: PlayCurrentVoice
         m_Mode: 1
         m_Arguments:
