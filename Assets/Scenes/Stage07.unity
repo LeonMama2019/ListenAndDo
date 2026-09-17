@@ -1244,7 +1244,7 @@ Transform:
   m_GameObject: {fileID: 1130757190}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.3055353, y: -1.39, z: 0}
+  m_LocalPosition: {x: 3, y: -1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1294,7 +1294,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.97, y: 3.46}
+  m_Size: {x: 5, y: 5}
   m_EdgeRadius: 0
 --- !u!114 &1130757195
 MonoBehaviour:
@@ -1526,7 +1526,7 @@ Transform:
   m_GameObject: {fileID: 1265914331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.77, y: -1.33, z: 0}
+  m_LocalPosition: {x: -3, y: -1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1576,7 +1576,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 4.49, y: 5.22}
+  m_Size: {x: 5, y: 5}
   m_EdgeRadius: 0
 --- !u!114 &1265914336
 MonoBehaviour:
@@ -2348,9 +2348,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 11500000, guid: f4b312f145217a24b95fc690af1be510, type: 3}
         m_TargetAssemblyTypeName: Stage05Manager, Assembly-CSharp
-        m_MethodName: PlayCurrentVoice
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
