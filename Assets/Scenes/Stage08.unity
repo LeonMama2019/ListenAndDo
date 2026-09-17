@@ -190,7 +190,7 @@ MonoBehaviour:
   voiceAudioSource: {fileID: 1942821817}
   stage08Answer: {fileID: 579584489}
   distractionAudioSource: {fileID: 1942821817}
-  dropSound: {fileID: 0}
+  dropSound: {fileID: 8300000, guid: 1bd86b8e71346ce45aa3c98b7cf83047, type: 3}
   beforeSoundGap: 0.1
   afterSoundGap: 0.1
   doubleSoundGap: 0.2
