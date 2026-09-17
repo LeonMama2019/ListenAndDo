@@ -26,6 +26,8 @@ public class Stage08Manager : MonoBehaviour
     [Tooltip("未設定なら問題音声用AudioSourceを共用します")]
     [SerializeField] private AudioSource distractionAudioSource;
     [SerializeField] private AudioClip dropSound;
+    [Range(0f, 1f)]
+    [SerializeField] private float distractionVolume = 0.35f;
     [SerializeField] private float beforeSoundGap = 0.1f;
     [SerializeField] private float afterSoundGap = 0.1f;
     [SerializeField] private float doubleSoundGap = 0.2f;
@@ -158,7 +160,7 @@ public class Stage08Manager : MonoBehaviour
         }
 
         AudioSource source = distractionAudioSource != null ? distractionAudioSource : voiceAudioSource;
-        if (source != null) source.PlayOneShot(dropSound);
+        if (source != null) source.PlayOneShot(dropSound, distractionVolume);
     }
 
     private float GetDropLength()
