@@ -48,6 +48,8 @@ public class HandListSelector : MonoBehaviour
 
     public void NextHand()
     {
+        Debug.Log("HandList Button OnClick → NextHand が呼ばれました");
+
         if (handSprites == null || handSprites.Length == 0) return;
         if (!handSelected)
         {
