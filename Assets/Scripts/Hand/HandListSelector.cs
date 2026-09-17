@@ -28,7 +28,6 @@ public class HandListSelector : MonoBehaviour
     private string currentHandAction = "";
     private bool handSelected = false;
     private bool cursorEnabled = false;
-    private int lastSelectionFrame = -1;
 
     public bool IsHandSelected() => handSelected;
 
@@ -43,28 +42,12 @@ public class HandListSelector : MonoBehaviour
 
     private void Update()
     {
-        // UI ButtonのOnClickが他のUIに遮られた場合も、
-        // 表示中のHand自身を押せば選択できるようにする。
-        if (Input.GetMouseButtonDown(0) &&
-            handImage != null &&
-            RectTransformUtility.RectangleContainsScreenPoint(
-                handImage.rectTransform,
-                Input.mousePosition,
-                null))
-        {
-            NextHand();
-        }
-
         if (!cursorEnabled || handCursorImage == null) return;
         handCursorImage.rectTransform.position = Input.mousePosition;
     }
 
     public void NextHand()
     {
-        // Updateの予備入力とButton.onClickが同じフレームに来ても1回だけ処理する。
-        if (lastSelectionFrame == Time.frameCount) return;
-        lastSelectionFrame = Time.frameCount;
-
         if (handSprites == null || handSprites.Length == 0) return;
         if (!handSelected)
         {
