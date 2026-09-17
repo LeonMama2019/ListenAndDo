@@ -44,6 +44,7 @@ public static class AnswerLogManager
     {
         EnsureLoaded();
         logData.answers.Add(entry);
+        LevelResultStore.RecordAnswer(entry);
         Save();
     }
 
