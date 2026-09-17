@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class HandListSelector : MonoBehaviour
+public class HandListSelector : MonoBehaviour, IPointerClickHandler
 {
     [Header("リスト内で手を表示するImage")]
     [SerializeField] private Image handImage;
@@ -28,6 +29,7 @@ public class HandListSelector : MonoBehaviour
     private string currentHandAction = "";
     private bool handSelected = false;
     private bool cursorEnabled = false;
+    private int lastSelectionFrame = -1;
 
     public bool IsHandSelected() => handSelected;
 
@@ -46,9 +48,26 @@ public class HandListSelector : MonoBehaviour
         handCursorImage.rectTransform.position = Input.mousePosition;
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        NextHand();
+    }
+
     public void NextHand()
     {
-        if (handSprites == null || handSprites.Length == 0) return;
+        // Button.onClickとIPointerClickが同時に呼ばれても、1クリックで1回だけ進める。
+        if (lastSelectionFrame == Time.frameCount)
+            return;
+
+        lastSelectionFrame = Time.frameCount;
+
+        if (handSprites == null || handSprites.Length == 0)
+        {
+            Debug.LogWarning("HandListSelector: Hand Spritesが設定されていません");
+            return;
+        }
+
+        Debug.Log("HandListSelector: Handを選択しました");
         if (!handSelected)
         {
             handSelected = true;
