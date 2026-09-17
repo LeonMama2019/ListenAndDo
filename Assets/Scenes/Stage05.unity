@@ -589,11 +589,11 @@ RectTransform:
   - {fileID: 1630326315}
   - {fileID: 1906337312}
   - {fileID: 1839019138}
-  - {fileID: 1942821814}
   - {fileID: 1203676983}
   - {fileID: 1679911146}
   - {fileID: 1380375804}
   - {fileID: 1994643867}
+  - {fileID: 1942821814}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
