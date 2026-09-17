@@ -3,10 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Result画面のレベル1〜7用アコーディオン。
-/// 各レベルの▼/▶ボタンを押すと詳細を開閉する。
-/// Content / Level に VerticalLayoutGroup + ContentSizeFitter を使えば、
-/// 開いた分だけ下のレベルが自動で押し下げられる。
+/// Result画面のレベル別アコーディオン。
+/// 詳細を開閉し、レベル項目の高さも同時に変更する。
 /// </summary>
 public class ResultAccordion : MonoBehaviour
 {
@@ -16,11 +14,20 @@ public class ResultAccordion : MonoBehaviour
         [Tooltip("クリックするボタン（▼/▶を含むButton）")]
         public Button toggleButton;
 
-        [Tooltip("開閉する詳細GameObject")]
+        [Tooltip("開閉する詳細パネル。詳細の文字や画像はこの子に入れる")]
         public GameObject detail;
 
-        [Tooltip("▶ / ▼ を表示するTextMeshPro。Button自身が文字ならそのTMPを指定")]
+        [Tooltip("▶ / ▼ を表示するTextMeshPro")]
         public TMP_Text arrowText;
+
+        [Tooltip("詳細を含むレベル全体のRectTransform")]
+        public RectTransform levelRoot;
+
+        [Tooltip("詳細を閉じたときの高さ")]
+        public float closedHeight = 50f;
+
+        [Tooltip("詳細を開いたときの高さ")]
+        public float openHeight = 183f;
     }
 
     [Header("レベル1〜7を順番に登録")]
@@ -47,7 +54,7 @@ public class ResultAccordion : MonoBehaviour
         }
         else
         {
-            RefreshArrows();
+            RefreshAll();
         }
     }
 
@@ -67,10 +74,14 @@ public class ResultAccordion : MonoBehaviour
         if (item.arrowText != null)
             item.arrowText.text = open ? "▼" : "▶";
 
-        // LayoutGroupの再計算を即時反映。
-        RectTransform rect = item.detail.transform.parent as RectTransform;
-        if (rect != null)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        if (item.levelRoot != null)
+        {
+            item.levelRoot.SetSizeWithCurrentAnchors(
+                RectTransform.Axis.Vertical,
+                open ? item.openHeight : item.closedHeight);
+        }
+
+        RebuildLayout(item);
     }
 
     public void CloseAll()
@@ -87,14 +98,24 @@ public class ResultAccordion : MonoBehaviour
                levels[index].detail != null;
     }
 
-    private void RefreshArrows()
+    private void RefreshAll()
     {
         for (int i = 0; i < levels.Length; i++)
         {
             if (!IsValid(i)) continue;
-            LevelItem item = levels[i];
-            if (item.arrowText != null)
-                item.arrowText.text = item.detail.activeSelf ? "▼" : "▶";
+            SetOpen(i, levels[i].detail.activeSelf);
         }
+    }
+
+    private static void RebuildLayout(LevelItem item)
+    {
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform target = item.levelRoot != null
+            ? item.levelRoot.parent as RectTransform
+            : item.detail.transform.parent as RectTransform;
+
+        if (target != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(target);
     }
 }
