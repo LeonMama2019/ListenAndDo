@@ -110,6 +110,9 @@ public class Stage01Manager : MonoBehaviour
             object1.sprite = wrong;
             object2.sprite = answer;
         }
+
+        SpriteDisplayNormalizer.Normalize(object1);
+        SpriteDisplayNormalizer.Normalize(object2);
     }
 
     private string MakeSentenceJP(TaskData task)
