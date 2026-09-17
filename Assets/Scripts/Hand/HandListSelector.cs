@@ -45,8 +45,7 @@ public class HandListSelector : MonoBehaviour
     {
         // UI ButtonのOnClickが他のUIに遮られた場合も、
         // 表示中のHand自身を押せば選択できるようにする。
-        if (!cursorEnabled &&
-            Input.GetMouseButtonDown(0) &&
+        if (Input.GetMouseButtonDown(0) &&
             handImage != null &&
             RectTransformUtility.RectangleContainsScreenPoint(
                 handImage.rectTransform,
