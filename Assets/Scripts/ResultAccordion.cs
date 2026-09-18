@@ -47,7 +47,7 @@ public class ResultAccordion : MonoBehaviour
     [SerializeField] private Sprite openArrowSprite;
 
     [Header("Detail下の余白")]
-    [SerializeField] private float expandedBottomPadding = 40f;
+    [SerializeField] private float expandedBottomPadding = 120f;
 
     private void Awake()
     {
