@@ -1,23 +1,26 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 /// Result画面のレベル別アコーディオン。
-/// 詳細を開閉し、レベル項目の高さも同時に変更する。
+/// Level1〜7の参照をHierarchy名から自動取得し、詳細を開閉する。
 /// </summary>
 public class ResultAccordion : MonoBehaviour
 {
-    [System.Serializable]
+    private const int LevelCount = 7;
+
+    [Serializable]
     public class LevelItem
     {
-        [Tooltip("クリックするボタン（▼/▶を含むButton）")]
+        [Tooltip("クリックするToggleArrow Button")]
         public Button toggleButton;
 
-        [Tooltip("開閉する詳細パネル。詳細の文字や画像はこの子に入れる")]
+        [Tooltip("開閉するレベル詳細パネル")]
         public GameObject detail;
 
-        [Tooltip("▶ / ▼ を表示するTextMeshPro")]
+        [Tooltip("▶ / ▼ を表示するTextMeshPro（画像矢印なら空欄でOK）")]
         public TMP_Text arrowText;
 
         [Tooltip("詳細を含むレベル全体のRectTransform")]
@@ -26,47 +29,48 @@ public class ResultAccordion : MonoBehaviour
         [Tooltip("詳細を閉じたときの高さ")]
         public float closedHeight = 50f;
 
-        [Tooltip("詳細を開いたときの高さ")]
+        [Tooltip("詳細サイズを取得できない場合に使う予備の高さ")]
         public float openHeight = 183f;
     }
 
-    [Header("レベル1〜7を順番に登録")]
-    [SerializeField] private LevelItem[] levels = new LevelItem[7];
+    [Header("レベル1〜7（起動時に自動で再接続）")]
+    [SerializeField] private LevelItem[] levels = new LevelItem[LevelCount];
 
     [Header("起動時")]
     [SerializeField] private bool closeAllOnStart = true;
 
     private void Awake()
     {
+        AutoWireLevels();
+
         for (int i = 0; i < levels.Length; i++)
         {
             int index = i;
             LevelItem item = levels[i];
-            if (item == null || item.toggleButton == null) continue;
+            if (item == null || item.toggleButton == null)
+                continue;
 
             item.toggleButton.onClick.AddListener(() => Toggle(index));
         }
 
         if (closeAllOnStart)
-        {
-            for (int i = 0; i < levels.Length; i++)
-                SetOpen(i, false);
-        }
+            CloseAll();
         else
-        {
             RefreshAll();
-        }
     }
 
     public void Toggle(int index)
     {
-        if (!IsValid(index)) return;
+        if (!IsValid(index))
+            return;
+
         SetOpen(index, !levels[index].detail.activeSelf);
     }
 
     public void SetOpen(int index, bool open)
     {
-        if (!IsValid(index)) return;
+        if (!IsValid(index))
+            return;
 
         LevelItem item = levels[index];
         item.detail.SetActive(open);
@@ -76,9 +80,30 @@ public class ResultAccordion : MonoBehaviour
 
         if (item.levelRoot != null)
         {
+            float targetHeight = item.closedHeight;
+
+            if (open)
+            {
+                Canvas.ForceUpdateCanvases();
+
+                RectTransform detailRect = item.detail.transform as RectTransform;
+                float detailHeight = 0f;
+                if (detailRect != null)
+                {
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(detailRect);
+                    detailHeight = LayoutUtility.GetPreferredHeight(detailRect);
+                    if (detailHeight <= 0f)
+                        detailHeight = detailRect.rect.height;
+                }
+
+                targetHeight = detailHeight > 0f
+                    ? item.closedHeight + detailHeight
+                    : item.openHeight;
+            }
+
             item.levelRoot.SetSizeWithCurrentAnchors(
                 RectTransform.Axis.Vertical,
-                open ? item.openHeight : item.closedHeight);
+                targetHeight);
         }
 
         RebuildLayout(item);
@@ -90,21 +115,107 @@ public class ResultAccordion : MonoBehaviour
             SetOpen(i, false);
     }
 
+    private void AutoWireLevels()
+    {
+        if (levels == null || levels.Length != LevelCount)
+            Array.Resize(ref levels, LevelCount);
+
+        for (int i = 0; i < LevelCount; i++)
+        {
+            if (levels[i] == null)
+                levels[i] = new LevelItem();
+
+            int levelNumber = i + 1;
+            LevelItem item = levels[i];
+            Transform levelRoot = FindInScene("level" + levelNumber);
+
+            if (levelRoot == null)
+            {
+                Debug.LogWarning("ResultAccordion: level" + levelNumber + " が見つかりません。");
+                continue;
+            }
+
+            item.levelRoot = levelRoot as RectTransform;
+
+            Transform panel = FindChild(
+                levelRoot,
+                "level" + levelNumber + "panel");
+
+            if (panel != null)
+                item.detail = panel.gameObject;
+            else
+                Debug.LogWarning(
+                    "ResultAccordion: level" + levelNumber + "panel が見つかりません。");
+
+            Transform toggle = FindChild(levelRoot, "ToggleArrow");
+            if (toggle != null)
+            {
+                item.toggleButton = toggle.GetComponent<Button>();
+                item.arrowText = toggle.GetComponentInChildren<TMP_Text>(true);
+            }
+
+            if (item.toggleButton == null)
+                Debug.LogWarning(
+                    "ResultAccordion: level" + levelNumber + " のToggleArrow Buttonが見つかりません。");
+        }
+    }
+
     private bool IsValid(int index)
     {
-        return index >= 0 &&
-               index < levels.Length &&
-               levels[index] != null &&
-               levels[index].detail != null;
+        bool valid =
+            index >= 0 &&
+            index < levels.Length &&
+            levels[index] != null &&
+            levels[index].detail != null;
+
+        if (!valid)
+            Debug.LogWarning("ResultAccordion: Level" + (index + 1) + " の参照が不足しています。");
+
+        return valid;
     }
 
     private void RefreshAll()
     {
         for (int i = 0; i < levels.Length; i++)
         {
-            if (!IsValid(i)) continue;
-            SetOpen(i, levels[i].detail.activeSelf);
+            if (IsValid(i))
+                SetOpen(i, levels[i].detail.activeSelf);
         }
+    }
+
+    private Transform FindInScene(string objectName)
+    {
+        foreach (GameObject root in gameObject.scene.GetRootGameObjects())
+        {
+            Transform found = FindChild(root.transform, objectName);
+            if (found != null)
+                return found;
+        }
+
+        return null;
+    }
+
+    private static Transform FindChild(Transform root, string objectName)
+    {
+        string targetName = NormalizeName(objectName);
+        Transform[] children = root.GetComponentsInChildren<Transform>(true);
+
+        foreach (Transform child in children)
+        {
+            if (NormalizeName(child.name) == targetName)
+                return child;
+        }
+
+        return null;
+    }
+
+    private static string NormalizeName(string value)
+    {
+        return string.IsNullOrEmpty(value)
+            ? string.Empty
+            : value.Replace(" ", string.Empty)
+                   .Replace("'", string.Empty)
+                   .ToLowerInvariant();
     }
 
     private static void RebuildLayout(LevelItem item)
@@ -117,5 +228,7 @@ public class ResultAccordion : MonoBehaviour
 
         if (target != null)
             LayoutRebuilder.ForceRebuildLayoutImmediate(target);
+
+        Canvas.ForceUpdateCanvases();
     }
 }
