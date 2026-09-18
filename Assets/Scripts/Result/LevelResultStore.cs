@@ -24,13 +24,14 @@ public class LevelResultHistory
 }
 
 /// <summary>
-/// Level1〜8の結果をPlayerPrefsへ保存する。
-/// 最新結果はレベル別キー、全プレイ履歴はJSONで保持する。
+/// 各Levelの結果をPlayerPrefsへ保存する。
+/// Level番号に上限を設けず、追加されたStageも同じキー形式で保存する。
 /// </summary>
 public static class LevelResultStore
 {
     private const string KeyPrefix = "ListenAndDo.Level";
     private const string HistoryKey = "ListenAndDo.ResultHistory.v1";
+    private const string HighestSavedLevelKey = "ListenAndDo.HighestSavedLevel";
 
     private static int activeLevel;
     private static int questionCount;
@@ -60,7 +61,7 @@ public static class LevelResultStore
 
         EnsureCurrentSession();
 
-        if (activeLevel < 1 || activeLevel > 8)
+        if (activeLevel < 1)
             return;
 
         if (entry.attemptNumber == 1)
@@ -83,14 +84,14 @@ public static class LevelResultStore
     {
         EnsureCurrentSession();
 
-        if (activeLevel >= 1 && activeLevel <= 8)
+        if (activeLevel >= 1)
             replayCount++;
     }
 
     public static bool TryGetLatest(int level, out LevelResultRecord result)
     {
         result = null;
-        if (level < 1 || level > 8)
+        if (level < 1)
             return false;
 
         string prefix = GetLevelKey(level);
@@ -137,7 +138,11 @@ public static class LevelResultStore
 
     public static void ClearAllResults()
     {
-        for (int level = 1; level <= 8; level++)
+        int highestLevel = Mathf.Max(
+            8,
+            PlayerPrefs.GetInt(HighestSavedLevelKey, 8));
+
+        for (int level = 1; level <= highestLevel; level++)
         {
             string prefix = GetLevelKey(level);
             PlayerPrefs.DeleteKey(prefix + ".QuestionCount");
@@ -145,13 +150,19 @@ public static class LevelResultStore
             PlayerPrefs.DeleteKey(prefix + ".CorrectRate");
             PlayerPrefs.DeleteKey(prefix + ".AverageAnswerTime");
             PlayerPrefs.DeleteKey(prefix + ".TotalAnswerTime");
-            for (int i = 0; i < 7; i++)
-                PlayerPrefs.DeleteKey(prefix + ".AnswerTime" + (i + 1));
+
+            int answerTimeCount = PlayerPrefs.GetInt(
+                prefix + ".AnswerTimeCount",
+                7);
+            for (int i = 1; i <= answerTimeCount; i++)
+                PlayerPrefs.DeleteKey(prefix + ".AnswerTime" + i);
+            PlayerPrefs.DeleteKey(prefix + ".AnswerTimeCount");
             PlayerPrefs.DeleteKey(prefix + ".ReplayCount");
             PlayerPrefs.DeleteKey(prefix + ".PlayedAt");
         }
 
         PlayerPrefs.DeleteKey(HistoryKey);
+        PlayerPrefs.DeleteKey(HighestSavedLevelKey);
         PlayerPrefs.Save();
     }
 
@@ -160,7 +171,7 @@ public static class LevelResultStore
         int previousLevel = ParseLevel(previousScene.name);
         int nextLevel = ParseLevel(nextScene.name);
 
-        if (previousLevel >= 1 && previousLevel <= 7 && previousLevel != nextLevel)
+        if (previousLevel >= 1 && previousLevel != nextLevel)
             CompleteSession();
 
         BeginSessionForScene(nextScene.name);
@@ -191,7 +202,7 @@ public static class LevelResultStore
 
     private static void CompleteSession()
     {
-        if (activeLevel < 1 || activeLevel > 8 || questionCount <= 0)
+        if (activeLevel < 1 || questionCount <= 0)
             return;
 
         LevelResultRecord result = new LevelResultRecord
@@ -228,13 +239,29 @@ public static class LevelResultStore
         PlayerPrefs.SetFloat(prefix + ".CorrectRate", result.correctRate);
         PlayerPrefs.SetFloat(prefix + ".AverageAnswerTime", result.averageAnswerTime);
         PlayerPrefs.SetFloat(prefix + ".TotalAnswerTime", result.totalAnswerTime);
-        for (int i = 0; i < 7; i++)
-        {
-            float time = result.answerTimes != null && i < result.answerTimes.Count
-                ? result.answerTimes[i]
-                : -1f;
-            PlayerPrefs.SetFloat(prefix + ".AnswerTime" + (i + 1), time);
-        }
+
+        int previousTimeCount = PlayerPrefs.GetInt(
+            prefix + ".AnswerTimeCount",
+            0);
+        int answerTimeCount = result.answerTimes != null
+            ? result.answerTimes.Count
+            : 0;
+
+        PlayerPrefs.SetInt(prefix + ".AnswerTimeCount", answerTimeCount);
+        for (int i = 0; i < answerTimeCount; i++)
+            PlayerPrefs.SetFloat(
+                prefix + ".AnswerTime" + (i + 1),
+                result.answerTimes[i]);
+
+        for (int i = answerTimeCount + 1; i <= previousTimeCount; i++)
+            PlayerPrefs.DeleteKey(prefix + ".AnswerTime" + i);
+
+        int highestSavedLevel = PlayerPrefs.GetInt(
+            HighestSavedLevelKey,
+            0);
+        if (result.level > highestSavedLevel)
+            PlayerPrefs.SetInt(HighestSavedLevelKey, result.level);
+
         PlayerPrefs.SetInt(prefix + ".ReplayCount", result.replayCount);
         PlayerPrefs.SetString(prefix + ".PlayedAt", result.playedAt);
     }
@@ -249,16 +276,29 @@ public static class LevelResultStore
     private static List<float> LoadAnswerTimes(string prefix)
     {
         List<float> times = new List<float>();
-        for (int i = 0; i < 7; i++)
-        {
-            string key = prefix + ".AnswerTime" + (i + 1);
-            if (!PlayerPrefs.HasKey(key))
-                break;
+        int count = PlayerPrefs.GetInt(
+            prefix + ".AnswerTimeCount",
+            0);
 
-            float time = PlayerPrefs.GetFloat(key, -1f);
+        // 旧データにはCountがないため、連番キーを自動検出する。
+        if (count <= 0)
+        {
+            while (PlayerPrefs.HasKey(
+                prefix + ".AnswerTime" + (count + 1)))
+            {
+                count++;
+            }
+        }
+
+        for (int i = 1; i <= count; i++)
+        {
+            float time = PlayerPrefs.GetFloat(
+                prefix + ".AnswerTime" + i,
+                -1f);
             if (time >= 0f)
                 times.Add(time);
         }
+
         return times;
     }
 
