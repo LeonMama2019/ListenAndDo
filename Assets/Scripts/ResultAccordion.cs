@@ -54,8 +54,7 @@ public class ResultAccordion : MonoBehaviour
     [Header("Detail下の余白")]
     [SerializeField] private float expandedBottomPadding = 20f;
 
-    [Header("開いたDetailが下のLevelを押し下げる距離")]
-    [SerializeField] private float openedRowShift = 85f;
+    private const float OpenedRowShift = 85f;
 
     private void Awake()
     {
@@ -232,7 +231,7 @@ public class ResultAccordion : MonoBehaviour
             // このLevelのDetailが開いていれば、
             // 次のLevel以降を青い枠の外まで確実に下げる。
             if (item.isOpen)
-                downwardShift += openedRowShift;
+                downwardShift += OpenedRowShift;
         }
 
         contentRoot.SetSizeWithCurrentAnchors(
