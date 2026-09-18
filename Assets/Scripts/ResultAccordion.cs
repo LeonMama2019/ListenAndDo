@@ -39,6 +39,7 @@ public class ResultAccordion : MonoBehaviour
         [NonSerialized] public Image toggleImage;
         [NonSerialized] public Sprite closedArrowSprite;
         [NonSerialized] public LayoutElement layoutElement;
+        [NonSerialized] public bool isOpen;
     }
 
     [Header("レベル1〜7（起動時に自動で再接続）")]
@@ -52,6 +53,9 @@ public class ResultAccordion : MonoBehaviour
 
     [Header("Detail下の余白")]
     [SerializeField] private float expandedBottomPadding = 20f;
+
+    [Header("開いたDetailが下のLevelを押し下げる距離")]
+    [SerializeField] private float openedRowShift = 170f;
 
     private void Awake()
     {
@@ -101,40 +105,9 @@ public class ResultAccordion : MonoBehaviour
                     : item.closedArrowSprite;
         }
 
-        if (item.levelRoot != null)
-        {
-            float targetHeight = item.closedHeight;
-
-            if (open)
-            {
-                Canvas.ForceUpdateCanvases();
-
-                RectTransform detailRect = item.detail.transform as RectTransform;
-                float detailHeight = 0f;
-                if (detailRect != null)
-                {
-                    LayoutRebuilder.ForceRebuildLayoutImmediate(detailRect);
-                    detailHeight = LayoutUtility.GetPreferredHeight(detailRect);
-                    if (detailHeight <= 0f)
-                        detailHeight = detailRect.rect.height;
-                }
-
-                targetHeight = detailHeight > 0f
-                    ? item.closedHeight + detailHeight + expandedBottomPadding
-                    : item.openHeight + expandedBottomPadding;
-            }
-
-            item.levelRoot.SetSizeWithCurrentAnchors(
-                RectTransform.Axis.Vertical,
-                targetHeight);
-
-            if (item.layoutElement != null)
-            {
-                item.layoutElement.minHeight = targetHeight;
-                item.layoutElement.preferredHeight = targetHeight;
-                item.layoutElement.flexibleHeight = 0f;
-            }
-        }
+        // Detailの高さ計算には頼らず、開閉状態をそのまま配置に使う。
+        // levelRoot自体の高さは変えないので、見出しと矢印の位置は動かない。
+        item.isOpen = open;
 
         ReflowLevels();
     }
@@ -244,7 +217,7 @@ public class ResultAccordion : MonoBehaviour
         if (contentRoot == null)
             return;
 
-        float shiftFromOpenedLevels = 0f;
+        float downwardShift = 0f;
 
         for (int i = 0; i < levels.Length; i++)
         {
@@ -252,30 +225,19 @@ public class ResultAccordion : MonoBehaviour
             if (item == null || item.levelRoot == null)
                 continue;
 
-            float height = item.layoutElement != null &&
-                           item.layoutElement.preferredHeight > 0f
-                ? item.layoutElement.preferredHeight
-                : item.levelRoot.rect.height;
-
-            float extraHeight = Mathf.Max(0f, height - item.closedHeight);
-
-            // 開いている行は上端を固定し、その行より下は
-            // Detailの高さぶん丸ごと下へ移動する。
             Vector2 position = closedPositions[i];
-            position.y -= shiftFromOpenedLevels;
-            position.y -= extraHeight * (1f - item.levelRoot.pivot.y);
-
-            item.levelRoot.SetSizeWithCurrentAnchors(
-                RectTransform.Axis.Vertical,
-                height);
+            position.y -= downwardShift;
             item.levelRoot.anchoredPosition = position;
 
-            shiftFromOpenedLevels += extraHeight;
+            // このLevelのDetailが開いていれば、
+            // 次のLevel以降を青い枠の外まで確実に下げる。
+            if (item.isOpen)
+                downwardShift += openedRowShift;
         }
 
         contentRoot.SetSizeWithCurrentAnchors(
             RectTransform.Axis.Vertical,
-            closedContentHeight + shiftFromOpenedLevels);
+            closedContentHeight + downwardShift);
 
         Canvas.ForceUpdateCanvases();
     }
