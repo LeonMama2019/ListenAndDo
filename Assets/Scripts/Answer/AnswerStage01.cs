@@ -230,6 +230,7 @@ public class AnswerStage01 : MonoBehaviour
         if (!finishPanelActive && completedQuestions < totalQuestions) return;
         finishPanelActive = false;
         StopAllCoroutines();
+        LevelResultStore.CompleteCurrentSession();
         SceneManager.LoadScene("Top");
     }
 
