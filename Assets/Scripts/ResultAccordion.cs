@@ -46,6 +46,9 @@ public class ResultAccordion : MonoBehaviour
     [Header("Detailを開いた時の▼画像")]
     [SerializeField] private Sprite openArrowSprite;
 
+    [Header("Detail下の余白")]
+    [SerializeField] private float expandedBottomPadding = 40f;
+
     private void Awake()
     {
         AutoWireLevels();
@@ -113,8 +116,8 @@ public class ResultAccordion : MonoBehaviour
                 }
 
                 targetHeight = detailHeight > 0f
-                    ? item.closedHeight + detailHeight
-                    : item.openHeight;
+                    ? item.closedHeight + detailHeight + expandedBottomPadding
+                    : item.openHeight + expandedBottomPadding;
             }
 
             item.levelRoot.SetSizeWithCurrentAnchors(
