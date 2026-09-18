@@ -79,7 +79,7 @@ public class Stage01Manager : MonoBehaviour
 
         // 1問目はHand選択から3秒後にここへ来る。
         // 2問目以降は正解演出後にShowNextQuestion()が呼ばれるため即読み上げる。
-        PlayCurrentVoice();
+        PlayVoice(false);
     }
 
     private Sprite GetRandomWrongImage(Sprite answer)
@@ -133,6 +133,11 @@ public class Stage01Manager : MonoBehaviour
 
     public void PlayCurrentVoice()
     {
+        PlayVoice(true);
+    }
+
+    private void PlayVoice(bool countAsReplay)
+    {
         if (voiceAudioSource == null)
         {
             Debug.LogWarning("Voice Audio Sourceが設定されていません");
@@ -152,8 +157,11 @@ public class Stage01Manager : MonoBehaviour
         voiceAudioSource.Stop();
         voiceAudioSource.PlayOneShot(currentTask.voiceClip);
 
-        SpeakerClickCount++;
-        LevelResultStore.RecordSpeakerReplay();
+        if (countAsReplay)
+        {
+            SpeakerClickCount++;
+            LevelResultStore.RecordSpeakerReplay();
+        }
         if (SpeakerClickCount >= 4)
             ShowText(textForShow);
     }
