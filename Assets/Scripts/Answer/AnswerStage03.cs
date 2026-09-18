@@ -174,6 +174,7 @@ public class AnswerStage03 : MonoBehaviour
         if (!finishPanelActive && completedQuestions < totalQuestions) return;
         finishPanelActive = false;
         StopAllCoroutines();
+        LevelResultStore.CompleteCurrentSession();
         SceneManager.LoadScene("Top");
     }
 
