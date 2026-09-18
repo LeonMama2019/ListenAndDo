@@ -12,10 +12,8 @@ public class ResultAccordion : MonoBehaviour
     private const int LevelCount = 7;
 
     private RectTransform contentRoot;
-    private float levelSpacing = 30f;
-    private int contentTopPadding = 10;
-    private int contentBottomPadding = 0;
-    private int contentLeftPadding = 50;
+    private Vector2[] closedPositions = new Vector2[LevelCount];
+    private float closedContentHeight;
 
     [Serializable]
     public class LevelItem
@@ -216,35 +214,29 @@ public class ResultAccordion : MonoBehaviour
         if (contentRoot == null)
             return;
 
+        // まず既存のVerticalLayoutGroupに、閉じた状態の正しい位置を計算させる。
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRoot);
+        Canvas.ForceUpdateCanvases();
+
+        for (int i = 0; i < levels.Length; i++)
+        {
+            if (levels[i] != null && levels[i].levelRoot != null)
+                closedPositions[i] = levels[i].levelRoot.anchoredPosition;
+        }
+
+        closedContentHeight = contentRoot.rect.height;
+
+        // ここから先は位置を直接制御する。
+        // VerticalLayoutGroupに次のフレームで戻されないよう停止する。
         VerticalLayoutGroup verticalLayout =
             contentRoot.GetComponent<VerticalLayoutGroup>();
-
         if (verticalLayout != null)
-        {
-            levelSpacing = verticalLayout.spacing;
-            contentTopPadding = verticalLayout.padding.top;
-            contentBottomPadding = verticalLayout.padding.bottom;
-            contentLeftPadding = verticalLayout.padding.left;
-
-            // 高さ変更が次のフレームに上書きされないよう、
-            // 以降の配置はこのスクリプトで明示的に行う。
             verticalLayout.enabled = false;
-        }
 
         ContentSizeFitter fitter = contentRoot.GetComponent<ContentSizeFitter>();
         if (fitter != null)
             fitter.enabled = false;
-
-        foreach (LevelItem item in levels)
-        {
-            if (item == null || item.levelRoot == null)
-                continue;
-
-            RectTransform root = item.levelRoot;
-            root.anchorMin = new Vector2(0f, 1f);
-            root.anchorMax = new Vector2(0f, 1f);
-            root.pivot = new Vector2(root.pivot.x, 1f);
-        }
     }
 
     private void ReflowLevels()
@@ -252,10 +244,11 @@ public class ResultAccordion : MonoBehaviour
         if (contentRoot == null)
             return;
 
-        float yOffset = contentTopPadding;
+        float shiftFromOpenedLevels = 0f;
 
-        foreach (LevelItem item in levels)
+        for (int i = 0; i < levels.Length; i++)
         {
+            LevelItem item = levels[i];
             if (item == null || item.levelRoot == null)
                 continue;
 
@@ -264,22 +257,25 @@ public class ResultAccordion : MonoBehaviour
                 ? item.layoutElement.preferredHeight
                 : item.levelRoot.rect.height;
 
-            RectTransform root = item.levelRoot;
-            root.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-            root.anchoredPosition = new Vector2(
-                contentLeftPadding + root.rect.width * root.pivot.x,
-                -yOffset);
+            float extraHeight = Mathf.Max(0f, height - item.closedHeight);
 
-            yOffset += height + levelSpacing;
+            // 開いている行は上端を固定し、その行より下は
+            // Detailの高さぶん丸ごと下へ移動する。
+            Vector2 position = closedPositions[i];
+            position.y -= shiftFromOpenedLevels;
+            position.y -= extraHeight * (1f - item.levelRoot.pivot.y);
+
+            item.levelRoot.SetSizeWithCurrentAnchors(
+                RectTransform.Axis.Vertical,
+                height);
+            item.levelRoot.anchoredPosition = position;
+
+            shiftFromOpenedLevels += extraHeight;
         }
 
-        if (levels.Length > 0)
-            yOffset -= levelSpacing;
-
-        yOffset += contentBottomPadding;
         contentRoot.SetSizeWithCurrentAnchors(
             RectTransform.Axis.Vertical,
-            Mathf.Max(0f, yOffset));
+            closedContentHeight + shiftFromOpenedLevels);
 
         Canvas.ForceUpdateCanvases();
     }
