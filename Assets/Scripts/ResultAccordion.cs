@@ -55,7 +55,7 @@ public class ResultAccordion : MonoBehaviour
     [SerializeField] private float expandedBottomPadding = 20f;
 
     [Header("開いたDetailが下のLevelを押し下げる距離")]
-    [SerializeField] private float openedRowShift = 170f;
+    [SerializeField] private float openedRowShift = 85f;
 
     private void Awake()
     {
