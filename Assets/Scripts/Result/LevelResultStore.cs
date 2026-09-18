@@ -40,6 +40,7 @@ public static class LevelResultStore
     private static float totalCorrectAnswerTime;
     private static readonly List<float> answerTimes = new List<float>();
     private static int replayCount;
+    private static bool sessionCompleted;
     private static bool initialized;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -86,6 +87,16 @@ public static class LevelResultStore
 
         if (activeLevel >= 1)
             replayCount++;
+    }
+
+    /// <summary>
+    /// Stage終了直前に呼び、現在の結果をPlayerPrefsへ確実に保存する。
+    /// シーン切替通知から再度呼ばれても二重保存しない。
+    /// </summary>
+    public static void CompleteCurrentSession()
+    {
+        EnsureCurrentSession();
+        CompleteSession();
     }
 
     public static bool TryGetLatest(int level, out LevelResultRecord result)
@@ -198,11 +209,12 @@ public static class LevelResultStore
         totalCorrectAnswerTime = 0f;
         answerTimes.Clear();
         replayCount = 0;
+        sessionCompleted = false;
     }
 
     private static void CompleteSession()
     {
-        if (activeLevel < 1 || questionCount <= 0)
+        if (sessionCompleted || activeLevel < 1 || questionCount <= 0)
             return;
 
         LevelResultRecord result = new LevelResultRecord
@@ -225,6 +237,7 @@ public static class LevelResultStore
         SaveLatest(result);
         AppendHistory(result);
         PlayerPrefs.Save();
+        sessionCompleted = true;
 
         Debug.Log(
             $"Level{result.level}結果保存: 正解率={result.correctRate:P0}, " +
