@@ -54,7 +54,7 @@ public class ResultAccordion : MonoBehaviour
     [Header("Detail下の余白")]
     [SerializeField] private float expandedBottomPadding = 20f;
 
-    private const float OpenedRowShift = 85f;
+    private const float OpenedRowShift = 75f;
 
     private void Awake()
     {
