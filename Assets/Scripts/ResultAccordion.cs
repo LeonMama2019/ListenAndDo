@@ -31,6 +31,9 @@ public class ResultAccordion : MonoBehaviour
 
         [Tooltip("詳細サイズを取得できない場合に使う予備の高さ")]
         public float openHeight = 183f;
+
+        [NonSerialized] public Image toggleImage;
+        [NonSerialized] public Sprite closedArrowSprite;
     }
 
     [Header("レベル1〜7（起動時に自動で再接続）")]
@@ -38,6 +41,9 @@ public class ResultAccordion : MonoBehaviour
 
     [Header("起動時")]
     [SerializeField] private bool closeAllOnStart = true;
+
+    [Header("Detailを開いた時の▼画像")]
+    [SerializeField] private Sprite openArrowSprite;
 
     private void Awake()
     {
@@ -77,6 +83,14 @@ public class ResultAccordion : MonoBehaviour
 
         if (item.arrowText != null)
             item.arrowText.text = open ? "▼" : "▶";
+
+        if (item.toggleImage != null && item.closedArrowSprite != null)
+        {
+            item.toggleImage.sprite =
+                open && openArrowSprite != null
+                    ? openArrowSprite
+                    : item.closedArrowSprite;
+        }
 
         if (item.levelRoot != null)
         {
@@ -152,6 +166,16 @@ public class ResultAccordion : MonoBehaviour
             {
                 item.toggleButton = toggle.GetComponent<Button>();
                 item.arrowText = toggle.GetComponentInChildren<TMP_Text>(true);
+
+                if (item.toggleButton != null)
+                {
+                    item.toggleImage = item.toggleButton.targetGraphic as Image;
+                    if (item.toggleImage == null)
+                        item.toggleImage = toggle.GetComponent<Image>();
+
+                    if (item.toggleImage != null)
+                        item.closedArrowSprite = item.toggleImage.sprite;
+                }
             }
 
             if (item.toggleButton == null)
