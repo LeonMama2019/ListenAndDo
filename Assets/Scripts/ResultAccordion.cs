@@ -34,6 +34,7 @@ public class ResultAccordion : MonoBehaviour
 
         [NonSerialized] public Image toggleImage;
         [NonSerialized] public Sprite closedArrowSprite;
+        [NonSerialized] public LayoutElement layoutElement;
     }
 
     [Header("レベル1〜7（起動時に自動で再接続）")]
@@ -48,6 +49,7 @@ public class ResultAccordion : MonoBehaviour
     private void Awake()
     {
         AutoWireLevels();
+        ConfigureParentLayout();
 
         for (int i = 0; i < levels.Length; i++)
         {
@@ -118,6 +120,13 @@ public class ResultAccordion : MonoBehaviour
             item.levelRoot.SetSizeWithCurrentAnchors(
                 RectTransform.Axis.Vertical,
                 targetHeight);
+
+            if (item.layoutElement != null)
+            {
+                item.layoutElement.minHeight = targetHeight;
+                item.layoutElement.preferredHeight = targetHeight;
+                item.layoutElement.flexibleHeight = 0f;
+            }
         }
 
         RebuildLayout(item);
@@ -150,6 +159,9 @@ public class ResultAccordion : MonoBehaviour
             }
 
             item.levelRoot = levelRoot as RectTransform;
+            item.layoutElement = levelRoot.GetComponent<LayoutElement>();
+            if (item.layoutElement == null)
+                item.layoutElement = levelRoot.gameObject.AddComponent<LayoutElement>();
 
             Transform panel = FindChild(
                 levelRoot,
@@ -182,6 +194,33 @@ public class ResultAccordion : MonoBehaviour
                 Debug.LogWarning(
                     "ResultAccordion: level" + levelNumber + " のToggleArrow Buttonが見つかりません。");
         }
+    }
+
+
+    private void ConfigureParentLayout()
+    {
+        if (levels == null || levels.Length == 0 || levels[0] == null ||
+            levels[0].levelRoot == null)
+            return;
+
+        RectTransform content = levels[0].levelRoot.parent as RectTransform;
+        if (content == null)
+            return;
+
+        VerticalLayoutGroup verticalLayout =
+            content.GetComponent<VerticalLayoutGroup>();
+        if (verticalLayout == null)
+            verticalLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
+
+        verticalLayout.childControlHeight = true;
+        verticalLayout.childForceExpandHeight = false;
+
+        ContentSizeFitter fitter = content.GetComponent<ContentSizeFitter>();
+        if (fitter == null)
+            fitter = content.gameObject.AddComponent<ContentSizeFitter>();
+
+        fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
     }
 
     private bool IsValid(int index)
