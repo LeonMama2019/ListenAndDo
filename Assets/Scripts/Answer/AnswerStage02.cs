@@ -204,6 +204,7 @@ public class AnswerStage02 : MonoBehaviour
 
         finishPanelActive = false;
         StopAllCoroutines();
+        LevelResultStore.CompleteCurrentSession();
         SceneManager.LoadScene("Top");
     }
 
