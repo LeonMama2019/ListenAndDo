@@ -11,6 +11,8 @@ public class LevelResultRecord
     public int firstTryCorrectCount;
     public float correctRate;
     public float averageAnswerTime;
+    public float totalAnswerTime;
+    public List<float> answerTimes = new List<float>();
     public int replayCount;
     public string playedAt;
 }
@@ -35,6 +37,7 @@ public static class LevelResultStore
     private static int firstTryCorrectCount;
     private static int correctAnswerCount;
     private static float totalCorrectAnswerTime;
+    private static readonly List<float> answerTimes = new List<float>();
     private static int replayCount;
     private static bool initialized;
 
@@ -69,8 +72,10 @@ public static class LevelResultStore
 
         if (entry.isCorrect)
         {
+            float answerTime = Mathf.Max(0f, entry.answerTime);
             correctAnswerCount++;
-            totalCorrectAnswerTime += Mathf.Max(0f, entry.answerTime);
+            totalCorrectAnswerTime += answerTime;
+            answerTimes.Add(answerTime);
         }
     }
 
@@ -99,6 +104,11 @@ public static class LevelResultStore
             firstTryCorrectCount = PlayerPrefs.GetInt(prefix + ".FirstTryCorrectCount", 0),
             correctRate = PlayerPrefs.GetFloat(prefix + ".CorrectRate", 0f),
             averageAnswerTime = PlayerPrefs.GetFloat(prefix + ".AverageAnswerTime", 0f),
+            totalAnswerTime = PlayerPrefs.GetFloat(
+                prefix + ".TotalAnswerTime",
+                PlayerPrefs.GetFloat(prefix + ".AverageAnswerTime", 0f) *
+                PlayerPrefs.GetInt(prefix + ".QuestionCount", 0)),
+            answerTimes = LoadAnswerTimes(prefix),
             replayCount = PlayerPrefs.GetInt(prefix + ".ReplayCount", 0),
             playedAt = PlayerPrefs.GetString(prefix + ".PlayedAt", string.Empty)
         };
@@ -134,6 +144,9 @@ public static class LevelResultStore
             PlayerPrefs.DeleteKey(prefix + ".FirstTryCorrectCount");
             PlayerPrefs.DeleteKey(prefix + ".CorrectRate");
             PlayerPrefs.DeleteKey(prefix + ".AverageAnswerTime");
+            PlayerPrefs.DeleteKey(prefix + ".TotalAnswerTime");
+            for (int i = 0; i < 7; i++)
+                PlayerPrefs.DeleteKey(prefix + ".AnswerTime" + (i + 1));
             PlayerPrefs.DeleteKey(prefix + ".ReplayCount");
             PlayerPrefs.DeleteKey(prefix + ".PlayedAt");
         }
@@ -172,6 +185,7 @@ public static class LevelResultStore
         firstTryCorrectCount = 0;
         correctAnswerCount = 0;
         totalCorrectAnswerTime = 0f;
+        answerTimes.Clear();
         replayCount = 0;
     }
 
@@ -191,6 +205,8 @@ public static class LevelResultStore
             averageAnswerTime = correctAnswerCount > 0
                 ? totalCorrectAnswerTime / correctAnswerCount
                 : 0f,
+            totalAnswerTime = totalCorrectAnswerTime,
+            answerTimes = new List<float>(answerTimes),
             replayCount = replayCount,
             playedAt = DateTime.Now.ToString("o")
         };
@@ -201,7 +217,7 @@ public static class LevelResultStore
 
         Debug.Log(
             $"Level{result.level}結果保存: 正解率={result.correctRate:P0}, " +
-            $"平均回答時間={result.averageAnswerTime:F2}秒, 聞き返し={result.replayCount}回");
+            $"合計回答時間={result.totalAnswerTime:F2}秒, 聞き返し={result.replayCount}回");
     }
 
     private static void SaveLatest(LevelResultRecord result)
@@ -211,6 +227,14 @@ public static class LevelResultStore
         PlayerPrefs.SetInt(prefix + ".FirstTryCorrectCount", result.firstTryCorrectCount);
         PlayerPrefs.SetFloat(prefix + ".CorrectRate", result.correctRate);
         PlayerPrefs.SetFloat(prefix + ".AverageAnswerTime", result.averageAnswerTime);
+        PlayerPrefs.SetFloat(prefix + ".TotalAnswerTime", result.totalAnswerTime);
+        for (int i = 0; i < 7; i++)
+        {
+            float time = result.answerTimes != null && i < result.answerTimes.Count
+                ? result.answerTimes[i]
+                : -1f;
+            PlayerPrefs.SetFloat(prefix + ".AnswerTime" + (i + 1), time);
+        }
         PlayerPrefs.SetInt(prefix + ".ReplayCount", result.replayCount);
         PlayerPrefs.SetString(prefix + ".PlayedAt", result.playedAt);
     }
@@ -220,6 +244,22 @@ public static class LevelResultStore
         LevelResultHistory history = GetHistory();
         history.sessions.Add(result);
         PlayerPrefs.SetString(HistoryKey, JsonUtility.ToJson(history));
+    }
+
+    private static List<float> LoadAnswerTimes(string prefix)
+    {
+        List<float> times = new List<float>();
+        for (int i = 0; i < 7; i++)
+        {
+            string key = prefix + ".AnswerTime" + (i + 1);
+            if (!PlayerPrefs.HasKey(key))
+                break;
+
+            float time = PlayerPrefs.GetFloat(key, -1f);
+            if (time >= 0f)
+                times.Add(time);
+        }
+        return times;
     }
 
     private static string GetLevelKey(int level)
