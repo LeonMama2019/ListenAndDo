@@ -11,6 +11,12 @@ public class ResultAccordion : MonoBehaviour
 {
     private const int LevelCount = 7;
 
+    private RectTransform contentRoot;
+    private float levelSpacing = 30f;
+    private int contentTopPadding = 10;
+    private int contentBottomPadding = 0;
+    private int contentLeftPadding = 50;
+
     [Serializable]
     public class LevelItem
     {
@@ -47,7 +53,7 @@ public class ResultAccordion : MonoBehaviour
     [SerializeField] private Sprite openArrowSprite;
 
     [Header("Detail下の余白")]
-    [SerializeField] private float expandedBottomPadding = 120f;
+    [SerializeField] private float expandedBottomPadding = 20f;
 
     private void Awake()
     {
@@ -132,7 +138,7 @@ public class ResultAccordion : MonoBehaviour
             }
         }
 
-        RebuildLayout(item);
+        ReflowLevels();
     }
 
     public void CloseAll()
@@ -206,24 +212,76 @@ public class ResultAccordion : MonoBehaviour
             levels[0].levelRoot == null)
             return;
 
-        RectTransform content = levels[0].levelRoot.parent as RectTransform;
-        if (content == null)
+        contentRoot = levels[0].levelRoot.parent as RectTransform;
+        if (contentRoot == null)
             return;
 
         VerticalLayoutGroup verticalLayout =
-            content.GetComponent<VerticalLayoutGroup>();
-        if (verticalLayout == null)
-            verticalLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
+            contentRoot.GetComponent<VerticalLayoutGroup>();
 
-        verticalLayout.childControlHeight = true;
-        verticalLayout.childForceExpandHeight = false;
+        if (verticalLayout != null)
+        {
+            levelSpacing = verticalLayout.spacing;
+            contentTopPadding = verticalLayout.padding.top;
+            contentBottomPadding = verticalLayout.padding.bottom;
+            contentLeftPadding = verticalLayout.padding.left;
 
-        ContentSizeFitter fitter = content.GetComponent<ContentSizeFitter>();
-        if (fitter == null)
-            fitter = content.gameObject.AddComponent<ContentSizeFitter>();
+            // 高さ変更が次のフレームに上書きされないよう、
+            // 以降の配置はこのスクリプトで明示的に行う。
+            verticalLayout.enabled = false;
+        }
 
-        fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        ContentSizeFitter fitter = contentRoot.GetComponent<ContentSizeFitter>();
+        if (fitter != null)
+            fitter.enabled = false;
+
+        foreach (LevelItem item in levels)
+        {
+            if (item == null || item.levelRoot == null)
+                continue;
+
+            RectTransform root = item.levelRoot;
+            root.anchorMin = new Vector2(0f, 1f);
+            root.anchorMax = new Vector2(0f, 1f);
+            root.pivot = new Vector2(root.pivot.x, 1f);
+        }
+    }
+
+    private void ReflowLevels()
+    {
+        if (contentRoot == null)
+            return;
+
+        float yOffset = contentTopPadding;
+
+        foreach (LevelItem item in levels)
+        {
+            if (item == null || item.levelRoot == null)
+                continue;
+
+            float height = item.layoutElement != null &&
+                           item.layoutElement.preferredHeight > 0f
+                ? item.layoutElement.preferredHeight
+                : item.levelRoot.rect.height;
+
+            RectTransform root = item.levelRoot;
+            root.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+            root.anchoredPosition = new Vector2(
+                contentLeftPadding + root.rect.width * root.pivot.x,
+                -yOffset);
+
+            yOffset += height + levelSpacing;
+        }
+
+        if (levels.Length > 0)
+            yOffset -= levelSpacing;
+
+        yOffset += contentBottomPadding;
+        contentRoot.SetSizeWithCurrentAnchors(
+            RectTransform.Axis.Vertical,
+            Mathf.Max(0f, yOffset));
+
+        Canvas.ForceUpdateCanvases();
     }
 
     private bool IsValid(int index)
@@ -284,17 +342,5 @@ public class ResultAccordion : MonoBehaviour
                    .ToLowerInvariant();
     }
 
-    private static void RebuildLayout(LevelItem item)
-    {
-        Canvas.ForceUpdateCanvases();
 
-        RectTransform target = item.levelRoot != null
-            ? item.levelRoot.parent as RectTransform
-            : item.detail.transform.parent as RectTransform;
-
-        if (target != null)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(target);
-
-        Canvas.ForceUpdateCanvases();
-    }
 }
