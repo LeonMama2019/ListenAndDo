@@ -66,7 +66,7 @@ public class Stage06Manager : MonoBehaviour
         if (stage06Answer != null) stage06Answer.SetTask(currentTask);
         speakerClickCount = 0;
         if (Panel != null) Panel.SetActive(false);
-        PlayCurrentVoice();
+        PlayVoice(false);
     }
 
     private Sprite GetRandomWrongImage(Sprite answer)
@@ -109,6 +109,11 @@ public class Stage06Manager : MonoBehaviour
 
     public void PlayCurrentVoice()
     {
+        PlayVoice(true);
+    }
+
+    private void PlayVoice(bool countAsReplay)
+    {
         if (voiceAudioSource == null || currentTask == null || currentTask.voiceClip == null)
         {
             Debug.LogWarning("Stage06Manager: 問題音声を再生できません");
@@ -116,8 +121,11 @@ public class Stage06Manager : MonoBehaviour
         }
         voiceAudioSource.Stop();
         voiceAudioSource.PlayOneShot(currentTask.voiceClip);
-        speakerClickCount++;
-        LevelResultStore.RecordSpeakerReplay();
+        if (countAsReplay)
+        {
+            speakerClickCount++;
+            LevelResultStore.RecordSpeakerReplay();
+        }
         if (speakerClickCount >= 4) ShowText(textForShow);
     }
 }
