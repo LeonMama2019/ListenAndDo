@@ -133,7 +133,12 @@ public class AnswerStage01 : MonoBehaviour
         bool isCorrectObject = IsCorrectObject(target);
         bool isCorrect = isCorrectHand && isCorrectObject;
         RecordAnswer(target, isCorrect);
-        if (!isCorrectHand || !isCorrectObject) return;
+        if (!isCorrectHand)
+        {
+            if (tutorialStage01 != null) tutorialStage01.PlayHandSelectionVoice();
+            return;
+        }
+        if (!isCorrectObject) return;
         if (target == object1) CorrectAnswer(judge1, judge1Effect);
         else if (target == object2) CorrectAnswer(judge2, judge2Effect);
     }
