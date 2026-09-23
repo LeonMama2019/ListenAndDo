@@ -245,7 +245,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u304A\u308F\u308A"
+  m_text: "\u304A\u308F\u308A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d9e1773461deae5498bc86801ee4633c, type: 2}
   m_sharedMaterial: {fileID: -975139962867787368, guid: d9e1773461deae5498bc86801ee4633c, type: 2}
@@ -858,6 +858,7 @@ MonoBehaviour:
   TutorialFinishPanel: {fileID: 1994643866}
   finishPanelDuration: 5
   SpeakerClickCount: 0
+  wrongHandVoiceDelay: 5
   HandPanel: {fileID: 1380375803}
 --- !u!1 &688371901
 GameObject:
