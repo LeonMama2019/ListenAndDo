@@ -76,6 +76,11 @@ public class TutorialStage01 : MonoBehaviour
         }
     }
 
+    public void PlayHandSelectionVoice()
+    {
+        PlayVoice(stage01VoiceClip);
+    }
+
     public void SpeakerTutorial()
     {
         if (openingTutorialActive)
