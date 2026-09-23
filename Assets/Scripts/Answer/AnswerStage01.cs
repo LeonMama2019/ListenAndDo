@@ -45,6 +45,8 @@ public class AnswerStage01 : MonoBehaviour
     private int attemptNumber = 0;
     public int SpeakerClickCount;
     private GameObject previousMouseOverObject = null;
+    [SerializeField] private float wrongHandVoiceDelay = 5f;
+    private Coroutine wrongHandVoiceCoroutine;
     public GameObject HandPanel;
 
     private void Start()
@@ -135,12 +137,33 @@ public class AnswerStage01 : MonoBehaviour
         RecordAnswer(target, isCorrect);
         if (!isCorrectHand)
         {
-            if (tutorialStage01 != null) tutorialStage01.PlayHandSelectionVoice();
+            if (wrongHandVoiceCoroutine != null) StopCoroutine(wrongHandVoiceCoroutine);
+            wrongHandVoiceCoroutine = StartCoroutine(PlayWrongHandVoiceAfterDelay(target, selectedHand, currentTask));
             return;
         }
         if (!isCorrectObject) return;
         if (target == object1) CorrectAnswer(judge1, judge1Effect);
         else if (target == object2) CorrectAnswer(judge2, judge2Effect);
+    }
+
+    private IEnumerator PlayWrongHandVoiceAfterDelay(GameObject target, string selectedHand, TaskData task)
+    {
+        float elapsed = 0f;
+        while (elapsed < wrongHandVoiceDelay)
+        {
+            yield return null;
+            if (isAnswerProcessing || finishPanelActive || currentTask != task ||
+                handListSelector == null || handListSelector.GetCurrentHandAction() != selectedHand ||
+                !IsMouseOverObject(target))
+            {
+                wrongHandVoiceCoroutine = null;
+                yield break;
+            }
+            elapsed += Time.deltaTime;
+        }
+
+        wrongHandVoiceCoroutine = null;
+        if (tutorialStage01 != null) tutorialStage01.PlayHandSelectionVoice();
     }
 
     private bool IsCorrectObject(GameObject target)
@@ -180,6 +203,11 @@ public class AnswerStage01 : MonoBehaviour
     {
         if (isAnswerProcessing) return;
         isAnswerProcessing = true;
+        if (wrongHandVoiceCoroutine != null)
+        {
+            StopCoroutine(wrongHandVoiceCoroutine);
+            wrongHandVoiceCoroutine = null;
+        }
         completedQuestions++;
         judge1.SetActive(judge == judge1);
         judge2.SetActive(judge == judge2);
@@ -257,6 +285,11 @@ public class AnswerStage01 : MonoBehaviour
 
     public void SetTask(TaskData task)
     {
+        if (wrongHandVoiceCoroutine != null)
+        {
+            StopCoroutine(wrongHandVoiceCoroutine);
+            wrongHandVoiceCoroutine = null;
+        }
         currentTask = task;
         questionStartTime = Time.realtimeSinceStartup;
         attemptNumber = 0;
