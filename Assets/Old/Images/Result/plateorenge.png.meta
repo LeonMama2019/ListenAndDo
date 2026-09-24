@@ -1,0 +1,1222 @@
+fileFormatVersion: 2
+guid: be1604c6d9edb2442a3f5d2178714f0a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6398195846876865068
+    second: plateorenge_0
+  - first:
+      213: 2756022317588566633
+    second: plateorenge_1
+  - first:
+      213: 5583323707460332196
+    second: plateorenge_2
+  - first:
+      213: 4415708022080452559
+    second: plateorenge_3
+  - first:
+      213: 6408289837953899548
+    second: plateorenge_4
+  - first:
+      213: 2418763256810683231
+    second: plateorenge_5
+  - first:
+      213: -1611384883455287279
+    second: plateorenge_6
+  - first:
+      213: -5702818922311838624
+    second: plateorenge_7
+  - first:
+      213: -6387008770927604794
+    second: plateorenge_8
+  - first:
+      213: 793902966398687547
+    second: plateorenge_9
+  - first:
+      213: 6842413176636452612
+    second: plateorenge_10
+  - first:
+      213: 1681756550342039568
+    second: plateorenge_11
+  - first:
+      213: 2278454456695916034
+    second: plateorenge_12
+  - first:
+      213: 3127145461754123087
+    second: plateorenge_13
+  - first:
+      213: -9030258036227726223
+    second: plateorenge_14
+  - first:
+      213: -3632207408857187370
+    second: plateorenge_15
+  - first:
+      213: 6295312443348811434
+    second: plateorenge_16
+  - first:
+      213: 2818829188165782278
+    second: plateorenge_17
+  - first:
+      213: -2243397343994823199
+    second: plateorenge_18
+  - first:
+      213: -1783347020210435061
+    second: plateorenge_19
+  - first:
+      213: -875884259493967882
+    second: plateorenge_20
+  - first:
+      213: 3225665083731175899
+    second: plateorenge_21
+  - first:
+      213: -660660134922697132
+    second: plateorenge_22
+  - first:
+      213: -2516145202490726560
+    second: plateorenge_23
+  - first:
+      213: -7683519323980193741
+    second: plateorenge_24
+  - first:
+      213: 7991200429413987515
+    second: plateorenge_25
+  - first:
+      213: 6729558869836219506
+    second: plateorenge_26
+  - first:
+      213: -8615715459567272907
+    second: plateorenge_27
+  - first:
+      213: -319552846422828071
+    second: plateorenge_28
+  - first:
+      213: -936240181032934902
+    second: plateorenge_29
+  - first:
+      213: -254667668575347142
+    second: plateorenge_30
+  - first:
+      213: -5162007551426016154
+    second: plateorenge_31
+  - first:
+      213: -8238521826707839002
+    second: plateorenge_32
+  - first:
+      213: -5679527236978580052
+    second: plateorenge_33
+  - first:
+      213: 2465398087988019194
+    second: plateorenge_34
+  - first:
+      213: 5035315443095235685
+    second: plateorenge_35
+  - first:
+      213: -6306503407282086699
+    second: plateorenge_36
+  - first:
+      213: -7208396206848728341
+    second: plateorenge_37
+  - first:
+      213: 493127313735025307
+    second: plateorenge_38
+  - first:
+      213: 4213356925933031674
+    second: plateorenge_39
+  - first:
+      213: -2250761727413105452
+    second: plateorenge_40
+  - first:
+      213: 2268296393088903946
+    second: plateorenge_41
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: plateorenge_0
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 685
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dd568fb6ca0537a0800000000000000
+      internalID: -6398195846876865068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 79
+        width: 1959
+        height: 597
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9625ae022bb5f3620800000000000000
+      internalID: 2756022317588566633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_2
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 645
+        width: 52
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4aaa0398453fb7d40800000000000000
+      internalID: 5583323707460332196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_3
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 645
+        width: 61
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc7b2f7fc0fb74d30800000000000000
+      internalID: 4415708022080452559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_4
+      rect:
+        serializedVersion: 2
+        x: 814
+        y: 649
+        width: 23
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1cdcf0b7a1dee850800000000000000
+      internalID: 6408289837953899548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_5
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 657
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5bb7fded5c219120800000000000000
+      internalID: 2418763256810683231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_6
+      rect:
+        serializedVersion: 2
+        x: 1043
+        y: 646
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 110a6396cf533a9e0800000000000000
+      internalID: -1611384883455287279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_7
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 647
+        width: 33
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0641a3da7648bd0b0800000000000000
+      internalID: -5702818922311838624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_8
+      rect:
+        serializedVersion: 2
+        x: 1377
+        y: 657
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cb4e87dc59cc57a0800000000000000
+      internalID: -6387008770927604794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_9
+      rect:
+        serializedVersion: 2
+        x: 1380
+        y: 624
+        width: 80
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b39925aaa82840b00800000000000000
+      internalID: 793902966398687547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_10
+      rect:
+        serializedVersion: 2
+        x: 1537
+        y: 627
+        width: 33
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40f2edf088225fe50800000000000000
+      internalID: 6842413176636452612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_11
+      rect:
+        serializedVersion: 2
+        x: 1716
+        y: 639
+        width: 35
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 018d2d51cacc65710800000000000000
+      internalID: 1681756550342039568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_12
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 643
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2060440b142be9f10800000000000000
+      internalID: 2278454456695916034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_13
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 614
+        width: 40
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4354d8aa3ad56b20800000000000000
+      internalID: 3127145461754123087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_14
+      rect:
+        serializedVersion: 2
+        x: 763
+        y: 613
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 174a78019241ea280800000000000000
+      internalID: -9030258036227726223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_15
+      rect:
+        serializedVersion: 2
+        x: 1029
+        y: 619
+        width: 63
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6db768c1b9ec79dc0800000000000000
+      internalID: -3632207408857187370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_16
+      rect:
+        serializedVersion: 2
+        x: 1121
+        y: 641
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaef6ef20517d5750800000000000000
+      internalID: 6295312443348811434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_17
+      rect:
+        serializedVersion: 2
+        x: 1123
+        y: 631
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60bcf1b363e7e1720800000000000000
+      internalID: 2818829188165782278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_18
+      rect:
+        serializedVersion: 2
+        x: 1171
+        y: 627
+        width: 30
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ed322d600addd0e0800000000000000
+      internalID: -2243397343994823199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_19
+      rect:
+        serializedVersion: 2
+        x: 1274
+        y: 639
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0c0b1d65574047e0800000000000000
+      internalID: -1783347020210435061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_20
+      rect:
+        serializedVersion: 2
+        x: 1525
+        y: 634
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f7818818eb38d3f0800000000000000
+      internalID: -875884259493967882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_21
+      rect:
+        serializedVersion: 2
+        x: 1575
+        y: 611
+        width: 25
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd96d28ad4dd3cc20800000000000000
+      internalID: 3225665083731175899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_22
+      rect:
+        serializedVersion: 2
+        x: 1615
+        y: 644
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 456cbac8b1dd4d6f0800000000000000
+      internalID: -660660134922697132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_23
+      rect:
+        serializedVersion: 2
+        x: 1623
+        y: 645
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 067ac3af44bd41dd0800000000000000
+      internalID: -2516145202490726560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_24
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 629
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 330af4542e7ae5590800000000000000
+      internalID: -7683519323980193741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_25
+      rect:
+        serializedVersion: 2
+        x: 1252
+        y: 625
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb47b2c837276ee60800000000000000
+      internalID: 7991200429413987515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_26
+      rect:
+        serializedVersion: 2
+        x: 1567
+        y: 630
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 274caab2322346d50800000000000000
+      internalID: 6729558869836219506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_27
+      rect:
+        serializedVersion: 2
+        x: 1768
+        y: 637
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53cb6a20074de6880800000000000000
+      internalID: -8615715459567272907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_28
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 611
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9db90061168b09bf0800000000000000
+      internalID: -319552846422828071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_29
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 613
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a02a519048ec103f0800000000000000
+      internalID: -936240181032934902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_30
+      rect:
+        serializedVersion: 2
+        x: 999
+        y: 623
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3e1aceca1d377cf0800000000000000
+      internalID: -254667668575347142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_31
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 619
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66c4e514b7ddc58b0800000000000000
+      internalID: -5162007551426016154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_32
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 626
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e7e6c45c04eaad80800000000000000
+      internalID: -8238521826707839002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_33
+      rect:
+        serializedVersion: 2
+        x: 1598
+        y: 611
+        width: 8
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca56cb3c1144e21b0800000000000000
+      internalID: -5679527236978580052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_34
+      rect:
+        serializedVersion: 2
+        x: 1599
+        y: 627
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afff370bf7ad63220800000000000000
+      internalID: 2465398087988019194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_35
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 625
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56ceabd97b801e540800000000000000
+      internalID: 5035315443095235685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_36
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 610
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dc192a709cca78a0800000000000000
+      internalID: -6306503407282086699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_37
+      rect:
+        serializedVersion: 2
+        x: 947
+        y: 609
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be2228277d1a6fb90800000000000000
+      internalID: -7208396206848728341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_38
+      rect:
+        serializedVersion: 2
+        x: 1226
+        y: 611
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b92083cdda0f7d600800000000000000
+      internalID: 493127313735025307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_39
+      rect:
+        serializedVersion: 2
+        x: 1278
+        y: 614
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af09b220dc9d87a30800000000000000
+      internalID: 4213356925933031674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_40
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 613
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dc4f7b4220b3c0e0800000000000000
+      internalID: -2250761727413105452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plateorenge_41
+      rect:
+        serializedVersion: 2
+        x: 1509
+        y: 611
+        width: 19
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0b2d533d8b9a7f10800000000000000
+      internalID: 2268296393088903946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      plateorenge_0: -6398195846876865068
+      plateorenge_1: 2756022317588566633
+      plateorenge_10: 6842413176636452612
+      plateorenge_11: 1681756550342039568
+      plateorenge_12: 2278454456695916034
+      plateorenge_13: 3127145461754123087
+      plateorenge_14: -9030258036227726223
+      plateorenge_15: -3632207408857187370
+      plateorenge_16: 6295312443348811434
+      plateorenge_17: 2818829188165782278
+      plateorenge_18: -2243397343994823199
+      plateorenge_19: -1783347020210435061
+      plateorenge_2: 5583323707460332196
+      plateorenge_20: -875884259493967882
+      plateorenge_21: 3225665083731175899
+      plateorenge_22: -660660134922697132
+      plateorenge_23: -2516145202490726560
+      plateorenge_24: -7683519323980193741
+      plateorenge_25: 7991200429413987515
+      plateorenge_26: 6729558869836219506
+      plateorenge_27: -8615715459567272907
+      plateorenge_28: -319552846422828071
+      plateorenge_29: -936240181032934902
+      plateorenge_3: 4415708022080452559
+      plateorenge_30: -254667668575347142
+      plateorenge_31: -5162007551426016154
+      plateorenge_32: -8238521826707839002
+      plateorenge_33: -5679527236978580052
+      plateorenge_34: 2465398087988019194
+      plateorenge_35: 5035315443095235685
+      plateorenge_36: -6306503407282086699
+      plateorenge_37: -7208396206848728341
+      plateorenge_38: 493127313735025307
+      plateorenge_39: 4213356925933031674
+      plateorenge_4: 6408289837953899548
+      plateorenge_40: -2250761727413105452
+      plateorenge_41: 2268296393088903946
+      plateorenge_5: 2418763256810683231
+      plateorenge_6: -1611384883455287279
+      plateorenge_7: -5702818922311838624
+      plateorenge_8: -6387008770927604794
+      plateorenge_9: 793902966398687547
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
