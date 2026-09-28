@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 981458192}
   - component: {fileID: 981458194}
   - component: {fileID: 981458193}
+  - component: {fileID: 981458195}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -194,6 +195,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981458191}
   m_CullTransparentMesh: 1
+--- !u!114 &981458195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981458191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandSelector
+  handSide: 0
+  voiceClip: {fileID: 8300000, guid: 9dd0f6849db2534448fd2a74b8f8a873, type: 3}
 --- !u!1 &1038166497
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,6 +636,7 @@ GameObject:
   - component: {fileID: 2128648489}
   - component: {fileID: 2128648491}
   - component: {fileID: 2128648490}
+  - component: {fileID: 2128648492}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -685,6 +701,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2128648488}
   m_CullTransparentMesh: 1
+--- !u!114 &2128648492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128648488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandSelector
+  handSide: 0
+  voiceClip: {fileID: 8300000, guid: 18083bd96422ca9488d4e1ce2757dbc0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
