@@ -11,6 +11,7 @@ public class HandSelector : MonoBehaviour, IPointerClickHandler
 
     [Header("選択時に鳴らす音")]
     [SerializeField] private AudioClip voiceClip;
+    [SerializeField] private Stage1Tutorial tutorialOnSelect;
 
     private AudioSource audioSource;
     private Image handImage;
@@ -39,7 +40,9 @@ public class HandSelector : MonoBehaviour, IPointerClickHandler
 
     public void SelectHand()
     {
-        if (voiceClip != null)
+        // チュートリアル3の右手では、手の名前と次の説明が重ならないようにする。
+        bool advancedTutorial = tutorialOnSelect != null && tutorialOnSelect.OnRightHandSelected();
+        if (!advancedTutorial && voiceClip != null)
             audioSource.PlayOneShot(voiceClip);
 
         if (handImage == null || handImage.sprite == null)
