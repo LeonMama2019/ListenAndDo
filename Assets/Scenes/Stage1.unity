@@ -1641,6 +1641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f365902ac45641bda38b35f72b78f947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stage1Level1Quiz
+  tutorialPanel: {fileID: 726813368}
   objectList: {fileID: 11400000, guid: 98897b124aaa2fb4dabcc5c53c2ba154, type: 2}
   object1: {fileID: 1162528727}
   object2: {fileID: 386482905}
