@@ -633,6 +633,7 @@ GameObject:
   - component: {fileID: 726813365}
   - component: {fileID: 726813367}
   - component: {fileID: 726813366}
+  - component: {fileID: 726813368}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
@@ -700,6 +701,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726813364}
   m_CullTransparentMesh: 1
+--- !u!114 &726813368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726813364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a62d4c1aa44ef69a2034c64435e117, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Stage1Tutorial
+  step1: {fileID: 1153884751}
+  step2: {fileID: 409910135}
+  step3: {fileID: 1775123973}
+  rightHandBlink: {fileID: 981458197}
 --- !u!1 &734484499
 GameObject:
   m_ObjectHideFlags: 0
@@ -961,6 +978,7 @@ GameObject:
   - component: {fileID: 981458193}
   - component: {fileID: 981458195}
   - component: {fileID: 981458196}
+  - component: {fileID: 981458197}
   m_Layer: 5
   m_Name: RightHand
   m_TagString: Untagged
@@ -1039,6 +1057,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandSelector
   handSide: 0
   voiceClip: {fileID: 8300000, guid: 9dd0f6849db2534448fd2a74b8f8a873, type: 3}
+--- !u!114 &981458197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981458191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084bde646fb34c2fa9a7933c9a6a3480, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::UIBlink
+  cyclesPerSecond: 2
+  minimumAlpha: 0.25
 --- !u!111 &981458196
 Animation:
   m_ObjectHideFlags: 0
