@@ -15,4 +15,28 @@ MonoBehaviour:
   entries:
   - objectId: 1
     sprite: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
-    touchInstruction: {fileID: 8300000, guid: ab293b8348375c5468d8080b84c319aa, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 99f7e02ba2e18f8498db615f6218be96, type: 3}
+  - objectId: 2
+    sprite: {fileID: -893702136117968846, guid: 3897ddb9e63cb304596ced522a386ced, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 7334ac62fb55d234cae67eb2b43ab484, type: 3}
+  - objectId: 3
+    sprite: {fileID: 976429924805457222, guid: 181930525f169bb449b9170eff44c6a0, type: 3}
+    touchInstruction: {fileID: 8300000, guid: e8aa5000c35bf974db63bb1da9d2ccc0, type: 3}
+  - objectId: 4
+    sprite: {fileID: 72498739567925201, guid: d97a606ad008d1b4281c6529754fb0c8, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 7334ac62fb55d234cae67eb2b43ab484, type: 3}
+  - objectId: 5
+    sprite: {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
+    touchInstruction: {fileID: 8300000, guid: e3e3766f76789c040b4486f60d8b6970, type: 3}
+  - objectId: 6
+    sprite: {fileID: 4422662579018926940, guid: e0e8744c1f1bb43449a069313ce229c2, type: 3}
+    touchInstruction: {fileID: 8300000, guid: ee87e77cfd92498429fae029523c790c, type: 3}
+  - objectId: 7
+    sprite: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 7c0c4987e40c0064c9c22e0378ace611, type: 3}
+  - objectId: 8
+    sprite: {fileID: -6190948392007208175, guid: 9ecf57176de8d384aa072f23b9f65f54, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 92d8fe62de0afe14ba14d266b1ebf79b, type: 3}
+  - objectId: 9
+    sprite: {fileID: -3411414237561161789, guid: f309ca4fd1b43db44a8f2c4b0e14f8c6, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 69b2528d86c00164393a895d12c51d01, type: 3}
