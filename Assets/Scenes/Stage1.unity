@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 186432208}
   - component: {fileID: 186432210}
   - component: {fileID: 186432209}
+  - component: {fileID: 186432211}
   m_Layer: 5
   m_Name: Check
   m_TagString: Untagged
@@ -331,6 +332,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 186432207}
   m_CullTransparentMesh: 1
+--- !u!82 &186432211
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186432207}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 1bd86b8e71346ce45aa3c98b7cf83047, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &333102395
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,6 +735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
   data: {fileID: 0}
   entryIndex: -1
+  level1Quiz: {fileID: 0}
 --- !u!1 &409910135
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,6 +1629,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1038166502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038166497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f365902ac45641bda38b35f72b78f947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Stage1Level1Quiz
+  objectList: {fileID: 11400000, guid: 98897b124aaa2fb4dabcc5c53c2ba154, type: 2}
+  object1: {fileID: 1162528727}
+  object2: {fileID: 386482905}
+  object3: {fileID: 1884093271}
+  handLeftInstruction: {fileID: 8300000, guid: 5ec7387a1828b484da3cf64d7e41a385, type: 3}
+  handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
+  questionCount: 7
 --- !u!1 &1153884751
 GameObject:
   m_ObjectHideFlags: 0
@@ -2585,6 +2703,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
   data: {fileID: 0}
   entryIndex: -1
+  level1Quiz: {fileID: 0}
 --- !u!1 &2128648488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2954,22 +3073,3 @@ SceneRoots:
   - {fileID: 1810027415}
   - {fileID: 1038166501}
   - {fileID: 1635176273}
---- !u!114 &1038166502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038166497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f365902ac45641bda38b35f72b78f947, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::Stage1Level1Quiz
-  objectList: {fileID: 11400000, guid: 98897b124aaa2fb4dabcc5c53c2ba154, type: 2}
-  object1: {fileID: 1162528727}
-  object2: {fileID: 386482905}
-  object3: {fileID: 1884093271}
-  handLeftInstruction: {fileID: 8300000, guid: 5ec7387a1828b484da3cf64d7e41a385, type: 3}
-  handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
-  questionCount: 7
