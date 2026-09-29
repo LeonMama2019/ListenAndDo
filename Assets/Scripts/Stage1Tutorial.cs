@@ -33,20 +33,20 @@ public class Stage1Tutorial : MonoBehaviour
     // OKボタンの On Click() から呼ぶ。
     public void NextTutorialStep()
     {
-        if (currentStep >= 3)
+        if (currentStep >= 2)
             return;
 
         currentStep++;
         ShowStep(currentStep);
     }
 
-    // RightHandから呼ぶ。3の間だけ右手の選択で4へ進む。
+    // RightHandから呼ぶ。2の間だけ右手の選択で3へ進む。
     public bool OnRightHandSelected()
     {
-        if (currentStep != 3)
+        if (currentStep != 2)
             return false;
 
-        currentStep = 4;
+        currentStep = 3;
         ShowStep(currentStep);
         return true;
     }
@@ -57,10 +57,10 @@ public class Stage1Tutorial : MonoBehaviour
         if (step2 != null) step2.SetActive(step == 2);
         if (step3 != null) step3.SetActive(step == 3);
         if (step4 != null) step4.SetActive(step == 4);
-        if (okButton != null) okButton.SetActive(step != 3);
+        if (okButton != null) okButton.SetActive(step != 2);
         if (rightHandBlink != null)
         {
-            if (step == 3) rightHandBlink.StartBlinking();
+            if (step == 2) rightHandBlink.StartBlinking();
             else rightHandBlink.StopBlinking();
         }
 
