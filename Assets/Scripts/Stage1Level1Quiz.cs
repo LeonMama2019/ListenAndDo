@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Stage1Level1Quiz : MonoBehaviour
 {
+    [SerializeField] private Stage1Tutorial tutorialPanel;
     [SerializeField] private TouchObjectData objectList;
     [SerializeField] private TouchObjectTarget object1;
     [SerializeField] private GameObject object2;
@@ -31,6 +32,13 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         if (checkObject != null) checkAudio = checkObject.GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+        bool completed = PlayerPrefs.GetInt(Stage1Tutorial.CompletionKey, 0) == 1;
+        if (tutorialPanel != null) tutorialPanel.gameObject.SetActive(!completed);
+        if (completed) BeginQuiz();
     }
 
     public bool BeginQuiz()
