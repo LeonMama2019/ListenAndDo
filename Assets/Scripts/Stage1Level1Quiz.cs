@@ -18,6 +18,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     private readonly List<TouchObjectEntry> draw = new();
     private AudioSource audioSource;
     private AudioSource checkAudio;
+    private Coroutine instructionRoutine;
     private int questionIndex;
     private int correctCount;
     private HandSelector.HandSide correctHand;
@@ -87,7 +88,18 @@ public class Stage1Level1Quiz : MonoBehaviour
         // チュートリアルの右手選択から続く最初の1問だけ右手を正解にする。
         correctHand = questionIndex == 0 ? HandSelector.HandSide.Right
             : (Random.Range(0, 2) == 0 ? HandSelector.HandSide.Left : HandSelector.HandSide.Right);
-        StartCoroutine(PlayInstruction(draw[0].TouchInstruction));
+        ReplayInstruction();
+    }
+
+    // Speakerボタンの On Click() から呼ぶ。
+    public void ReplayInstruction()
+    {
+        if (!IsRunning || draw.Count == 0 || (checkObject != null && checkObject.activeSelf)) return;
+
+        if (instructionRoutine != null) StopCoroutine(instructionRoutine);
+        audioSource.Stop();
+        acceptingInput = false;
+        instructionRoutine = StartCoroutine(PlayInstruction(draw[0].TouchInstruction));
     }
 
     private IEnumerator PlayInstruction(AudioClip objectInstruction)
@@ -101,6 +113,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         audioSource.Play();
         yield return new WaitWhile(() => audioSource.isPlaying);
         acceptingInput = true;
+        instructionRoutine = null;
     }
 
     public bool SelectHand(HandSelector.HandSide hand)
