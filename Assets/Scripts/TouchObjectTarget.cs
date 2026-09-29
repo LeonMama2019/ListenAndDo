@@ -1,17 +1,24 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 // Object1～3は表示枠。抽選された行のSpriteをここへ表示する。
-public class TouchObjectTarget : MonoBehaviour
+public class TouchObjectTarget : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private TouchObjectData data;
     [SerializeField] private int entryIndex = -1;
+    [SerializeField] private Stage1Level1Quiz level1Quiz;
     private Image image;
 
     public TouchObjectData Data => data;
     public TouchObjectEntry Entry => data != null && entryIndex >= 0 && entryIndex < data.Entries.Count
         ? data.Entries[entryIndex] : null;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (level1Quiz != null) level1Quiz.TouchObject(this);
+    }
 
     private void Awake()
     {
@@ -50,6 +57,9 @@ public class TouchObjectTarget : MonoBehaviour
     private void RefreshImage()
     {
         if (Entry != null)
+        {
             image.sprite = Entry.Sprite;
+            image.preserveAspect = true;
+        }
     }
 }
