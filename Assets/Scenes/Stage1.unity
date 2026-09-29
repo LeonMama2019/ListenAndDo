@@ -344,7 +344,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 1bd86b8e71346ce45aa3c98b7cf83047, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1645,9 +1645,11 @@ MonoBehaviour:
   object1: {fileID: 1162528727}
   object2: {fileID: 386482905}
   object3: {fileID: 1884093271}
+  checkObject: {fileID: 186432207}
   handLeftInstruction: {fileID: 8300000, guid: 5ec7387a1828b484da3cf64d7e41a385, type: 3}
   handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
   questionCount: 7
+  nextQuestionDelay: 3
 --- !u!1 &1153884751
 GameObject:
   m_ObjectHideFlags: 0
