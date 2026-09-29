@@ -856,10 +856,13 @@ MonoBehaviour:
   step1: {fileID: 1153884751}
   step2: {fileID: 409910135}
   step3: {fileID: 1775123973}
+  step4: {fileID: 121131635}
+  okButton: {fileID: 2300000101}
   rightHandBlink: {fileID: 981458197}
   tutorial1: {fileID: 8300000, guid: 3359f8deff4a4034ebe197a5e343a5fb, type: 3}
   tutorial2: {fileID: 8300000, guid: 363ff8211b218854ea49365aca9655aa, type: 3}
   tutorial3: {fileID: 8300000, guid: 79723e21de43eb848ab1fa2cd5b84010, type: 3}
+  tutorial4: {fileID: 8300000, guid: e26a93529095a134aa93e6a9ea4cade7, type: 3}
 --- !u!82 &726813369
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1297,6 +1300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandSelector
   handSide: 0
   voiceClip: {fileID: 8300000, guid: 9dd0f6849db2534448fd2a74b8f8a873, type: 3}
+  tutorialOnSelect: {fileID: 726813368}
 --- !u!111 &981458196
 Animation:
   m_ObjectHideFlags: 0
