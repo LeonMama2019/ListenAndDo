@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class Stage1Tutorial : MonoBehaviour
 {
+    public const string CompletionKey = "Stage1.TutorialCompleted";
+
     [SerializeField] private GameObject step1;
     [SerializeField] private GameObject step2;
     [SerializeField] private GameObject step3;
@@ -27,7 +29,6 @@ public class Stage1Tutorial : MonoBehaviour
     private void Start()
     {
         currentStep = 1;
-        gameObject.SetActive(true);
         ShowStep(currentStep);
     }
 
@@ -37,7 +38,11 @@ public class Stage1Tutorial : MonoBehaviour
         if (currentStep == 4)
         {
             if (level1Quiz != null && level1Quiz.BeginQuiz())
+            {
+                PlayerPrefs.SetInt(CompletionKey, 1);
+                PlayerPrefs.Save();
                 gameObject.SetActive(false);
+            }
             return;
         }
 
