@@ -719,6 +719,9 @@ MonoBehaviour:
   step2: {fileID: 409910135}
   step3: {fileID: 1775123973}
   rightHandBlink: {fileID: 981458197}
+  tutorial1: {fileID: 8300000, guid: 3359f8deff4a4034ebe197a5e343a5fb, type: 3}
+  tutorial2: {fileID: 8300000, guid: 363ff8211b218854ea49365aca9655aa, type: 3}
+  tutorial3: {fileID: 8300000, guid: 79723e21de43eb848ab1fa2cd5b84010, type: 3}
 --- !u!82 &726813369
 AudioSource:
   m_ObjectHideFlags: 0
@@ -731,7 +734,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
