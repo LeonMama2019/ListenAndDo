@@ -1757,6 +1757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
   data: {fileID: 0}
   entryIndex: -1
+  level1Quiz: {fileID: 1038166502}
 --- !u!1 &1230896445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2953,51 +2954,6 @@ SceneRoots:
   - {fileID: 1810027415}
   - {fileID: 1038166501}
   - {fileID: 1635176273}
-<<<<<<< HEAD
-=======
---- !u!114 &1162528727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1162528723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e89279f38b94917925369e322a76c9b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
-  data: {fileID: 0}
-  entryIndex: -1
-  level1Quiz: {fileID: 1038166502}
---- !u!114 &386482909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386482905}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e89279f38b94917925369e322a76c9b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
-  data: {fileID: 0}
-  entryIndex: -1
---- !u!114 &1884093275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1884093271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e89279f38b94917925369e322a76c9b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
-  data: {fileID: 0}
-  entryIndex: -1
 --- !u!114 &1038166502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3017,4 +2973,3 @@ MonoBehaviour:
   handLeftInstruction: {fileID: 8300000, guid: 5ec7387a1828b484da3cf64d7e41a385, type: 3}
   handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
   questionCount: 7
->>>>>>> 5e2e6d82fe7a368c29f94b5feaa4857b5e27f52a
