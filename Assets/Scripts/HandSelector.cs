@@ -12,6 +12,7 @@ public class HandSelector : MonoBehaviour, IPointerClickHandler
     [Header("選択時に鳴らす音")]
     [SerializeField] private AudioClip voiceClip;
     [SerializeField] private Stage1Tutorial tutorialOnSelect;
+    [SerializeField] private Stage1Level1Quiz level1Quiz;
 
     private AudioSource audioSource;
     private Image handImage;
@@ -40,9 +41,11 @@ public class HandSelector : MonoBehaviour, IPointerClickHandler
 
     public void SelectHand()
     {
-        // チュートリアル3の右手では、手の名前と次の説明が重ならないようにする。
+        // チュートリアル2の右手では、手の名前と次の説明が重ならないようにする。
         bool advancedTutorial = tutorialOnSelect != null && tutorialOnSelect.OnRightHandSelected();
-        if (!advancedTutorial && voiceClip != null)
+        bool inQuiz = level1Quiz != null && level1Quiz.IsRunning;
+        if (inQuiz && !level1Quiz.SelectHand(handSide)) return;
+        if (!advancedTutorial && !inQuiz && voiceClip != null)
             audioSource.PlayOneShot(voiceClip);
 
         if (handImage == null || handImage.sprite == null)
@@ -99,6 +102,12 @@ public class HandSelector : MonoBehaviour, IPointerClickHandler
         {
             cursorRect.anchoredPosition = localPoint;
         }
+    }
+
+    public static void ResetCursor()
+    {
+        if (cursorObject != null) cursorObject.SetActive(false);
+        Cursor.visible = true;
     }
 
     private void OnDisable()
