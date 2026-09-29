@@ -13,6 +13,7 @@ public class Stage1Tutorial : MonoBehaviour
     [SerializeField] private AudioClip tutorial2;
     [SerializeField] private AudioClip tutorial3;
     [SerializeField] private AudioClip tutorial4;
+    [SerializeField] private Stage1Level1Quiz level1Quiz;
 
     private int currentStep;
     private AudioSource audioSource;
@@ -33,8 +34,14 @@ public class Stage1Tutorial : MonoBehaviour
     // OKボタンの On Click() から呼ぶ。
     public void NextTutorialStep()
     {
-        if (currentStep >= 2)
+        if (currentStep == 4)
+        {
+            if (level1Quiz != null && level1Quiz.BeginQuiz())
+                gameObject.SetActive(false);
             return;
+        }
+
+        if (currentStep == 2 || currentStep > 4) return;
 
         currentStep++;
         ShowStep(currentStep);
