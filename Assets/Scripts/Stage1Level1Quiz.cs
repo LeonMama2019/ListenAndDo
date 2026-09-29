@@ -8,12 +8,15 @@ public class Stage1Level1Quiz : MonoBehaviour
     [SerializeField] private TouchObjectTarget object1;
     [SerializeField] private GameObject object2;
     [SerializeField] private GameObject object3;
+    [SerializeField] private GameObject checkObject;
     [SerializeField] private AudioClip handLeftInstruction;
     [SerializeField] private AudioClip handRightInstruction;
     [SerializeField, Min(1)] private int questionCount = 7;
+    [SerializeField, Min(0f)] private float nextQuestionDelay = 3f;
 
     private readonly List<TouchObjectEntry> draw = new();
     private AudioSource audioSource;
+    private AudioSource checkAudio;
     private int questionIndex;
     private int correctCount;
     private HandSelector.HandSide correctHand;
@@ -27,14 +30,16 @@ public class Stage1Level1Quiz : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        if (checkObject != null) checkAudio = checkObject.GetComponent<AudioSource>();
     }
 
     public bool BeginQuiz()
     {
         if (IsRunning) return false;
-        if (objectList == null || object1 == null || handLeftInstruction == null || handRightInstruction == null)
+        if (objectList == null || object1 == null || checkObject == null || checkAudio == null ||
+            handLeftInstruction == null || handRightInstruction == null)
         {
-            Debug.LogError("Level1のデータ・Object1・左右の音声を設定してください。", this);
+            Debug.LogError("Level1のデータ・Object1・Check(AudioSource)・左右の音声を設定してください。", this);
             return false;
         }
 
@@ -48,6 +53,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         IsRunning = true;
         questionIndex = 0;
         correctCount = 0;
+        checkObject.SetActive(false);
         object1.gameObject.SetActive(true);
         if (object2 != null) object2.SetActive(false);
         if (object3 != null) object3.SetActive(false);
@@ -104,19 +110,37 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (!IsRunning || !acceptingInput || !selectedHand.HasValue || target != object1)
             return;
 
-        acceptingInput = false;
-        bool correct = selectedHand.Value == correctHand;
-        if (correct) correctCount++;
-        Debug.Log($"Level1 {questionIndex + 1}/{questionCount}: {(correct ? "正解" : "不正解")}", this);
+        if (selectedHand.Value != correctHand)
+        {
+            selectedHand = null;
+            HandSelector.ResetCursor();
+            Debug.Log($"Level1 {questionIndex + 1}/{questionCount}: もう一度手を選んでね", this);
+            return;
+        }
 
+        acceptingInput = false;
+        correctCount++;
+        HandSelector.ResetCursor();
+        checkObject.SetActive(true);
+        checkAudio.Stop();
+        checkAudio.Play();
+        Debug.Log($"Level1 {questionIndex + 1}/{questionCount}: 正解", this);
+        StartCoroutine(ContinueAfterCorrect());
+    }
+
+    private IEnumerator ContinueAfterCorrect()
+    {
+        yield return new WaitForSeconds(nextQuestionDelay);
+        checkObject.SetActive(false);
         questionIndex++;
         if (questionIndex >= questionCount)
         {
             IsRunning = false;
-            HandSelector.ResetCursor();
             Debug.Log($"Level1終了: {correctCount}/{questionCount}問正解", this);
-            return;
         }
-        StartNextQuestion();
+        else
+        {
+            StartNextQuestion();
+        }
     }
 }
