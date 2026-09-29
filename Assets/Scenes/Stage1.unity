@@ -2843,7 +2843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e89279f38b94917925369e322a76c9b, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
-  data: {fileID: 11400000, guid: 41c181a25d9c4f0bb956c01746101536, type: 2}
+  data: {fileID: 0}
 --- !u!114 &386482909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2856,7 +2856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e89279f38b94917925369e322a76c9b, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
-  data: {fileID: 11400000, guid: dbd1e9fa20f94ec5838cf9930bb11d28, type: 2}
+  data: {fileID: 0}
 --- !u!114 &1884093275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2869,4 +2869,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e89279f38b94917925369e322a76c9b, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TouchObjectTarget
-  data: {fileID: 11400000, guid: 4874dc3e3be445fb9cdf519328289c36, type: 2}
+  data: {fileID: 0}
