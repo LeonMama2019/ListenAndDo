@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 121131638}
   - component: {fileID: 121131637}
   m_Layer: 5
-  m_Name: 4
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,8 +203,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -559,7 +559,7 @@ GameObject:
   - component: {fileID: 409910138}
   - component: {fileID: 409910137}
   m_Layer: 5
-  m_Name: 2
+  m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -631,8 +631,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -791,10 +791,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1153884752}
   - {fileID: 409910136}
   - {fileID: 1775123974}
   - {fileID: 121131636}
+  - {fileID: 1153884752}
   - {fileID: 2300000102}
   m_Father: {fileID: 1038166501}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1449,7 +1449,7 @@ GameObject:
   - component: {fileID: 1153884754}
   - component: {fileID: 1153884753}
   m_Layer: 5
-  m_Name: 1
+  m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1521,8 +1521,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1956,7 +1956,7 @@ GameObject:
   - component: {fileID: 1775123976}
   - component: {fileID: 1775123975}
   m_Layer: 5
-  m_Name: 3
+  m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2028,8 +2028,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2550,6 +2550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandSelector
   handSide: 0
   voiceClip: {fileID: 8300000, guid: 18083bd96422ca9488d4e1ce2757dbc0, type: 3}
+  tutorialOnSelect: {fileID: 0}
 --- !u!1 &2300000101
 GameObject:
   m_ObjectHideFlags: 0
