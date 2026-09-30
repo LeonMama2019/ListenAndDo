@@ -24,6 +24,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     private HandSelector.HandSide correctHand;
     private HandSelector.HandSide? selectedHand;
     private bool acceptingInput;
+    private StageLevelResultRecorder resultRecorder;
 
     public bool IsRunning { get; private set; }
 
@@ -62,6 +63,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         IsRunning = true;
         questionIndex = 0;
         correctCount = 0;
+        resultRecorder = new StageLevelResultRecorder(1, 1, questionCount);
         checkObject.SetActive(false);
         object1.gameObject.SetActive(true);
         if (object2 != null) object2.SetActive(false);
@@ -88,7 +90,9 @@ public class Stage1Level1Quiz : MonoBehaviour
         // チュートリアルの右手選択から続く最初の1問だけ右手を正解にする。
         correctHand = questionIndex == 0 ? HandSelector.HandSide.Right
             : (Random.Range(0, 2) == 0 ? HandSelector.HandSide.Left : HandSelector.HandSide.Right);
-        ReplayInstruction();
+        resultRecorder.BeginQuestion(questionIndex + 1, draw[0].ObjectId,
+            correctHand.ToString(), Time.realtimeSinceStartupAsDouble);
+        PlayCurrentInstruction();
     }
 
     // Speakerボタンの On Click() から呼ぶ。
@@ -96,6 +100,12 @@ public class Stage1Level1Quiz : MonoBehaviour
     {
         if (!IsRunning || draw.Count == 0 || (checkObject != null && checkObject.activeSelf)) return;
 
+        resultRecorder.RecordReplay();
+        PlayCurrentInstruction();
+    }
+
+    private void PlayCurrentInstruction()
+    {
         if (instructionRoutine != null) StopCoroutine(instructionRoutine);
         audioSource.Stop();
         acceptingInput = false;
@@ -133,6 +143,7 @@ public class Stage1Level1Quiz : MonoBehaviour
 
         if (selectedHand.Value != correctHand)
         {
+            resultRecorder.RecordWrongAnswer();
             selectedHand = null;
             HandSelector.ResetCursor();
             Debug.Log($"Level1 {questionIndex + 1}/{questionCount}: もう一度手を選んでね", this);
@@ -140,6 +151,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         }
 
         acceptingInput = false;
+        resultRecorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         correctCount++;
         HandSelector.ResetCursor();
         checkObject.SetActive(true);
