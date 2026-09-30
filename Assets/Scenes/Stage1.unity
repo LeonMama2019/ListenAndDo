@@ -908,7 +908,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -541, y: 278}
+  m_AnchoredPosition: {x: -446, y: 216}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &514834177
@@ -1823,6 +1823,21 @@ MonoBehaviour:
   handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
   questionCount: 7
   nextQuestionDelay: 3
+--- !u!114 &1038166503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038166497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9e87d2a9e8437c98ae3d4a67dd3642, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackReturnController
+  backReturnPanel: {fileID: 338903853}
+  levelMenuScene: LevelMenu
+  stageNumber: 1
 --- !u!1 &1153884751
 GameObject:
   m_ObjectHideFlags: 0
@@ -2771,8 +2786,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 511, y: -254}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 463, y: 232}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1860542616
 MonoBehaviour:
@@ -3321,21 +3336,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2300000201}
   m_CullTransparentMesh: 1
---- !u!114 &1038166503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038166497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e9e87d2a9e8437c98ae3d4a67dd3642, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BackReturnController
-  backReturnPanel: {fileID: 338903853}
-  levelMenuScene: LevelMenu
-  stageNumber: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
