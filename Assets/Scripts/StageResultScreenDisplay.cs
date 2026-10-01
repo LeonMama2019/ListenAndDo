@@ -168,7 +168,8 @@ public class StageResultScreenDisplay : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        LoadScene(FromRecords ? "Result" : "Stage" + SelectedStage);
+        if (FromRecords) LoadScene("Result");
+        else StageLevelMenu.OpenStageMenu(SelectedStage);
     }
 
     private static void LoadScene(string name)
