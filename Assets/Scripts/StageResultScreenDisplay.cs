@@ -204,7 +204,7 @@ public class StageResultScreenDisplay : MonoBehaviour
 
     private static string Seconds(float value)
     {
-        return Mathf.Max(0f, value).ToString("F2", CultureInfo.InvariantCulture);
+        return Mathf.Max(0f, value).ToString("F1", CultureInfo.InvariantCulture);
     }
 
     private static bool TryNumber(string name, string prefix, out int number)
