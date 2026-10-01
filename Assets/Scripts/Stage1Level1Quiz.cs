@@ -170,6 +170,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         {
             IsRunning = false;
             Debug.Log($"Level1終了: {correctCount}/{questionCount}問正解", this);
+            StageResultScreenDisplay.OpenAfterGame(1, 1);
         }
         else
         {
