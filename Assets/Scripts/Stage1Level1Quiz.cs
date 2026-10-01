@@ -25,6 +25,11 @@ public class Stage1Level1Quiz : MonoBehaviour
     private HandSelector.HandSide? selectedHand;
     private bool acceptingInput;
     private StageLevelResultRecorder resultRecorder;
+    private int levelNumber;
+    private TouchObjectTarget secondTarget;
+    private TouchObjectTarget thirdTarget;
+    private TouchObjectTarget correctTarget;
+    private TouchObjectEntry correctEntry;
 
     public bool IsRunning { get; private set; }
 
@@ -38,7 +43,13 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     private void Start()
     {
-        bool completed = PlayerPrefs.GetInt(Stage1Tutorial.CompletionKey, 0) == 1;
+        levelNumber = StageLevelMenu.SelectedStage == 1 ? StageLevelMenu.SelectedLevel : 1;
+        if (levelNumber < 1 || levelNumber > 2) levelNumber = 1;
+        secondTarget = object2 == null ? null : object2.GetComponent<TouchObjectTarget>();
+        thirdTarget = object3 == null ? null : object3.GetComponent<TouchObjectTarget>();
+        if (secondTarget != null) secondTarget.SetQuiz(this);
+        if (thirdTarget != null) thirdTarget.SetQuiz(this);
+        bool completed = levelNumber > 1 || PlayerPrefs.GetInt(Stage1Tutorial.CompletionKey, 0) == 1;
         if (tutorialPanel != null) tutorialPanel.gameObject.SetActive(!completed);
         if (completed) BeginQuiz();
     }
@@ -53,21 +64,27 @@ public class Stage1Level1Quiz : MonoBehaviour
             return false;
         }
 
-        objectList.PickRandomEntries(1, draw);
-        if (draw.Count == 0)
+        objectList.PickRandomEntries(levelNumber == 2 ? 2 : 1, draw);
+        if (draw.Count < (levelNumber == 2 ? 2 : 1))
         {
             Debug.LogError("Stage1のデータにSpriteと音声が設定された行がありません。", this);
+            return false;
+        }
+
+        if (levelNumber == 2 && (secondTarget == null || thirdTarget == null))
+        {
+            Debug.LogError("Level2 requires Object2 and Object3 TouchObjectTarget components.", this);
             return false;
         }
 
         IsRunning = true;
         questionIndex = 0;
         correctCount = 0;
-        resultRecorder = new StageLevelResultRecorder(1, 1, questionCount);
+        resultRecorder = new StageLevelResultRecorder(1, levelNumber, questionCount);
         checkObject.SetActive(false);
-        object1.gameObject.SetActive(true);
-        if (object2 != null) object2.SetActive(false);
-        if (object3 != null) object3.SetActive(false);
+        object1.gameObject.SetActive(levelNumber == 1);
+        if (object2 != null) object2.SetActive(levelNumber == 2);
+        if (object3 != null) object3.SetActive(levelNumber == 2);
         HandSelector.ResetCursor();
         StartNextQuestion();
         return true;
@@ -78,19 +95,32 @@ public class Stage1Level1Quiz : MonoBehaviour
         acceptingInput = false;
         selectedHand = null;
         HandSelector.ResetCursor();
-        objectList.PickRandomEntries(1, draw);
-        if (draw.Count == 0)
+        objectList.PickRandomEntries(levelNumber == 2 ? 2 : 1, draw);
+        if (draw.Count < (levelNumber == 2 ? 2 : 1))
         {
             IsRunning = false;
             Debug.LogError("出題できるオブジェクトがありません。", this);
             return;
         }
 
-        object1.SetEntry(objectList, draw[0]);
+        if (levelNumber == 2)
+        {
+            secondTarget.SetEntry(objectList, draw[0]);
+            thirdTarget.SetEntry(objectList, draw[1]);
+            int correctIndex = Random.Range(0, 2);
+            correctTarget = correctIndex == 0 ? secondTarget : thirdTarget;
+            correctEntry = draw[correctIndex];
+        }
+        else
+        {
+            object1.SetEntry(objectList, draw[0]);
+            correctTarget = object1;
+            correctEntry = draw[0];
+        }
         // チュートリアルの右手選択から続く最初の1問だけ右手を正解にする。
-        correctHand = questionIndex == 0 ? HandSelector.HandSide.Right
+        correctHand = levelNumber == 1 && questionIndex == 0 ? HandSelector.HandSide.Right
             : (Random.Range(0, 2) == 0 ? HandSelector.HandSide.Left : HandSelector.HandSide.Right);
-        resultRecorder.BeginQuestion(questionIndex + 1, draw[0].ObjectId,
+        resultRecorder.BeginQuestion(questionIndex + 1, correctEntry.ObjectId,
             correctHand.ToString(), Time.realtimeSinceStartupAsDouble);
         PlayCurrentInstruction();
     }
@@ -109,7 +139,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (instructionRoutine != null) StopCoroutine(instructionRoutine);
         audioSource.Stop();
         acceptingInput = false;
-        instructionRoutine = StartCoroutine(PlayInstruction(draw[0].TouchInstruction));
+        instructionRoutine = StartCoroutine(PlayInstruction(correctEntry.TouchInstruction));
     }
 
     private IEnumerator PlayInstruction(AudioClip objectInstruction)
@@ -138,15 +168,15 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     public void TouchObject(TouchObjectTarget target)
     {
-        if (!IsRunning || !acceptingInput || !selectedHand.HasValue || target != object1)
+        if (!IsRunning || !acceptingInput || !selectedHand.HasValue)
             return;
 
-        if (selectedHand.Value != correctHand)
+        if (target != correctTarget || selectedHand.Value != correctHand)
         {
             resultRecorder.RecordWrongAnswer();
             selectedHand = null;
             HandSelector.ResetCursor();
-            Debug.Log($"Level1 {questionIndex + 1}/{questionCount}: もう一度手を選んでね", this);
+            Debug.Log($"Level{levelNumber} {questionIndex + 1}/{questionCount}: もう一度手を選んでね", this);
             return;
         }
 
@@ -157,7 +187,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         checkObject.SetActive(true);
         checkAudio.Stop();
         checkAudio.Play();
-        Debug.Log($"Level1 {questionIndex + 1}/{questionCount}: 正解", this);
+        Debug.Log($"Level{levelNumber} {questionIndex + 1}/{questionCount}: 正解", this);
         StartCoroutine(ContinueAfterCorrect());
     }
 
@@ -169,8 +199,9 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (questionIndex >= questionCount)
         {
             IsRunning = false;
-            Debug.Log($"Level1終了: {correctCount}/{questionCount}問正解", this);
-            StageResultScreenDisplay.OpenAfterGame(1, 1);
+            Debug.Log($"Level{levelNumber}終了: {correctCount}/{questionCount}問正解", this);
+            StageLevelMenu.MarkCompleted(1, levelNumber);
+            StageResultScreenDisplay.OpenAfterGame(1, levelNumber);
         }
         else
         {

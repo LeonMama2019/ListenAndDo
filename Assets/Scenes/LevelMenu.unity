@@ -277,6 +277,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 2300000901}
   - component: {fileID: 667116581}
   - component: {fileID: 667116580}
   - component: {fileID: 667116579}
@@ -1601,6 +1602,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121438224}
   m_CullTransparentMesh: 1
+--- !u!114 &2300000901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667116577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04553a25b91d43789c15521e5812e3dd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenu
+  unlockedLevel2: {fileID: -8971143343992950655, guid: 211f8847d8b74b142866ae62d4581c04, type: 3}
+  lockedLevel2: {fileID: 6926229887609193247, guid: d146886e4e26a6144ade0afa27c17101, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

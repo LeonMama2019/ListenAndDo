@@ -15,6 +15,11 @@ public class TouchObjectTarget : MonoBehaviour, IPointerClickHandler
     public TouchObjectEntry Entry => data != null && entryIndex >= 0 && entryIndex < data.Entries.Count
         ? data.Entries[entryIndex] : null;
 
+    public void SetQuiz(Stage1Level1Quiz quiz)
+    {
+        level1Quiz = quiz;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (level1Quiz != null) level1Quiz.TouchObject(this);
