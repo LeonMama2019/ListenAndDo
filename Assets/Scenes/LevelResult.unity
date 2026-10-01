@@ -499,7 +499,7 @@ GameObject:
   - component: {fileID: 357568787}
   - component: {fileID: 357568789}
   m_Layer: 5
-  m_Name: toStagemenu
+  m_Name: nextbutton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2203,7 +2203,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30B9\u30C6\u30FC\u30B8\u3092\u9078\u3076"
+  m_text: "\u30EC\u30D9\u30EB\u3092\u9078\u3076"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d9e1773461deae5498bc86801ee4633c, type: 2}
   m_sharedMaterial: {fileID: -975139962867787368, guid: d9e1773461deae5498bc86801ee4633c, type: 2}

@@ -33,7 +33,7 @@ MonoBehaviour:
     touchInstruction: {fileID: 8300000, guid: ee87e77cfd92498429fae029523c790c, type: 3}
   - objectId: 7
     sprite: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
-    touchInstruction: {fileID: 8300000, guid: 7c0c4987e40c0064c9c22e0378ace611, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 4d331c7e33ddf8c4291f4576e7752e87, type: 3}
   - objectId: 8
     sprite: {fileID: -6190948392007208175, guid: 9ecf57176de8d384aa072f23b9f65f54, type: 3}
     touchInstruction: {fileID: 8300000, guid: 92d8fe62de0afe14ba14d266b1ebf79b, type: 3}
