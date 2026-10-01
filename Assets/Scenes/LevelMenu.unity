@@ -1614,8 +1614,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04553a25b91d43789c15521e5812e3dd, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenu
-  unlockedLevel2: {fileID: -8971143343992950655, guid: 211f8847d8b74b142866ae62d4581c04, type: 3}
-  lockedLevel2: {fileID: 6926229887609193247, guid: d146886e4e26a6144ade0afa27c17101, type: 3}
+  levelImages:
+  - unlocked: {fileID: 21300000, guid: 211f8847d8b74b142866ae62d4581c04, type: 3}
+    locked: {fileID: 21300000, guid: d146886e4e26a6144ade0afa27c17101, type: 3}
+  - unlocked: {fileID: 21300000, guid: ea6f2d8c78ac4b84b84148cbf89b3808, type: 3}
+    locked: {fileID: 21300000, guid: 8d4d776f8733bb045a4e3108bab2edd2, type: 3}
+  - unlocked: {fileID: 21300000, guid: d7700515edde50e41b07c71f113dc06a, type: 3}
+    locked: {fileID: 21300000, guid: d0d02ff488780a14497cf4fe72e70212, type: 3}
+  - unlocked: {fileID: 21300000, guid: 079ca04d83986e84da9007b8630eb7c4, type: 3}
+    locked: {fileID: 21300000, guid: 19c3a3ceedda44342b1fe80960eeb4fe, type: 3}
+  - unlocked: {fileID: 21300000, guid: ecbede2378f766e4ca27aabd0bae60f9, type: 3}
+    locked: {fileID: 21300000, guid: 04adae1d524649b4fa65ed2526a75e5d, type: 3}
+  - unlocked: {fileID: 21300000, guid: ad23f3f79cc7eff40bf8a495365d8b92, type: 3}
+    locked: {fileID: 21300000, guid: b5df1886f9a287b48ad0301eeed53222, type: 3}
+  - unlocked: {fileID: 21300000, guid: 71f0a04228ddab24eb189bab26652b0f, type: 3}
+    locked: {fileID: 21300000, guid: 5af7ffb6742657640978f5385a953091, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

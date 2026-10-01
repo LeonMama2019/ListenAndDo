@@ -26,6 +26,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     private bool acceptingInput;
     private StageLevelResultRecorder resultRecorder;
     private int levelNumber;
+    private int ObjectCount => levelNumber == 1 ? 1 : (levelNumber <= 4 ? 2 : 3);
     private TouchObjectTarget secondTarget;
     private TouchObjectTarget thirdTarget;
     private TouchObjectTarget correctTarget;
@@ -44,7 +45,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     private void Start()
     {
         levelNumber = StageLevelMenu.SelectedStage == 1 ? StageLevelMenu.SelectedLevel : 1;
-        if (levelNumber < 1 || levelNumber > 2) levelNumber = 1;
+        if (levelNumber < 1 || levelNumber > 8) levelNumber = 1;
         secondTarget = object2 == null ? null : object2.GetComponent<TouchObjectTarget>();
         thirdTarget = object3 == null ? null : object3.GetComponent<TouchObjectTarget>();
         if (secondTarget != null) secondTarget.SetQuiz(this);
@@ -64,14 +65,14 @@ public class Stage1Level1Quiz : MonoBehaviour
             return false;
         }
 
-        objectList.PickRandomEntries(levelNumber == 2 ? 2 : 1, draw);
-        if (draw.Count < (levelNumber == 2 ? 2 : 1))
+        objectList.PickRandomEntries(ObjectCount, draw);
+        if (draw.Count < (ObjectCount))
         {
             Debug.LogError("Stage1のデータにSpriteと音声が設定された行がありません。", this);
             return false;
         }
 
-        if (levelNumber == 2 && (secondTarget == null || thirdTarget == null))
+        if (levelNumber >= 2 && (secondTarget == null || thirdTarget == null))
         {
             Debug.LogError("Level2 requires Object2 and Object3 TouchObjectTarget components.", this);
             return false;
@@ -82,9 +83,9 @@ public class Stage1Level1Quiz : MonoBehaviour
         correctCount = 0;
         resultRecorder = new StageLevelResultRecorder(1, levelNumber, questionCount);
         checkObject.SetActive(false);
-        object1.gameObject.SetActive(levelNumber == 1);
-        if (object2 != null) object2.SetActive(levelNumber == 2);
-        if (object3 != null) object3.SetActive(levelNumber == 2);
+        object1.gameObject.SetActive(ObjectCount != 2);
+        if (object2 != null) object2.SetActive(levelNumber >= 2);
+        if (object3 != null) object3.SetActive(levelNumber >= 2);
         HandSelector.ResetCursor();
         StartNextQuestion();
         return true;
@@ -95,15 +96,24 @@ public class Stage1Level1Quiz : MonoBehaviour
         acceptingInput = false;
         selectedHand = null;
         HandSelector.ResetCursor();
-        objectList.PickRandomEntries(levelNumber == 2 ? 2 : 1, draw);
-        if (draw.Count < (levelNumber == 2 ? 2 : 1))
+        objectList.PickRandomEntries(ObjectCount, draw);
+        if (draw.Count < (ObjectCount))
         {
             IsRunning = false;
             Debug.LogError("出題できるオブジェクトがありません。", this);
             return;
         }
 
-        if (levelNumber == 2)
+        if (ObjectCount == 3)
+        {
+            object1.SetEntry(objectList, draw[0]);
+            secondTarget.SetEntry(objectList, draw[1]);
+            thirdTarget.SetEntry(objectList, draw[2]);
+            int correctIndex = Random.Range(0, 3);
+            correctTarget = correctIndex == 0 ? object1 : (correctIndex == 1 ? secondTarget : thirdTarget);
+            correctEntry = draw[correctIndex];
+        }
+        else if (ObjectCount == 2)
         {
             secondTarget.SetEntry(objectList, draw[0]);
             thirdTarget.SetEntry(objectList, draw[1]);

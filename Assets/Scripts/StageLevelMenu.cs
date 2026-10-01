@@ -8,8 +8,14 @@ public class StageLevelMenu : MonoBehaviour
 {
     public static int SelectedStage { get; private set; } = 1;
     public static int SelectedLevel { get; private set; } = 1;
-    [SerializeField] private Sprite unlockedLevel2;
-    [SerializeField] private Sprite lockedLevel2;
+    [Serializable]
+    private class LevelImages
+    {
+        public Sprite unlocked;
+        public Sprite locked;
+    }
+    // Index 0 = Level2, index 6 = Level8.
+    [SerializeField] private LevelImages[] levelImages = new LevelImages[7];
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetSelection()
@@ -34,10 +40,10 @@ public class StageLevelMenu : MonoBehaviour
 
     public static bool IsUnlocked(int stage, int level)
     {
+        if (stage < 1 || level < 1 || level > 8) return false;
         if (level == 1) return true;
-        if (level != 2) return false; // Later gameplay levels are not connected yet.
-        if (PlayerPrefs.GetInt(CompletionKey(stage, 1), 0) == 1) return true;
-        StageLevelResult previous = StageLevelResultRecorder.Load(stage, 1);
+        if (PlayerPrefs.GetInt(CompletionKey(stage, level - 1), 0) == 1) return true;
+        StageLevelResult previous = StageLevelResultRecorder.Load(stage, level - 1);
         return previous != null && previous.questions != null && previous.questions.Count == 7;
     }
 
@@ -48,8 +54,7 @@ public class StageLevelMenu : MonoBehaviour
 
     private void Start()
     {
-        ConnectLevel(1);
-        ConnectLevel(2);
+        for (int level = 1; level <= 8; level++) ConnectLevel(level);
     }
 
     private void ConnectLevel(int level)
@@ -58,8 +63,14 @@ public class StageLevelMenu : MonoBehaviour
         if (target == null) return;
         Image image = target.GetComponent<Image>();
         bool unlocked = IsUnlocked(SelectedStage, level);
-        if (level == 2 && image != null)
-            image.sprite = unlocked ? unlockedLevel2 : lockedLevel2;
+        if (level >= 2 && image != null)
+        {
+            LevelImages images = levelImages != null && level - 2 < levelImages.Length
+                ? levelImages[level - 2] : null;
+            Sprite sprite = images == null ? null : (unlocked ? images.unlocked : images.locked);
+            if (sprite != null) image.sprite = sprite;
+            else Debug.LogWarning("Level" + level + " image is not configured.", this);
+        }
         Button button = target.GetComponent<Button>();
         if (button == null) button = target.gameObject.AddComponent<Button>();
         button.targetGraphic = image;
