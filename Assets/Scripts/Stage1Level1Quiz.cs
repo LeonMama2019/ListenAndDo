@@ -23,6 +23,14 @@ public class Stage1Level1Quiz : MonoBehaviour
     private AudioSource obstructionAudio;
     private Coroutine obstructionRoutine;
 
+    [Header("Level4 鉛筆の動き")]
+    [SerializeField] private Animator penAnimator;
+    [SerializeField, Min(0.1f)] private float penMinDuration = 0.4f;
+    [SerializeField, Min(0.1f)] private float penMaxDuration = 2.5f;
+    [SerializeField, Min(0.1f)] private float penSlowSpeed = 0.6f;
+    [SerializeField, Min(0.1f)] private float penFastSpeed = 2f;
+    private Coroutine penRoutine;
+
     private readonly List<TouchObjectEntry> draw = new();
     private AudioSource audioSource;
     private AudioSource checkAudio;
@@ -64,6 +72,11 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (thirdTarget != null) thirdTarget.SetQuiz(this);
         bool completed = levelNumber > 1 || PlayerPrefs.GetInt(Stage1Tutorial.CompletionKey, 0) == 1;
         if (tutorialPanel != null) tutorialPanel.gameObject.SetActive(!completed);
+        if (penAnimator != null)
+        {
+            penAnimator.speed = 0f;
+            penAnimator.gameObject.SetActive(levelNumber == 4);
+        }
         if (completed) BeginQuiz();
     }
 
@@ -90,6 +103,12 @@ public class Stage1Level1Quiz : MonoBehaviour
             return false;
         }
 
+        if (levelNumber == 4 && penAnimator != null)
+        {
+            penAnimator.gameObject.SetActive(true);
+            penAnimator.Play("Base Layer.Roll", 0, 0f);
+            penAnimator.speed = 0f;
+        }
         IsRunning = true;
         questionIndex = 0;
         correctCount = 0;
@@ -105,6 +124,7 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     private void StartNextQuestion()
     {
+        StopPenMovement();
         StopObstruction();
         acceptingInput = false;
         selectedHand = null;
@@ -148,6 +168,8 @@ public class Stage1Level1Quiz : MonoBehaviour
         PlayCurrentInstruction();
         if (levelNumber == 3 && woodDropDosun != null)
             obstructionRoutine = StartCoroutine(PlayObstruction());
+        if (levelNumber == 4 && penAnimator != null)
+            penRoutine = StartCoroutine(RandomPenMovement());
     }
 
     // Speakerボタンの On Click() から呼ぶ。
@@ -207,6 +229,7 @@ public class Stage1Level1Quiz : MonoBehaviour
 
         acceptingInput = false;
         StopObstruction();
+        StopPenMovement();
         resultRecorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         correctCount++;
         HandSelector.ResetCursor();
@@ -239,9 +262,34 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (obstructionAudio != null) obstructionAudio.Stop();
     }
 
+    private IEnumerator RandomPenMovement()
+    {
+        while (IsRunning)
+        {
+            // Independent draws allow consecutive stops or speed changes.
+            int mode = Random.Range(0, 5);
+            penAnimator.speed = mode < 2 ? 0f
+                : mode == 2 ? Mathf.Max(0.1f, penSlowSpeed)
+                : mode == 3 ? 1f : Mathf.Max(0.1f, penFastSpeed);
+            float min = Mathf.Max(0.1f, penMinDuration);
+            float max = Mathf.Max(min, penMaxDuration);
+            yield return new WaitForSeconds(Random.Range(min, max));
+        }
+        penRoutine = null;
+        if (penAnimator != null) penAnimator.speed = 0f;
+    }
+
+    private void StopPenMovement()
+    {
+        if (penRoutine != null) StopCoroutine(penRoutine);
+        penRoutine = null;
+        if (penAnimator != null) penAnimator.speed = 0f;
+    }
+
     private void OnDisable()
     {
         StopObstruction();
+        StopPenMovement();
     }
 
     private IEnumerator ContinueAfterCorrect()

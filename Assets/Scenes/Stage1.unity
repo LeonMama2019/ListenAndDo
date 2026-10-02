@@ -1823,6 +1823,11 @@ MonoBehaviour:
   handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
   questionCount: 7
   nextQuestionDelay: 3
+  penAnimator: {fileID: 1230896449}
+  penMinDuration: 0.4
+  penMaxDuration: 2.5
+  penSlowSpeed: 0.6
+  penFastSpeed: 2
   woodDropDosun: {fileID: 8300000, guid: cc0a79c59a094314dbf4f512a54acebe, type: 3}
   obstructionMinInterval: 0.5
   obstructionMaxInterval: 3
@@ -2122,7 +2127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
