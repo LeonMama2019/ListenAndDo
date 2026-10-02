@@ -77,6 +77,7 @@ public class StageResultScreenDisplay : MonoBehaviour
             detail.gameObject.SetActive(true);
             Populate();
             Bind(Find(detail, "toStagemenu"), ReturnToMenu);
+            Bind(Find(detail, "nextbutton"), () => StageLevelMenu.OpenStageMenu(SelectedStage));
         }
         else
         {

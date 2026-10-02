@@ -22,6 +22,8 @@ public class Stage1Level1Quiz : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float obstructionVolume = 0.7f;
     [Header("Level5 ランダム妨害音")]
     [SerializeField] private AudioClip[] level5ObstructionClips;
+    [SerializeField] private AudioClip alarmClip;
+    [SerializeField, Range(0f, 1f)] private float alarmVolumeScale = 0.4f;
     private AudioSource obstructionAudio;
     private Coroutine obstructionRoutine;
 
@@ -252,7 +254,11 @@ public class Stage1Level1Quiz : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(min, max));
             if (!IsRunning || (checkObject != null && checkObject.activeSelf)) break;
             AudioClip clip = levelNumber == 5 ? PickLevel5Clip() : woodDropDosun;
-            if (clip != null) obstructionAudio.PlayOneShot(clip, obstructionVolume);
+            if (clip != null)
+            {
+                float volume = obstructionVolume * (clip == alarmClip ? alarmVolumeScale : 1f);
+                obstructionAudio.PlayOneShot(clip, volume);
+            }
             // Let each thud finish before starting the next random wait.
             yield return new WaitWhile(() => obstructionAudio.isPlaying);
         }
