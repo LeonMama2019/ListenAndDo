@@ -15,6 +15,14 @@ public class Stage1Level1Quiz : MonoBehaviour
     [SerializeField, Min(1)] private int questionCount = 7;
     [SerializeField, Min(0f)] private float nextQuestionDelay = 3f;
 
+    [Header("Level3 妨害音")]
+    [SerializeField] private AudioClip woodDropDosun;
+    [SerializeField, Min(0.1f)] private float obstructionMinInterval = 0.5f;
+    [SerializeField, Min(0.1f)] private float obstructionMaxInterval = 3f;
+    [SerializeField, Range(0f, 1f)] private float obstructionVolume = 0.7f;
+    private AudioSource obstructionAudio;
+    private Coroutine obstructionRoutine;
+
     private readonly List<TouchObjectEntry> draw = new();
     private AudioSource audioSource;
     private AudioSource checkAudio;
@@ -40,6 +48,10 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         if (checkObject != null) checkAudio = checkObject.GetComponent<AudioSource>();
+        obstructionAudio = gameObject.AddComponent<AudioSource>();
+        obstructionAudio.playOnAwake = false;
+        obstructionAudio.loop = false;
+        obstructionAudio.spatialBlend = 0f;
     }
 
     private void Start()
@@ -93,6 +105,7 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     private void StartNextQuestion()
     {
+        StopObstruction();
         acceptingInput = false;
         selectedHand = null;
         HandSelector.ResetCursor();
@@ -133,6 +146,8 @@ public class Stage1Level1Quiz : MonoBehaviour
         resultRecorder.BeginQuestion(questionIndex + 1, correctEntry.ObjectId,
             correctHand.ToString(), Time.realtimeSinceStartupAsDouble);
         PlayCurrentInstruction();
+        if (levelNumber == 3 && woodDropDosun != null)
+            obstructionRoutine = StartCoroutine(PlayObstruction());
     }
 
     // Speakerボタンの On Click() から呼ぶ。
@@ -191,6 +206,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         }
 
         acceptingInput = false;
+        StopObstruction();
         resultRecorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         correctCount++;
         HandSelector.ResetCursor();
@@ -199,6 +215,33 @@ public class Stage1Level1Quiz : MonoBehaviour
         checkAudio.Play();
         Debug.Log($"Level{levelNumber} {questionIndex + 1}/{questionCount}: 正解", this);
         StartCoroutine(ContinueAfterCorrect());
+    }
+
+    private IEnumerator PlayObstruction()
+    {
+        while (IsRunning)
+        {
+            float min = Mathf.Max(0.1f, obstructionMinInterval);
+            float max = Mathf.Max(min, obstructionMaxInterval);
+            yield return new WaitForSeconds(Random.Range(min, max));
+            if (!IsRunning || (checkObject != null && checkObject.activeSelf)) break;
+            obstructionAudio.PlayOneShot(woodDropDosun, obstructionVolume);
+            // Let each thud finish before starting the next random wait.
+            yield return new WaitWhile(() => obstructionAudio.isPlaying);
+        }
+        obstructionRoutine = null;
+    }
+
+    private void StopObstruction()
+    {
+        if (obstructionRoutine != null) StopCoroutine(obstructionRoutine);
+        obstructionRoutine = null;
+        if (obstructionAudio != null) obstructionAudio.Stop();
+    }
+
+    private void OnDisable()
+    {
+        StopObstruction();
     }
 
     private IEnumerator ContinueAfterCorrect()
