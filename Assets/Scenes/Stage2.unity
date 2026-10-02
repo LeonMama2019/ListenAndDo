@@ -1492,6 +1492,7 @@ GameObject:
   - component: {fileID: 981458195}
   - component: {fileID: 981458196}
   - component: {fileID: 981458197}
+  - component: {fileID: 2200000001}
   m_Layer: 5
   m_Name: dice3
   m_TagString: Untagged
@@ -1563,7 +1564,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981458191}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
   m_Name: 
@@ -1579,7 +1580,7 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981458191}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Animation: {fileID: 0}
   m_Animations:
@@ -1596,7 +1597,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981458191}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 084bde646fb34c2fa9a7933c9a6a3480, type: 3}
   m_Name: 
@@ -2734,6 +2735,7 @@ GameObject:
   - component: {fileID: 1964114260}
   - component: {fileID: 1964114259}
   - component: {fileID: 1964114258}
+  - component: {fileID: 2200000002}
   m_Layer: 5
   m_Name: dice2
   m_TagString: Untagged
@@ -2767,7 +2769,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1964114256}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
   m_Name: 
@@ -2826,6 +2828,7 @@ GameObject:
   - component: {fileID: 2128648491}
   - component: {fileID: 2128648490}
   - component: {fileID: 2128648492}
+  - component: {fileID: 2200000003}
   m_Layer: 5
   m_Name: dice1
   m_TagString: Untagged
@@ -2897,7 +2900,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2128648488}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
   m_Name: 
@@ -3183,3 +3186,63 @@ SceneRoots:
   - {fileID: 1810027415}
   - {fileID: 1038166501}
   - {fileID: 1635176273}
+--- !u!114 &2200000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981458191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae8d0f9be74242ada499e899f14503a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DiceSwipe
+  faces:
+  - {fileID: 39516445742236537, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: 2376305099863235458, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: 1813239885723335896, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -7464760887336577109, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -8866378825118310145, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -3287765887320952711, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  swipeThreshold: 30
+--- !u!114 &2200000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964114256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae8d0f9be74242ada499e899f14503a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DiceSwipe
+  faces:
+  - {fileID: 39516445742236537, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: 2376305099863235458, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: 1813239885723335896, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -7464760887336577109, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -8866378825118310145, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -3287765887320952711, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  swipeThreshold: 30
+--- !u!114 &2200000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128648488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae8d0f9be74242ada499e899f14503a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DiceSwipe
+  faces:
+  - {fileID: 39516445742236537, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: 2376305099863235458, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: 1813239885723335896, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -7464760887336577109, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -8866378825118310145, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  - {fileID: -3287765887320952711, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
+  swipeThreshold: 30

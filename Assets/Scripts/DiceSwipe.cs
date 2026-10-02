@@ -1,0 +1,73 @@
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+[RequireComponent(typeof(Image))]
+public class DiceSwipe : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
+    IBeginDragHandler, IDragHandler, IEndDragHandler
+{
+    [SerializeField] private Sprite[] faces = new Sprite[6];
+    [SerializeField, Min(1f)] private float swipeThreshold = 30f;
+    private Image image;
+    private Vector2 start;
+    private int? pointer;
+    private int top = 1, bottom = 6, left = 4, right = 3, front = 2, back = 5;
+    public int CurrentValue => top;
+
+    private void Awake()
+    {
+        image = GetComponent<Image>();
+        for (int i = 0; i < faces.Length; i++)
+            if (faces[i] != null && faces[i] == image.sprite)
+            {
+                // Rotate the initial die to match its selected face.
+                int target = i + 1;
+                if (target == bottom) { RollRight(); RollRight(); }
+                else if (target == left) RollRight();
+                else if (target == right) RollLeft();
+                else if (target == front) RollUp();
+                else if (target == back) RollDown();
+                break;
+            }
+        Refresh();
+    }
+
+    public void OnPointerDown(PointerEventData e)
+    {
+        if (pointer.HasValue || e.button != PointerEventData.InputButton.Left) return;
+        pointer = e.pointerId;
+        start = e.position;
+    }
+    public void OnPointerUp(PointerEventData e) => Finish(e);
+    public void OnBeginDrag(PointerEventData e) { }
+    public void OnDrag(PointerEventData e) { }
+    public void OnEndDrag(PointerEventData e) => Finish(e);
+
+    private void Finish(PointerEventData e)
+    {
+        if (pointer != e.pointerId) return;
+        pointer = null;
+        Vector2 delta = e.position - start;
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas != null) delta /= Mathf.Max(0.01f, canvas.rootCanvas.scaleFactor);
+        if (Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y)) < swipeThreshold) return;
+        if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+        {
+            if (delta.x > 0) RollRight(); else RollLeft();
+        }
+        else
+        {
+            if (delta.y > 0) RollUp(); else RollDown();
+        }
+        Refresh();
+    }
+    private void RollRight() { int t = top; top = left; left = bottom; bottom = right; right = t; }
+    private void RollLeft() { int t = top; top = right; right = bottom; bottom = left; left = t; }
+    private void RollUp() { int t = top; top = front; front = bottom; bottom = back; back = t; }
+    private void RollDown() { int t = top; top = back; back = bottom; bottom = front; front = t; }
+    private void Refresh()
+    {
+        if (top <= faces.Length && faces[top - 1] != null) image.sprite = faces[top - 1];
+    }
+    private void OnDisable() => pointer = null;
+}
