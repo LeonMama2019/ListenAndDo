@@ -35,6 +35,15 @@ public class Stage1Level1Quiz : MonoBehaviour
     [SerializeField, Min(0.1f)] private float penFastSpeed = 2f;
     private Coroutine penRoutine;
 
+    [Header("Level6 ネズミの動き")]
+    [SerializeField] private Animator mouseMover;
+    [SerializeField] private Animator mouseVisual;
+    [SerializeField, Min(0.1f)] private float mouseMinDuration = 0.4f;
+    [SerializeField, Min(0.1f)] private float mouseMaxDuration = 2.5f;
+    [SerializeField, Min(0.1f)] private float mouseSlowSpeed = 0.6f;
+    [SerializeField, Min(0.1f)] private float mouseFastSpeed = 2f;
+    private Coroutine mouseRoutine;
+
     private readonly List<TouchObjectEntry> draw = new();
     private AudioSource audioSource;
     private AudioSource checkAudio;
@@ -81,6 +90,8 @@ public class Stage1Level1Quiz : MonoBehaviour
             penAnimator.speed = 0f;
             penAnimator.gameObject.SetActive(levelNumber == 4);
         }
+        SetMouseSpeed(0f);
+        if (mouseMover != null) mouseMover.gameObject.SetActive(levelNumber == 6);
         if (completed) BeginQuiz();
     }
 
@@ -113,6 +124,13 @@ public class Stage1Level1Quiz : MonoBehaviour
             penAnimator.Play("Base Layer.Roll", 0, 0f);
             penAnimator.speed = 0f;
         }
+        if (levelNumber == 6 && mouseMover != null)
+        {
+            mouseMover.gameObject.SetActive(true);
+            mouseMover.Play("Base Layer.MouseMove", 0, 0f);
+            if (mouseVisual != null) mouseVisual.Play("Base Layer.Mouse", 0, 0f);
+            SetMouseSpeed(0f);
+        }
         IsRunning = true;
         questionIndex = 0;
         correctCount = 0;
@@ -128,6 +146,7 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     private void StartNextQuestion()
     {
+        StopMouseMovement();
         StopPenMovement();
         StopObstruction();
         acceptingInput = false;
@@ -175,6 +194,8 @@ public class Stage1Level1Quiz : MonoBehaviour
             obstructionRoutine = StartCoroutine(PlayObstruction());
         if (levelNumber == 4 && penAnimator != null)
             penRoutine = StartCoroutine(RandomPenMovement());
+        if (levelNumber == 6 && mouseMover != null)
+            mouseRoutine = StartCoroutine(RandomMouseMovement());
     }
 
     // Speakerボタンの On Click() から呼ぶ。
@@ -235,6 +256,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         acceptingInput = false;
         StopObstruction();
         StopPenMovement();
+        StopMouseMovement();
         resultRecorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         correctCount++;
         HandSelector.ResetCursor();
@@ -316,8 +338,40 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (penAnimator != null) penAnimator.speed = 0f;
     }
 
+    private IEnumerator RandomMouseMovement()
+    {
+        while (IsRunning)
+        {
+            int mode = Random.Range(0, 5);
+            float speed = mode < 2 ? 0f
+                : mode == 2 ? Mathf.Max(0.1f, mouseSlowSpeed)
+                : mode == 3 ? 1f : Mathf.Max(0.1f, mouseFastSpeed);
+            // Pause both travel and running frames so it does not run in place.
+            SetMouseSpeed(speed);
+            float min = Mathf.Max(0.1f, mouseMinDuration);
+            float max = Mathf.Max(min, mouseMaxDuration);
+            yield return new WaitForSeconds(Random.Range(min, max));
+        }
+        mouseRoutine = null;
+        SetMouseSpeed(0f);
+    }
+
+    private void SetMouseSpeed(float speed)
+    {
+        if (mouseMover != null) mouseMover.speed = speed;
+        if (mouseVisual != null) mouseVisual.speed = speed;
+    }
+
+    private void StopMouseMovement()
+    {
+        if (mouseRoutine != null) StopCoroutine(mouseRoutine);
+        mouseRoutine = null;
+        SetMouseSpeed(0f);
+    }
+
     private void OnDisable()
     {
+        StopMouseMovement();
         StopObstruction();
         StopPenMovement();
     }

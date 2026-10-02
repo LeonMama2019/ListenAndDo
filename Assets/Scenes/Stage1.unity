@@ -1281,7 +1281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1823,6 +1823,12 @@ MonoBehaviour:
   handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
   questionCount: 7
   nextQuestionDelay: 3
+  mouseMover: {fileID: 1339968171}
+  mouseVisual: {fileID: 734484501}
+  mouseMinDuration: 0.4
+  mouseMaxDuration: 2.5
+  mouseSlowSpeed: 0.6
+  mouseFastSpeed: 2
   woodDropDosun: {fileID: 8300000, guid: cc0a79c59a094314dbf4f512a54acebe, type: 3}
   obstructionMinInterval: 0.5
   obstructionMaxInterval: 3
