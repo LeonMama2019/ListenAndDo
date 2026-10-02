@@ -1462,6 +1462,7 @@ GameObject:
   - component: {fileID: 1370700425}
   - component: {fileID: 1370700424}
   - component: {fileID: 1370700426}
+  - component: {fileID: 2300000002}
   m_Layer: 5
   m_Name: Stage2
   m_TagString: Untagged
@@ -2025,6 +2026,7 @@ GameObject:
   - component: {fileID: 1766660329}
   - component: {fileID: 1766660328}
   - component: {fileID: 1766660330}
+  - component: {fileID: 2300000001}
   m_Layer: 5
   m_Name: Stage1
   m_TagString: Untagged
@@ -2538,3 +2540,29 @@ SceneRoots:
   - {fileID: 173695451}
   - {fileID: 565391036}
   - {fileID: 97305407}
+--- !u!114 &2300000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766660326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c941a6017f4b398663c5c991bb75f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageSceneButton
+  stageNumber: 1
+--- !u!114 &2300000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370700422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c941a6017f4b398663c5c991bb75f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageSceneButton
+  stageNumber: 2

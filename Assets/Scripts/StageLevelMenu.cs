@@ -33,6 +33,20 @@ public class StageLevelMenu : MonoBehaviour
         SceneManager.LoadScene("LevelMenu");
     }
 
+    public static void OpenStage(int stage)
+    {
+        if (stage < 1) return;
+        string scene = "Stage" + stage;
+        if (!Application.CanStreamedLevelBeLoaded(scene))
+        {
+            Debug.LogError("Add scene to Build Profiles: " + scene);
+            return;
+        }
+        SelectedStage = stage;
+        SelectedLevel = 1;
+        SceneManager.LoadScene(scene);
+    }
+
     public static void MarkCompleted(int stage, int level)
     {
         PlayerPrefs.SetInt(CompletionKey(stage, level), 1);
