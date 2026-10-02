@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -55,6 +56,19 @@ public class StageLevelMenu : MonoBehaviour
     private void Start()
     {
         for (int level = 1; level <= 8; level++) ConnectLevel(level);
+        UpdateUnlockedCount();
+    }
+
+    private void UpdateUnlockedCount()
+    {
+        int unlockedCount = 0;
+        for (int level = 1; level <= 8; level++)
+            if (IsUnlocked(SelectedStage, level)) unlockedCount++;
+
+        Transform count = Find("count");
+        if (count == null) return;
+        TMP_Text label = count.GetComponent<TMP_Text>();
+        if (label != null) label.text = unlockedCount.ToString();
     }
 
     private void ConnectLevel(int level)
