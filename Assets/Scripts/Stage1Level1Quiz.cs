@@ -48,6 +48,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     [SerializeField] private AudioClip clockTickLoop;
     [SerializeField, Range(0f, 1f)] private float clockVolume = 0.5f;
     private AudioSource clockAudio;
+    private Coroutine clockRoutine;
 
     private readonly List<TouchObjectEntry> draw = new();
     private AudioSource audioSource;
@@ -97,10 +98,10 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (penAnimator != null)
         {
             penAnimator.speed = 0f;
-            penAnimator.gameObject.SetActive(levelNumber == 4);
+            penAnimator.gameObject.SetActive(levelNumber == 4 || levelNumber == 8);
         }
         SetMouseSpeed(0f);
-        if (mouseMover != null) mouseMover.gameObject.SetActive(levelNumber == 6);
+        if (mouseMover != null) mouseMover.gameObject.SetActive(levelNumber == 6 || levelNumber == 8);
         if (completed) BeginQuiz();
     }
 
@@ -127,13 +128,13 @@ public class Stage1Level1Quiz : MonoBehaviour
             return false;
         }
 
-        if (levelNumber == 4 && penAnimator != null)
+        if ((levelNumber == 4 || levelNumber == 8) && penAnimator != null)
         {
             penAnimator.gameObject.SetActive(true);
             penAnimator.Play("Base Layer.Roll", 0, 0f);
             penAnimator.speed = 0f;
         }
-        if (levelNumber == 6 && mouseMover != null)
+        if ((levelNumber == 6 || levelNumber == 8) && mouseMover != null)
         {
             mouseMover.gameObject.SetActive(true);
             mouseMover.Play("Base Layer.MouseMove", 0, 0f);
@@ -205,6 +206,11 @@ public class Stage1Level1Quiz : MonoBehaviour
             clockAudio.Play();
         }
         PlayCurrentInstruction();
+        if (levelNumber == 8)
+        {
+            StartRandomDistractions();
+            return;
+        }
         if ((levelNumber == 3 && woodDropDosun != null) ||
             (levelNumber == 5 && HasLevel5Clips()))
             obstructionRoutine = StartCoroutine(PlayObstruction());
@@ -284,6 +290,47 @@ public class Stage1Level1Quiz : MonoBehaviour
         StartCoroutine(ContinueAfterCorrect());
     }
 
+    // Each distraction has an independent 50% chance per question, including none.
+    private void StartRandomDistractions()
+    {
+        bool sound = Random.Range(0, 2) == 1;
+        bool pen = Random.Range(0, 2) == 1;
+        bool mouse = Random.Range(0, 2) == 1;
+        bool clock = Random.Range(0, 2) == 1;
+
+        if (sound && HasLevel5Clips())
+            obstructionRoutine = StartCoroutine(PlayObstruction());
+        if (penAnimator != null)
+        {
+            penAnimator.gameObject.SetActive(pen);
+            if (pen) penRoutine = StartCoroutine(RandomPenMovement());
+        }
+        if (mouseMover != null)
+        {
+            mouseMover.gameObject.SetActive(mouse);
+            if (mouse) mouseRoutine = StartCoroutine(RandomMouseMovement());
+        }
+        if (clock && clockTickLoop != null)
+            clockRoutine = StartCoroutine(RandomClockSound());
+    }
+
+    private IEnumerator RandomClockSound()
+    {
+        clockAudio.clip = clockTickLoop;
+        clockAudio.volume = clockVolume;
+        while (IsRunning)
+        {
+            float min = Mathf.Max(0.1f, obstructionMinInterval);
+            float max = Mathf.Max(min, obstructionMaxInterval);
+            yield return new WaitForSeconds(Random.Range(min, max));
+            if (!IsRunning || (checkObject != null && checkObject.activeSelf)) break;
+            if (Random.Range(0, 2) == 0) clockAudio.Stop();
+            else if (!clockAudio.isPlaying) clockAudio.Play();
+        }
+        clockRoutine = null;
+        clockAudio.Stop();
+    }
+
     private IEnumerator PlayObstruction()
     {
         while (IsRunning)
@@ -292,7 +339,7 @@ public class Stage1Level1Quiz : MonoBehaviour
             float max = Mathf.Max(min, obstructionMaxInterval);
             yield return new WaitForSeconds(Random.Range(min, max));
             if (!IsRunning || (checkObject != null && checkObject.activeSelf)) break;
-            AudioClip clip = levelNumber == 5 ? PickLevel5Clip() : woodDropDosun;
+            AudioClip clip = (levelNumber == 5 || levelNumber == 8) ? PickLevel5Clip() : woodDropDosun;
             if (clip != null)
             {
                 float volume = obstructionVolume * (clip == alarmClip ? alarmVolumeScale : 1f);
@@ -388,6 +435,8 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     private void StopClock()
     {
+        if (clockRoutine != null) StopCoroutine(clockRoutine);
+        clockRoutine = null;
         if (clockAudio != null) clockAudio.Stop();
     }
 
