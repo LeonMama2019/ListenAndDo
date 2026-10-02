@@ -24,7 +24,7 @@ MonoBehaviour:
     touchInstruction: {fileID: 8300000, guid: e8aa5000c35bf974db63bb1da9d2ccc0, type: 3}
   - objectId: 4
     sprite: {fileID: 72498739567925201, guid: d97a606ad008d1b4281c6529754fb0c8, type: 3}
-    touchInstruction: {fileID: 8300000, guid: 7334ac62fb55d234cae67eb2b43ab484, type: 3}
+    touchInstruction: {fileID: 8300000, guid: 4756e268e37280945bb493ff51230893, type: 3}
   - objectId: 5
     sprite: {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
     touchInstruction: {fileID: 8300000, guid: e3e3766f76789c040b4486f60d8b6970, type: 3}

@@ -1823,15 +1823,15 @@ MonoBehaviour:
   handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
   questionCount: 7
   nextQuestionDelay: 3
+  woodDropDosun: {fileID: 8300000, guid: cc0a79c59a094314dbf4f512a54acebe, type: 3}
+  obstructionMinInterval: 0.5
+  obstructionMaxInterval: 3
+  obstructionVolume: 0.7
   penAnimator: {fileID: 1230896449}
   penMinDuration: 0.4
   penMaxDuration: 2.5
   penSlowSpeed: 0.6
   penFastSpeed: 2
-  woodDropDosun: {fileID: 8300000, guid: cc0a79c59a094314dbf4f512a54acebe, type: 3}
-  obstructionMinInterval: 0.5
-  obstructionMaxInterval: 3
-  obstructionVolume: 0.7
 --- !u!114 &1038166503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2110,7 +2110,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -77.6}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -527, y: 81}
+  m_AnchoredPosition: {x: -404, y: 49}
   m_SizeDelta: {x: 180, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1230896447
@@ -2208,7 +2208,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: 3}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1339968170
