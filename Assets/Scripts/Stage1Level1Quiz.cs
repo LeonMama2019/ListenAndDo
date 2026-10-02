@@ -20,6 +20,8 @@ public class Stage1Level1Quiz : MonoBehaviour
     [SerializeField, Min(0.1f)] private float obstructionMinInterval = 0.5f;
     [SerializeField, Min(0.1f)] private float obstructionMaxInterval = 3f;
     [SerializeField, Range(0f, 1f)] private float obstructionVolume = 0.7f;
+    [Header("Level5 ランダム妨害音")]
+    [SerializeField] private AudioClip[] level5ObstructionClips;
     private AudioSource obstructionAudio;
     private Coroutine obstructionRoutine;
 
@@ -166,7 +168,8 @@ public class Stage1Level1Quiz : MonoBehaviour
         resultRecorder.BeginQuestion(questionIndex + 1, correctEntry.ObjectId,
             correctHand.ToString(), Time.realtimeSinceStartupAsDouble);
         PlayCurrentInstruction();
-        if (levelNumber == 3 && woodDropDosun != null)
+        if ((levelNumber == 3 && woodDropDosun != null) ||
+            (levelNumber == 5 && HasLevel5Clips()))
             obstructionRoutine = StartCoroutine(PlayObstruction());
         if (levelNumber == 4 && penAnimator != null)
             penRoutine = StartCoroutine(RandomPenMovement());
@@ -248,11 +251,32 @@ public class Stage1Level1Quiz : MonoBehaviour
             float max = Mathf.Max(min, obstructionMaxInterval);
             yield return new WaitForSeconds(Random.Range(min, max));
             if (!IsRunning || (checkObject != null && checkObject.activeSelf)) break;
-            obstructionAudio.PlayOneShot(woodDropDosun, obstructionVolume);
+            AudioClip clip = levelNumber == 5 ? PickLevel5Clip() : woodDropDosun;
+            if (clip != null) obstructionAudio.PlayOneShot(clip, obstructionVolume);
             // Let each thud finish before starting the next random wait.
             yield return new WaitWhile(() => obstructionAudio.isPlaying);
         }
         obstructionRoutine = null;
+    }
+
+    private bool HasLevel5Clips()
+    {
+        if (level5ObstructionClips == null) return false;
+        foreach (AudioClip clip in level5ObstructionClips)
+            if (clip != null) return true;
+        return false;
+    }
+
+    private AudioClip PickLevel5Clip()
+    {
+        int available = 0;
+        foreach (AudioClip clip in level5ObstructionClips)
+            if (clip != null) available++;
+        if (available == 0) return null;
+        int selected = Random.Range(0, available);
+        foreach (AudioClip clip in level5ObstructionClips)
+            if (clip != null && selected-- == 0) return clip;
+        return null;
     }
 
     private void StopObstruction()

@@ -1827,6 +1827,10 @@ MonoBehaviour:
   obstructionMinInterval: 0.5
   obstructionMaxInterval: 3
   obstructionVolume: 0.7
+  level5ObstructionClips:
+  - {fileID: 8300000, guid: cc0a79c59a094314dbf4f512a54acebe, type: 3}
+  - {fileID: 8300000, guid: 02a2b14084c771f46ac3464c18afe8c3, type: 3}
+  - {fileID: 8300000, guid: 0b46aba5ecd9c784484e88d8013eccfc, type: 3}
   penAnimator: {fileID: 1230896449}
   penMinDuration: 0.4
   penMaxDuration: 2.5
