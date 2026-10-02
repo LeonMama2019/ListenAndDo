@@ -1823,6 +1823,8 @@ MonoBehaviour:
   handRightInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
   questionCount: 7
   nextQuestionDelay: 3
+  clockTickLoop: {fileID: 8300000, guid: 4ae715fa6a752e04aaa9d8aee64e1198, type: 3}
+  clockVolume: 0.5
   mouseMover: {fileID: 1339968171}
   mouseVisual: {fileID: 734484501}
   mouseMinDuration: 0.4

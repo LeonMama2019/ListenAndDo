@@ -44,6 +44,11 @@ public class Stage1Level1Quiz : MonoBehaviour
     [SerializeField, Min(0.1f)] private float mouseFastSpeed = 2f;
     private Coroutine mouseRoutine;
 
+    [Header("Level7 時計の連続音")]
+    [SerializeField] private AudioClip clockTickLoop;
+    [SerializeField, Range(0f, 1f)] private float clockVolume = 0.5f;
+    private AudioSource clockAudio;
+
     private readonly List<TouchObjectEntry> draw = new();
     private AudioSource audioSource;
     private AudioSource checkAudio;
@@ -73,6 +78,10 @@ public class Stage1Level1Quiz : MonoBehaviour
         obstructionAudio.playOnAwake = false;
         obstructionAudio.loop = false;
         obstructionAudio.spatialBlend = 0f;
+        clockAudio = gameObject.AddComponent<AudioSource>();
+        clockAudio.playOnAwake = false;
+        clockAudio.loop = true;
+        clockAudio.spatialBlend = 0f;
     }
 
     private void Start()
@@ -146,6 +155,7 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     private void StartNextQuestion()
     {
+        StopClock();
         StopMouseMovement();
         StopPenMovement();
         StopObstruction();
@@ -188,6 +198,12 @@ public class Stage1Level1Quiz : MonoBehaviour
             : (Random.Range(0, 2) == 0 ? HandSelector.HandSide.Left : HandSelector.HandSide.Right);
         resultRecorder.BeginQuestion(questionIndex + 1, correctEntry.ObjectId,
             correctHand.ToString(), Time.realtimeSinceStartupAsDouble);
+        if (levelNumber == 7 && clockTickLoop != null)
+        {
+            clockAudio.clip = clockTickLoop;
+            clockAudio.volume = clockVolume;
+            clockAudio.Play();
+        }
         PlayCurrentInstruction();
         if ((levelNumber == 3 && woodDropDosun != null) ||
             (levelNumber == 5 && HasLevel5Clips()))
@@ -257,6 +273,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         StopObstruction();
         StopPenMovement();
         StopMouseMovement();
+        StopClock();
         resultRecorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         correctCount++;
         HandSelector.ResetCursor();
@@ -369,8 +386,14 @@ public class Stage1Level1Quiz : MonoBehaviour
         SetMouseSpeed(0f);
     }
 
+    private void StopClock()
+    {
+        if (clockAudio != null) clockAudio.Stop();
+    }
+
     private void OnDisable()
     {
+        StopClock();
         StopMouseMovement();
         StopObstruction();
         StopPenMovement();
