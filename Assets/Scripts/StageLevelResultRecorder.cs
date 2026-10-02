@@ -16,7 +16,9 @@ public class StageQuestionResult
 [Serializable]
 public class StageLevelResult
 {
-    public int schemaVersion = 1;
+    public int schemaVersion = 2;
+    public string userId;
+    public int attemptNumber;
     public string attemptId;
     public string completedAtUtc;
     public int stageNumber;
@@ -39,6 +41,7 @@ public sealed class StageLevelResultRecorder
         this.questionCount = questionCount;
         result = new StageLevelResult
         {
+            userId = GetOrCreateUserId(),
             attemptId = Guid.NewGuid().ToString("N"),
             stageNumber = stageNumber,
             levelNumber = levelNumber
@@ -76,7 +79,14 @@ public sealed class StageLevelResultRecorder
         current = null;
         if (result.questions.Count != questionCount) return;
         result.completedAtUtc = DateTime.UtcNow.ToString("o");
-        PlayerPrefs.SetString(StorageKey(result.stageNumber, result.levelNumber), JsonUtility.ToJson(result));
+        EnsureHistoryMigrated(result.stageNumber, result.levelNumber);
+        int count = PlayerPrefs.GetInt(HistoryCountKey(result.stageNumber, result.levelNumber), 0);
+        result.attemptNumber = count + 1;
+        string json = JsonUtility.ToJson(result);
+        PlayerPrefs.SetString(AttemptKey(result.stageNumber, result.levelNumber, result.attemptNumber), json);
+        PlayerPrefs.SetInt(HistoryCountKey(result.stageNumber, result.levelNumber), result.attemptNumber);
+        // Keep the latest-result key for existing result screens and unlock checks.
+        PlayerPrefs.SetString(StorageKey(result.stageNumber, result.levelNumber), json);
         PlayerPrefs.Save();
         saved = true;
     }
@@ -91,4 +101,62 @@ public sealed class StageLevelResultRecorder
         string json = PlayerPrefs.GetString(StorageKey(stage, level), "");
         return string.IsNullOrEmpty(json) ? null : JsonUtility.FromJson<StageLevelResult>(json);
     }
+
+    private const string UserIdKey = "ListenAndDo.LocalUserId";
+
+    public static string GetOrCreateUserId()
+    {
+        string id = PlayerPrefs.GetString(UserIdKey, "");
+        if (!string.IsNullOrEmpty(id)) return id;
+        id = Guid.NewGuid().ToString("N");
+        PlayerPrefs.SetString(UserIdKey, id);
+        PlayerPrefs.Save();
+        return id;
+    }
+
+    private static string HistoryCountKey(int stage, int level)
+    {
+        return $"ListenAndDo.Stage{stage}.Level{level}.HistoryCount";
+    }
+
+    private static string AttemptKey(int stage, int level, int attempt)
+    {
+        return $"ListenAndDo.Stage{stage}.Level{level}.Attempt{attempt}";
+    }
+
+    // The previous format only retained the latest completed attempt.
+    // Preserve that available record as history entry 1 without replacing it.
+    private static void EnsureHistoryMigrated(int stage, int level)
+    {
+        string countKey = HistoryCountKey(stage, level);
+        if (PlayerPrefs.HasKey(countKey)) return;
+        StageLevelResult previous = Load(stage, level);
+        int count = 0;
+        if (previous != null && previous.questions != null && previous.questions.Count > 0)
+        {
+            previous.userId = string.IsNullOrEmpty(previous.userId)
+                ? GetOrCreateUserId() : previous.userId;
+            previous.attemptNumber = 1;
+            PlayerPrefs.SetString(AttemptKey(stage, level, 1), JsonUtility.ToJson(previous));
+            count = 1;
+        }
+        PlayerPrefs.SetInt(countKey, count);
+        PlayerPrefs.Save();
+    }
+
+    public static List<StageLevelResult> LoadHistory(int stage, int level)
+    {
+        EnsureHistoryMigrated(stage, level);
+        int count = PlayerPrefs.GetInt(HistoryCountKey(stage, level), 0);
+        List<StageLevelResult> history = new();
+        for (int attempt = 1; attempt <= count; attempt++)
+        {
+            string json = PlayerPrefs.GetString(AttemptKey(stage, level, attempt), "");
+            if (string.IsNullOrEmpty(json)) continue;
+            StageLevelResult entry = JsonUtility.FromJson<StageLevelResult>(json);
+            if (entry != null) history.Add(entry);
+        }
+        return history;
+    }
+
 }
