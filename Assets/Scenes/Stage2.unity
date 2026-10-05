@@ -836,7 +836,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &409910136
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1227,8 +1227,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 11, y: 239}
-  m_SizeDelta: {x: -450, y: -496.3067}
+  m_AnchoredPosition: {x: 11, y: 230.42334}
+  m_SizeDelta: {x: -450, y: -479.15332}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &726813366
 MonoBehaviour:
@@ -2068,7 +2068,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1153884752
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2085,8 +2085,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 50}
+  m_AnchoredPosition: {x: -0.0000041723, y: 15}
+  m_SizeDelta: {x: 542.0603, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1153884753
 MonoBehaviour:
@@ -2108,7 +2108,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u4ECA\u3001\u30B5\u30A4\u30B3\u30ED\u306E\u76EE\u306E1\u306F\u53F3\u306B\u3080\u3044\u3066\u3044\u308B\u3088"
+  m_text: "\u4ECA\u30B5\u30A4\u30B3\u30ED\u306E\u76EE\u306E1\u306F\n\u53F3\u306B\u3080\u3044\u3066\u3044\u308B\u3088"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 2465128367423993225, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -2174,7 +2174,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -1.9118958, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3386,7 +3386,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 14}
   m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1895590470
@@ -3409,7 +3409,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30B5\u30A4\u30B3\u30ED\u306E\u76EE\u3092\u3044\u308F\u308C\u305F\u307B\u3046\u306B\u5411\u3051\u3066\u306D"
+  m_text: "\u30B5\u30A4\u30B3\u30ED\u306E\u76EE\u3092\n\u3044\u308F\u308C\u305F\u307B\u3046\u306B\u5411\u3051\u3066\u306D"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 2465128367423993225, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -3890,12 +3890,6 @@ MonoBehaviour:
   - {fileID: 121131635}
   - {fileID: 1153884751}
   - {fileID: 1895590468}
-  voices:
-  - {fileID: 8300000, guid: 6e6a480f1e162c94291b7a22235d67a5, type: 3}
-  - {fileID: 8300000, guid: 3fdd03c5339c2224b8aa7c110993b9a3, type: 3}
-  - {fileID: 8300000, guid: 6ebe30860003e12449022b1f450e7fee, type: 3}
-  - {fileID: 8300000, guid: 6b34f38465885904596ad61ad0903180, type: 3}
-  - {fileID: 8300000, guid: c8eb5136102185d49ab5d61a6cc395a8, type: 3}
   swipe: {fileID: 170848767}
   die: {fileID: 1964114257}
   swipeDistance: 160
