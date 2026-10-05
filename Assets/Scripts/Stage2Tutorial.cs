@@ -16,11 +16,15 @@ public class Stage2Tutorial : MonoBehaviour
     private GameObject inputSurface;
     private Action completed;
     private int step;
+    [SerializeField, Min(0f)] private float transitionDelay = 3f;
+    private bool transitioning;
+    private Coroutine transition;
 
     public void Begin(Action onCompleted)
     {
         completed = onCompleted;
         step = 0;
+        transitioning = false;
         foreach (var item in steps)
             if (item == null) { Debug.LogError("Assign Stage2 Tutorial steps 1-5.", this); return; }
         // Step AudioSources are played explicitly, once per transition.
@@ -100,17 +104,36 @@ public class Stage2Tutorial : MonoBehaviour
     }
     public void Gesture(Vector2 delta)
     {
+        if (transitioning) return;
         bool isSwipe = Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y)) >= 30f;
         if (step >= 1 && step <= 3 && isSwipe && die != null)
         {
             var tutorialDie = die.GetComponent<DiceSwipe>();
             if (tutorialDie != null) tutorialDie.RollTutorialGesture(delta);
         }
-        if (step == 1 && isSwipe) Show(2);
-        else if (step == 2 && isSwipe && delta.y > Mathf.Abs(delta.x)) Show(3);
-        else if (step == 3 && isSwipe && delta.x > Mathf.Abs(delta.y)) Show(4);
-        else if (step == 4 && !isSwipe) Show(5);
-        else if (step == 5 && !isSwipe)
+        if (step == 1 && isSwipe) QueueTransition(2);
+        else if (step == 2 && isSwipe && delta.y > Mathf.Abs(delta.x)) QueueTransition(3);
+        else if (step == 3 && isSwipe && delta.x > Mathf.Abs(delta.y)) QueueTransition(4);
+        else if (step == 4 && !isSwipe) QueueTransition(5);
+        else if (step == 5 && !isSwipe) QueueTransition(6);
+    }
+    private void QueueTransition(int next)
+    {
+        transitioning = true;
+        if (motion != null) { StopCoroutine(motion); motion = null; }
+        if (swipe != null) swipe.gameObject.SetActive(false);
+        transition = StartCoroutine(TransitionAfterDelay(next));
+    }
+    private IEnumerator TransitionAfterDelay(int next)
+    {
+        yield return new WaitForSecondsRealtime(Mathf.Max(0f, transitionDelay));
+        transition = null;
+        if (next <= 5)
+        {
+            Show(next);
+            transitioning = false;
+        }
+        else
         {
             PlayerPrefs.SetInt(CompletionKey, 1); PlayerPrefs.Save();
             var callback = completed; completed = null;
@@ -120,6 +143,9 @@ public class Stage2Tutorial : MonoBehaviour
     }
     private void OnDisable()
     {
+        if (transition != null) StopCoroutine(transition);
+        transition = null;
+        transitioning = false;
         if (motion != null) StopCoroutine(motion);
         motion = null;
         foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
