@@ -103,7 +103,14 @@ public class Stage2Quiz : MonoBehaviour
             if (clip == null) { Debug.LogError("Stage2 direction audio is missing.", this); return; }
         if ((Slow ? endSlow : end) == null) { Debug.LogError("Stage2 end audio is missing.", this); return; }
         recorder = new StageLevelResultRecorder(2, level, questionCount);
-        NextQuestion();
+        var tutorial = Find("Tutorial")?.GetComponent<Stage2Tutorial>();
+        if (level == 1 && tutorial != null && PlayerPrefs.GetInt(Stage2Tutorial.CompletionKey, 0) != 1)
+        {
+            if (check != null) check.SetActive(false);
+            if (mouse != null) mouse.SetActive(false);
+            tutorial.Begin(NextQuestion);
+        }
+        else NextQuestion();
     }
     private void Event(string kind, string target = "", string detail = "")
     {
