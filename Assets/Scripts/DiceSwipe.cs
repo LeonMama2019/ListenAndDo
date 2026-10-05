@@ -57,6 +57,13 @@ public class DiceSwipe : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         return true;
     }
 
+    // Stable tutorial start: an upward swipe reveals 2, a rightward swipe reveals 4.
+    public void ResetTutorialOrientation()
+    {
+        top = 1; bottom = 6; left = 4; right = 3; front = 2; back = 5;
+        Refresh();
+    }
+
     private void Awake()
     {
         image = GetComponent<Image>();

@@ -54,7 +54,7 @@ public class Stage2Tutorial : MonoBehaviour
         if (die != null)
         {
             var tutorialDie = die.GetComponent<DiceSwipe>();
-            if (tutorialDie != null) tutorialDie.SetVisibleValue(1);
+            if (tutorialDie != null) tutorialDie.ResetTutorialOrientation();
         }
         foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
         if (motion != null) { StopCoroutine(motion); motion = null; }
@@ -106,14 +106,19 @@ public class Stage2Tutorial : MonoBehaviour
     {
         if (transitioning) return;
         bool isSwipe = Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y)) >= 30f;
-        if (step >= 1 && step <= 3 && isSwipe && die != null)
+        var tutorialDie = die == null ? null : die.GetComponent<DiceSwipe>();
+        if (step >= 1 && step <= 3 && isSwipe)
         {
-            var tutorialDie = die.GetComponent<DiceSwipe>();
             if (tutorialDie != null) tutorialDie.RollTutorialGesture(delta);
         }
         if (step == 1 && isSwipe) QueueTransition(2);
-        else if (step == 2 && isSwipe && delta.y > Mathf.Abs(delta.x)) QueueTransition(3);
-        else if (step == 3 && isSwipe && delta.x > Mathf.Abs(delta.y)) QueueTransition(4);
+        else if ((step == 2 || step == 3) && isSwipe && tutorialDie != null)
+        {
+            int expected = step == 2 ? 2 : 4;
+            bool directionCorrect = step == 2 ? delta.y > Mathf.Abs(delta.x) : delta.x > Mathf.Abs(delta.y);
+            if (directionCorrect && tutorialDie.CurrentValue == expected) QueueTransition(step + 1);
+            else tutorialDie.ResetTutorialOrientation();
+        }
         else if (step == 4 && !isSwipe) QueueTransition(5);
         else if (step == 5 && !isSwipe) QueueTransition(6);
     }
