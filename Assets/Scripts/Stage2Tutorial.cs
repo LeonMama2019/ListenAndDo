@@ -50,8 +50,8 @@ public class Stage2Tutorial : MonoBehaviour
     {
         if (step == number) return;
         step = number;
-        // Each explanation starts with 1 visible; gesture-driven rolls stay unchanged.
-        if (die != null)
+        // Step 4 preserves the successful face from step 3 and does not allow rolls.
+        if (step != 4 && die != null)
         {
             var tutorialDie = die.GetComponent<DiceSwipe>();
             if (tutorialDie != null) tutorialDie.ResetTutorialOrientation();
