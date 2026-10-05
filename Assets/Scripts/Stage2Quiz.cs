@@ -46,9 +46,9 @@ public class Stage2Quiz : MonoBehaviour
     private int level, question;
     private bool accepting, finished;
     private double started;
-    private bool Slow => level == 5 || level == 6 || level == 8;
+    private bool Slow => level == 4 || level == 7 || level == 8;
     private bool Mouse => level == 6 || level == 8;
-    private bool Mixed => level == 4 || level == 6 || level == 7 || level == 8;
+    private bool Mixed => level >= 3;
 
     private Transform Find(string name)
     {
@@ -79,7 +79,7 @@ public class Stage2Quiz : MonoBehaviour
     private void Start()
     {
         level = StageLevelMenu.SelectedStage == 2 ? StageLevelMenu.SelectedLevel : 1;
-        int count = level == 1 ? 1 : (level == 3 || level >= 7 ? 3 : 2);
+        int count = level == 1 ? 1 : (level >= 5 ? 3 : 2);
         for (int i = 1; i <= 3; i++)
         {
             var t = Find("dice" + i);
