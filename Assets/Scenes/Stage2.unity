@@ -3409,7 +3409,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30B5\u30A4\u30B3\u30ED\u306E\u76EE\u3092\n\u3044\u308F\u308C\u305F\u307B\u3046\u306B\u5411\u3051\u3066\u306D"
+  m_text: "\u3058\u3083\u3042\u30B2\u30FC\u30E0\u306F\u3058\u3081\u308B\u3088"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 2465128367423993225, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -3894,6 +3894,7 @@ MonoBehaviour:
   die: {fileID: 1964114257}
   swipeDistance: 160
   motionSeconds: 1
+  transitionDelay: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
