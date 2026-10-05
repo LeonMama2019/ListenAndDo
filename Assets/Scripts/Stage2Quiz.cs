@@ -136,8 +136,8 @@ public class Stage2Quiz : MonoBehaviour
             if (Mixed)
             { int pick = UnityEngine.Random.Range(0, available.Count); direction = available[pick]; available.RemoveAt(pick); }
             string name = directionNames[direction];
-            int number;
-            do { number = UnityEngine.Random.Range(1, 7); } while (number == dice[i].ValueAt(name));
+            int number = UnityEngine.Random.Range(1, 7);
+            dice[i].SetVisibleValue(number);
             log.targets.Add(new Stage2DiceTarget { dice = dice[i].name, number = number,
                 direction = name, initialOrientation = dice[i].Orientation });
         }

@@ -28,6 +28,18 @@ public class DiceSwipe : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         Refresh();
     }
 
+    // Stage2-only setup: use physical rolls so visible and hidden faces stay consistent.
+    public void SetVisibleValue(int value)
+    {
+        if (value < 1 || value > 6) throw new System.ArgumentOutOfRangeException(nameof(value));
+        if (value == bottom) { RollRight(); RollRight(); }
+        else if (value == left) RollRight();
+        else if (value == right) RollLeft();
+        else if (value == front) RollUp();
+        else if (value == back) RollDown();
+        Refresh();
+    }
+
     private void Awake()
     {
         image = GetComponent<Image>();
