@@ -11,6 +11,7 @@ public class StageQuestionResult
     public float timeToCorrectSeconds;
     public int wrongAnswerCount;
     public int replayCount;
+    public Stage2QuestionLog diceQuestion;
 }
 
 [Serializable]
@@ -58,6 +59,11 @@ public sealed class StageLevelResultRecorder
             correctHand = hand
         };
         startedAt = now;
+    }
+
+    public void SetDiceQuestion(Stage2QuestionLog log)
+    {
+        if (current != null) current.diceQuestion = log;
     }
 
     public void RecordWrongAnswer()

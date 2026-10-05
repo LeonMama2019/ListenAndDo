@@ -13,6 +13,20 @@ public class DiceSwipe : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private int? pointer;
     private int top = 1, bottom = 6, left = 4, right = 3, front = 2, back = 5;
     public int CurrentValue => top;
+    public bool InputEnabled { get; set; } = true;
+    public event System.Action<DiceSwipe, string> Rolled;
+    // Screen up/down correspond to the back/front edges of the die.
+    public int ValueAt(string direction) => direction == "Left" ? left :
+        direction == "Right" ? right : direction == "Up" ? back : front;
+    public string Orientation => $"{top},{bottom},{left},{right},{front},{back}";
+    public void Shuffle()
+    {
+        for (int i = 0; i < 20; i++)
+            switch (Random.Range(0, 4))
+            { case 0: RollLeft(); break; case 1: RollRight(); break;
+              case 2: RollUp(); break; default: RollDown(); break; }
+        Refresh();
+    }
 
     private void Awake()
     {
@@ -34,7 +48,7 @@ public class DiceSwipe : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     public void OnPointerDown(PointerEventData e)
     {
-        if (pointer.HasValue || e.button != PointerEventData.InputButton.Left) return;
+        if (!InputEnabled || pointer.HasValue || e.button != PointerEventData.InputButton.Left) return;
         pointer = e.pointerId;
         start = e.position;
     }
@@ -47,19 +61,22 @@ public class DiceSwipe : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     {
         if (pointer != e.pointerId) return;
         pointer = null;
+        if (!InputEnabled) return;
         Vector2 delta = e.position - start;
         Canvas canvas = GetComponentInParent<Canvas>();
         if (canvas != null) delta /= Mathf.Max(0.01f, canvas.rootCanvas.scaleFactor);
         if (Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y)) < swipeThreshold) return;
+        string direction;
         if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
         {
-            if (delta.x > 0) RollRight(); else RollLeft();
+            if (delta.x > 0) { RollRight(); direction = "Right"; } else { RollLeft(); direction = "Left"; }
         }
         else
         {
-            if (delta.y > 0) RollUp(); else RollDown();
+            if (delta.y > 0) { RollUp(); direction = "Up"; } else { RollDown(); direction = "Down"; }
         }
         Refresh();
+        Rolled?.Invoke(this, direction);
     }
     private void RollRight() { int t = top; top = left; left = bottom; bottom = right; right = t; }
     private void RollLeft() { int t = top; top = right; right = bottom; bottom = left; left = t; }

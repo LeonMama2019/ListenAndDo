@@ -1617,6 +1617,7 @@ GameObject:
   - component: {fileID: 1038166499}
   - component: {fileID: 1038166498}
   - component: {fileID: 1038166502}
+  - component: {fileID: 2400000001}
   - component: {fileID: 1038166503}
   m_Layer: 5
   m_Name: Canvas
@@ -1718,7 +1719,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038166497}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f365902ac45641bda38b35f72b78f947, type: 3}
   m_Name: 
@@ -1770,7 +1771,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BackReturnController
   backReturnPanel: {fileID: 338903853}
   levelMenuScene: LevelMenu
-  stageNumber: 1
+  stageNumber: 2
 --- !u!1 &1132600776
 GameObject:
   m_ObjectHideFlags: 0
@@ -2939,8 +2940,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1038166502}
-        m_TargetAssemblyTypeName: Stage1Level1Quiz, Assembly-CSharp
+      - m_Target: {fileID: 2400000001}
+        m_TargetAssemblyTypeName: Stage2Quiz, Assembly-CSharp
         m_MethodName: ReplayInstruction
         m_Mode: 1
         m_Arguments:
@@ -3467,6 +3468,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2300000201}
   m_CullTransparentMesh: 1
+--- !u!114 &2400000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038166497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 123f42ca63f54302bf8bb966a5328108, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Stage2Quiz
+  numbers:
+  - {fileID: 8300000, guid: 88b8713ca9ef7ef4f92debf74a1a366f, type: 3}
+  - {fileID: 8300000, guid: 39e1c89399e68fe4a8b4ed27bda30588, type: 3}
+  - {fileID: 8300000, guid: eec2383a2e2d7d642af78409e696f9a4, type: 3}
+  - {fileID: 8300000, guid: b7843f54ac4d7b6459f64b9f195bd21a, type: 3}
+  - {fileID: 8300000, guid: fa00d4b6b9311b14cb7983632469dbd2, type: 3}
+  - {fileID: 8300000, guid: b84ba3ee67451c3488f7e5dd60a56d3b, type: 3}
+  slowNumbers:
+  - {fileID: 8300000, guid: f4bf098295d1f7f44a92d33ced330e5d, type: 3}
+  - {fileID: 8300000, guid: 2456e905cf5aff749b0cebd4399e2248, type: 3}
+  - {fileID: 8300000, guid: 43e87ea0759be8542916de831c815234, type: 3}
+  - {fileID: 8300000, guid: 31c139c4da418d54db99e7a9251c96c2, type: 3}
+  - {fileID: 8300000, guid: 0d5181097b96cde4bb2ce80327ca6012, type: 3}
+  - {fileID: 8300000, guid: 05f58da92d10ca54c83df89cda266c44, type: 3}
+  directions:
+  - {fileID: 8300000, guid: 8e00fe2a3d80363439ac9479e9a9dc14, type: 3}
+  - {fileID: 8300000, guid: 8622daeb3bd1a0043954bc2e426bd393, type: 3}
+  - {fileID: 8300000, guid: b76069251d65d694f8b67e7c8b774ea7, type: 3}
+  - {fileID: 8300000, guid: f9c4ea6f6bfad0347a1c440558b2779e, type: 3}
+  slowDirections:
+  - {fileID: 8300000, guid: 5b9e1f5d6a480c14aa5062bdfc9b9f0c, type: 3}
+  - {fileID: 8300000, guid: 6422cb2d64644f74c8fabc3cf2e6ad00, type: 3}
+  - {fileID: 8300000, guid: 4a1fa5921ba2aec4aa4a250b3a264b49, type: 3}
+  - {fileID: 8300000, guid: 060f67e33debbee40abb10d3fec71a6f, type: 3}
+  end: {fileID: 8300000, guid: f63ddcf594135ba409d58623d7c3d917, type: 3}
+  endSlow: {fileID: 8300000, guid: 9f76d527c0947f5499f77f14b6036f38, type: 3}
+  questionCount: 7
+  nextQuestionDelay: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
