@@ -95,6 +95,11 @@ public class Stage2Tutorial : MonoBehaviour
     public void Gesture(Vector2 delta)
     {
         bool isSwipe = Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y)) >= 30f;
+        if (step >= 1 && step <= 3 && isSwipe && die != null)
+        {
+            var tutorialDie = die.GetComponent<DiceSwipe>();
+            if (tutorialDie != null) tutorialDie.RollTutorialGesture(delta);
+        }
         if (step == 1 && isSwipe) Show(2);
         else if (step == 2 && isSwipe && delta.y > Mathf.Abs(delta.x)) Show(3);
         else if (step == 3 && isSwipe && delta.x > Mathf.Abs(delta.y)) Show(4);

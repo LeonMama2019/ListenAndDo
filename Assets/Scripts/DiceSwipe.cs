@@ -40,6 +40,23 @@ public class DiceSwipe : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         Refresh();
     }
 
+    // Tutorial gestures are captured by the full-screen overlay instead of this Image.
+    // Reuse the physical rolls without sending quiz answer events.
+    public bool RollTutorialGesture(Vector2 delta)
+    {
+        if (Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y)) < swipeThreshold) return false;
+        if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+        {
+            if (delta.x > 0) RollRight(); else RollLeft();
+        }
+        else
+        {
+            if (delta.y > 0) RollUp(); else RollDown();
+        }
+        Refresh();
+        return true;
+    }
+
     private void Awake()
     {
         image = GetComponent<Image>();
