@@ -8,12 +8,10 @@ public class Stage2Tutorial : MonoBehaviour
 {
     public const string CompletionKey = "Stage2.TutorialCompleted";
     [SerializeField] private GameObject[] steps = new GameObject[5];
-    [SerializeField] private AudioClip[] voices = new AudioClip[5];
     [SerializeField] private RectTransform swipe;
     [SerializeField] private RectTransform die;
     [SerializeField] private float swipeDistance = 160f;
     [SerializeField] private float motionSeconds = 1f;
-    private AudioSource audioSource;
     private Coroutine motion;
     private GameObject inputSurface;
     private Action completed;
@@ -25,7 +23,7 @@ public class Stage2Tutorial : MonoBehaviour
         step = 0;
         foreach (var item in steps)
             if (item == null) { Debug.LogError("Assign Stage2 Tutorial steps 1-5.", this); return; }
-        // Child panels may carry AudioSources; only this controller plays the step voices.
+        // Step AudioSources are played explicitly, once per transition.
         foreach (var childAudio in GetComponentsInChildren<AudioSource>(true))
         {
             childAudio.playOnAwake = false;
@@ -33,10 +31,6 @@ public class Stage2Tutorial : MonoBehaviour
         }
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = false;
-        audioSource.Stop();
         // Capture gestures across the whole screen, independently of the tutorial panel size.
         inputSurface = new GameObject("Stage2TutorialInput", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         var canvas = GetComponentInParent<Canvas>().rootCanvas;
@@ -55,9 +49,13 @@ public class Stage2Tutorial : MonoBehaviour
         foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
         if (motion != null) { StopCoroutine(motion); motion = null; }
         for (int i = 0; i < steps.Length; i++) steps[i].SetActive(i == step - 1);
-        audioSource.Stop();
-        if (voices.Length >= step && voices[step - 1] != null)
-        { audioSource.clip = voices[step - 1]; audioSource.Play(); }
+        var stepAudio = steps[step - 1].GetComponent<AudioSource>();
+        if (stepAudio != null && stepAudio.clip != null)
+        {
+            stepAudio.playOnAwake = false;
+            stepAudio.Play();
+        }
+        else Debug.LogWarning("Stage2 Tutorial " + step + ": attach its voice to the step AudioSource.", this);
         if (swipe != null)
         {
             swipe.gameObject.SetActive(step == 2 || step == 3);
@@ -113,7 +111,7 @@ public class Stage2Tutorial : MonoBehaviour
     {
         if (motion != null) StopCoroutine(motion);
         motion = null;
-        if (audioSource != null) audioSource.Stop();
+        foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
         if (swipe != null) swipe.gameObject.SetActive(false);
         if (inputSurface != null) { inputSurface.SetActive(false); Destroy(inputSurface); }
     }
