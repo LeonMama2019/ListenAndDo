@@ -22,8 +22,15 @@ public class Stage2Tutorial : MonoBehaviour
     public void Begin(Action onCompleted)
     {
         completed = onCompleted;
+        step = 0;
         foreach (var item in steps)
             if (item == null) { Debug.LogError("Assign Stage2 Tutorial steps 1-5.", this); return; }
+        // Child panels may carry AudioSources; only this controller plays the step voices.
+        foreach (var childAudio in GetComponentsInChildren<AudioSource>(true))
+        {
+            childAudio.playOnAwake = false;
+            childAudio.Stop();
+        }
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
         audioSource = GetComponent<AudioSource>();
@@ -43,7 +50,9 @@ public class Stage2Tutorial : MonoBehaviour
     }
     private void Show(int number)
     {
+        if (step == number) return;
         step = number;
+        foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
         if (motion != null) { StopCoroutine(motion); motion = null; }
         for (int i = 0; i < steps.Length; i++) steps[i].SetActive(i == step - 1);
         audioSource.Stop();
