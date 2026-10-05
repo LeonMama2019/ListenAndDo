@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 5471114978251189754, guid: 2dec8fb87b0a37e4abea644f7a7324e9, type: 3}
+  m_Sprite: {fileID: 8405380093318311299, guid: 1e69d72b41deca54abd19e5cd50c1743, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2075,7 +2075,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9202860469723268940, guid: dc8925f6cdb37504a8702207cc9deb0d, type: 3}
+  m_Sprite: {fileID: -7648537321097967548, guid: 1e69d72b41deca54abd19e5cd50c1743, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2533,13 +2533,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1955566972}
   m_CullTransparentMesh: 1
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 173695451}
-  - {fileID: 565391036}
-  - {fileID: 97305407}
 --- !u!114 &2300000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2566,3 +2559,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageSceneButton
   stageNumber: 2
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 173695451}
+  - {fileID: 565391036}
+  - {fileID: 97305407}
