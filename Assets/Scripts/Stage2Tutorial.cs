@@ -46,6 +46,12 @@ public class Stage2Tutorial : MonoBehaviour
     {
         if (step == number) return;
         step = number;
+        // Each explanation starts with 1 visible; gesture-driven rolls stay unchanged.
+        if (die != null)
+        {
+            var tutorialDie = die.GetComponent<DiceSwipe>();
+            if (tutorialDie != null) tutorialDie.SetVisibleValue(1);
+        }
         foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
         if (motion != null) { StopCoroutine(motion); motion = null; }
         for (int i = 0; i < steps.Length; i++) steps[i].SetActive(i == step - 1);
