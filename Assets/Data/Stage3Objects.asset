@@ -14,32 +14,60 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items:
   - objectId: blue_cup
-    displayName: 青いコップ
+    displayName: "\u9752\u3044\u30B3\u30C3\u30D7"
     sprite: {fileID: -7447722783648091699, guid: 96eb0c891d34c5e44912483290aeab9d, type: 3}
     voice: {fileID: 0}
   - objectId: yellow_cup
-    displayName: 黄色いコップ
+    displayName: "\u9EC4\u8272\u3044\u30B3\u30C3\u30D7"
     sprite: {fileID: -1504379219401341549, guid: 00f5a453b9f70c2478a48d2a0591e5ff, type: 3}
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: 54ab224ad52b4104b888b9bb79c62da6, type: 3}
   - objectId: red_cup
-    displayName: 赤いコップ
+    displayName: "\u8D64\u3044\u30B3\u30C3\u30D7"
     sprite: {fileID: -8826186400413195334, guid: 196a3c4fc1ab3794b9b18aebbcf8b30b, type: 3}
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: 6e5e0759a3454b4478ff0c3dfe3f7d45, type: 3}
   - objectId: red_book
-    displayName: 赤い本
+    displayName: "\u8D64\u3044\u672C"
     sprite: {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: ff2d31379570c5b49bb4128932ea1c5c, type: 3}
+  - objectId: blue_book
+    displayName: "\u9752\u3044\u672C"
+    sprite: {fileID: 976429924805457222, guid: 181930525f169bb449b9170eff44c6a0, type: 3}
+    voice: {fileID: 8300000, guid: d426233cb80b88b4d9d47abf85b59b25, type: 3}
+  - objectId: green_book
+    displayName: "\u7DD1\u306E\u672C"
+    sprite: {fileID: 72498739567925201, guid: d97a606ad008d1b4281c6529754fb0c8, type: 3}
+    voice: {fileID: 8300000, guid: 41b05b27f942eae4282db23d62dbbdc5, type: 3}
+  - objectId: yellow_book
+    displayName: "\u9EC4\u8272\u3044\u306E\u672C"
+    sprite: {fileID: -6190948392007208175, guid: 9ecf57176de8d384aa072f23b9f65f54, type: 3}
+    voice: {fileID: 8300000, guid: 14cbc440a1768094ab5f3a5d956731e9, type: 3}
+  - objectId: red_apple
+    displayName: "\u8D64\u3044\u30EA\u30F3\u30B4"
+    sprite: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
+    voice: {fileID: 8300000, guid: 27b406e5fb10cb74b9617133d9888ef1, type: 3}
+  - objectId: green_apple
+    displayName: "\u7DD1\u306E\u30EA\u30F3\u30B4"
+    sprite: {fileID: -893702136117968846, guid: 3897ddb9e63cb304596ced522a386ced, type: 3}
+    voice: {fileID: 8300000, guid: e88360faa86f95946b5f7d736c9c7e0e, type: 3}
+  - objectId: fork
+    displayName: "\u30D5\u30A9\u30FC\u30AF"
+    sprite: {fileID: 4422662579018926940, guid: e0e8744c1f1bb43449a069313ce229c2, type: 3}
+    voice: {fileID: 8300000, guid: eee04b423a8827e488466f0d6067d302, type: 3}
+  - objectId: spoon
+    displayName: "\u30B9\u30D7\u30FC\u30F3"
+    sprite: {fileID: -3411414237561161789, guid: f309ca4fd1b43db44a8f2c4b0e14f8c6, type: 3}
+    voice: {fileID: 8300000, guid: 07a03cc156300a34084ae0499ab6615d, type: 3}
   boxes:
   - objectId: red_box
-    displayName: 赤い箱
+    displayName: "\u8D64\u3044\u7BB1"
     sprite: {fileID: 48715915199795665, guid: a324817ad47049e4395834b3ca8a7b55, type: 3}
     voice: {fileID: 0}
   - objectId: yellow_box
-    displayName: 黄色い箱
+    displayName: "\u9EC4\u8272\u3044\u7BB1"
     sprite: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
     voice: {fileID: 0}
   - objectId: blue_box
-    displayName: 青い箱
+    displayName: "\u9752\u3044\u7BB1"
     sprite: {fileID: 49734331898714785, guid: 805cb041a999a784da08ec4defc8ce83, type: 3}
     voice: {fileID: 0}
   endVoice: {fileID: 0}
