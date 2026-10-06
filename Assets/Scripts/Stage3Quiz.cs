@@ -190,7 +190,7 @@ public class Stage3Quiz : MonoBehaviour
         cursorRect.anchoredPosition = CanvasPoint(pointerPosition);
         foreach (var box in boxes)
         {
-            if (!box.Contains(pointerPosition, UiCamera, cursorRect)) continue;
+            if (!box.Contains(pointerPosition, UiCamera)) continue;
             StartCoroutine(Drop(box));
             break;
         }

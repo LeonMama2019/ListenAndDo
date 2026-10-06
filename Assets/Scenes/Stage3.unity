@@ -4010,8 +4010,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Stage3BoxTarget
   boxId: red_box
   hitArea: {fileID: 0}
-  openingBounds: {x: 0.08, y: 0.25, z: 0.92, w: 0.9}
-  dropPadding: 12
+  openingBounds: {x: 0.25, y: 0.55, z: 0.75, w: 0.9}
+  dropPadding: 0
 --- !u!114 &2800000012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4026,8 +4026,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Stage3BoxTarget
   boxId: yellow_box
   hitArea: {fileID: 0}
-  openingBounds: {x: 0.08, y: 0.25, z: 0.92, w: 0.9}
-  dropPadding: 12
+  openingBounds: {x: 0.25, y: 0.55, z: 0.75, w: 0.9}
+  dropPadding: 0
 --- !u!114 &2800000013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4042,8 +4042,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Stage3BoxTarget
   boxId: blue_box
   hitArea: {fileID: 0}
-  openingBounds: {x: 0.08, y: 0.25, z: 0.92, w: 0.9}
-  dropPadding: 12
+  openingBounds: {x: 0.25, y: 0.55, z: 0.75, w: 0.9}
+  dropPadding: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
