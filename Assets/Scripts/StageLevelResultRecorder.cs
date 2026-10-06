@@ -11,6 +11,8 @@ public class StageQuestionResult
     public float timeToCorrectSeconds;
     public int wrongAnswerCount;
     public int replayCount;
+    public float speechSpeedAtStart;
+    public List<SpeechSpeedChange> speechSpeedChanges = new();
     public Stage2QuestionLog diceQuestion;
     public Stage3QuestionLog placementQuestion;
 }
@@ -60,6 +62,7 @@ public sealed class StageLevelResultRecorder
             correctHand = hand
         };
         startedAt = now;
+        SpeechPlaybackSpeed.BeginQuestion(current, now);
     }
 
     public void SetDiceQuestion(Stage2QuestionLog log)
@@ -88,6 +91,7 @@ public sealed class StageLevelResultRecorder
         current.timeToCorrectSeconds = (float)Math.Max(0d, now - startedAt);
         result.totalAnswerSeconds += current.timeToCorrectSeconds;
         result.questions.Add(current);
+        SpeechPlaybackSpeed.EndQuestion(current);
         current = null;
         if (result.questions.Count != questionCount) return;
         result.completedAtUtc = DateTime.UtcNow.ToString("o");

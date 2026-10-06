@@ -72,6 +72,7 @@ public class Stage2Quiz : MonoBehaviour
         voice = gameObject.AddComponent<AudioSource>();
         voice.playOnAwake = false;
         voice.spatialBlend = 0;
+        SpeechSpeedSource.Bind(voice);
         check = Find("Check")?.gameObject;
         checkAudio = check == null ? null : check.GetComponent<AudioSource>();
         mouse = Find("Mouse")?.gameObject;

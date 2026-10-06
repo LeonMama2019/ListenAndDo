@@ -24,6 +24,7 @@ public class Stage1Tutorial : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        SpeechSpeedSource.Bind(audioSource);
     }
 
     private void Start()

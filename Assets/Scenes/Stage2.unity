@@ -1064,6 +1064,7 @@ GameObject:
   - component: {fileID: 445979680}
   - component: {fileID: 445979682}
   - component: {fileID: 445979681}
+  - component: {fileID: 2900000001}
   m_Layer: 5
   m_Name: Spead
   m_TagString: Untagged
@@ -4047,6 +4048,21 @@ MonoBehaviour:
   swipeDistance: 160
   motionSeconds: 1
   transitionDelay: 3
+--- !u!114 &2900000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445979679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d615b0470d4ec788d5fbff171c2023, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpeechSpeedSlider
+  knob: {fileID: 581777436}
+  railRange: {x: 0.21, y: 0.79}
+  valueLabel: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

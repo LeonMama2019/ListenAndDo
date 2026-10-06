@@ -44,6 +44,7 @@ public class Stage3Quiz : MonoBehaviour
         voice = gameObject.AddComponent<AudioSource>();
         voice.playOnAwake = false;
         voice.spatialBlend = 0;
+        SpeechSpeedSource.Bind(voice);
         if (check != null) { checkAudio = check.GetComponent<AudioSource>(); check.SetActive(false); }
         foreach (var root in gameObject.scene.GetRootGameObjects())
         {

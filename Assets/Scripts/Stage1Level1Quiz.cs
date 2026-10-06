@@ -74,6 +74,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        SpeechSpeedSource.Bind(audioSource);
         if (checkObject != null) checkAudio = checkObject.GetComponent<AudioSource>();
         obstructionAudio = gameObject.AddComponent<AudioSource>();
         obstructionAudio.playOnAwake = false;

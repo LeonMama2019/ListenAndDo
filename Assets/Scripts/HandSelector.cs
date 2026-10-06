@@ -32,6 +32,7 @@ public class HandSelector : MonoBehaviour, IPointerClickHandler
             audioSource = gameObject.AddComponent<AudioSource>();
 
         audioSource.playOnAwake = false;
+        SpeechSpeedSource.Bind(audioSource);
     }
 
     public void OnPointerClick(PointerEventData eventData)

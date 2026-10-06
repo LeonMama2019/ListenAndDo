@@ -63,6 +63,7 @@ public class Stage2Tutorial : MonoBehaviour
         if (stepAudio != null && stepAudio.clip != null)
         {
             stepAudio.playOnAwake = false;
+            SpeechSpeedSource.Bind(stepAudio);
             stepAudio.Play();
         }
         else Debug.LogWarning("Stage2 Tutorial " + step + ": attach its voice to the step AudioSource.", this);
