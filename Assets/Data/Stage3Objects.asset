@@ -61,13 +61,13 @@ MonoBehaviour:
   - objectId: red_box
     displayName: "\u8D64\u3044\u7BB1"
     sprite: {fileID: 48715915199795665, guid: a324817ad47049e4395834b3ca8a7b55, type: 3}
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: 2e1c09261da905948a38f85e50e6358a, type: 3}
   - objectId: yellow_box
     displayName: "\u9EC4\u8272\u3044\u7BB1"
     sprite: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: 4b7a7eeb87b8141438e584d32033a89a, type: 3}
   - objectId: blue_box
     displayName: "\u9752\u3044\u7BB1"
     sprite: {fileID: 49734331898714785, guid: 805cb041a999a784da08ec4defc8ce83, type: 3}
-    voice: {fileID: 0}
-  endVoice: {fileID: 0}
+    voice: {fileID: 8300000, guid: e9972152c01317540971fda92e47f48f, type: 3}
+  endVoice: {fileID: 8300000, guid: a2a9b8abeeeb2a84c87ea44c2a2968e1, type: 3}
