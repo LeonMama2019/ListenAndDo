@@ -2070,10 +2070,6 @@ GameObject:
   - component: {fileID: 981458192}
   - component: {fileID: 981458194}
   - component: {fileID: 981458193}
-  - component: {fileID: 981458195}
-  - component: {fileID: 981458196}
-  - component: {fileID: 981458197}
-  - component: {fileID: 2200000001}
   m_Layer: 5
   m_Name: box3
   m_TagString: Untagged
@@ -2138,53 +2134,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981458191}
   m_CullTransparentMesh: 1
---- !u!114 &981458195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 981458191}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandSelector
-  handSide: 1
-  voiceClip: {fileID: 8300000, guid: 9dd0f6849db2534448fd2a74b8f8a873, type: 3}
-  tutorialOnSelect: {fileID: 0}
-  level1Quiz: {fileID: 0}
---- !u!111 &981458196
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 981458191}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 7400000, guid: 5afd4ae4239ee3546b34c02d934bed29, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
---- !u!114 &981458197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 981458191}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 084bde646fb34c2fa9a7933c9a6a3480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIBlink
-  cyclesPerSecond: 2
-  minimumAlpha: 0.25
 --- !u!1 &1038166497
 GameObject:
   m_ObjectHideFlags: 0
@@ -3851,8 +3800,6 @@ GameObject:
   - component: {fileID: 1964114257}
   - component: {fileID: 1964114260}
   - component: {fileID: 1964114259}
-  - component: {fileID: 1964114258}
-  - component: {fileID: 2200000002}
   m_Layer: 5
   m_Name: box2
   m_TagString: Untagged
@@ -3879,22 +3826,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -126}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1964114258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1964114256}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandSelector
-  handSide: 0
-  voiceClip: {fileID: 8300000, guid: 18083bd96422ca9488d4e1ce2757dbc0, type: 3}
-  tutorialOnSelect: {fileID: 0}
-  level1Quiz: {fileID: 0}
 --- !u!114 &1964114259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3944,8 +3875,6 @@ GameObject:
   - component: {fileID: 2128648489}
   - component: {fileID: 2128648491}
   - component: {fileID: 2128648490}
-  - component: {fileID: 2128648492}
-  - component: {fileID: 2200000003}
   m_Layer: 5
   m_Name: box1
   m_TagString: Untagged
@@ -4010,82 +3939,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2128648488}
   m_CullTransparentMesh: 1
---- !u!114 &2128648492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2128648488}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83b1fa46d9d84d2fa91ec08fd3a4a621, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandSelector
-  handSide: 0
-  voiceClip: {fileID: 8300000, guid: 18083bd96422ca9488d4e1ce2757dbc0, type: 3}
-  tutorialOnSelect: {fileID: 0}
-  level1Quiz: {fileID: 0}
---- !u!114 &2200000001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 981458191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae8d0f9be74242ada499e899f14503a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DiceSwipe
-  faces:
-  - {fileID: 39516445742236537, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: 2376305099863235458, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: 1813239885723335896, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -7464760887336577109, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -8866378825118310145, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -3287765887320952711, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  swipeThreshold: 30
---- !u!114 &2200000002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1964114256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae8d0f9be74242ada499e899f14503a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DiceSwipe
-  faces:
-  - {fileID: 39516445742236537, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: 2376305099863235458, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: 1813239885723335896, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -7464760887336577109, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -8866378825118310145, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -3287765887320952711, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  swipeThreshold: 30
---- !u!114 &2200000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2128648488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae8d0f9be74242ada499e899f14503a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DiceSwipe
-  faces:
-  - {fileID: 39516445742236537, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: 2376305099863235458, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: 1813239885723335896, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -7464760887336577109, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -8866378825118310145, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  - {fileID: -3287765887320952711, guid: 0f402f233b05fa34d9b63a1b2564d499, type: 3}
-  swipeThreshold: 30
 --- !u!114 &2500000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
