@@ -9,13 +9,17 @@ public class Stage3ObjectEntry
     [SerializeField] private string objectId;
     [SerializeField] private string displayName;
     [SerializeField] private Sprite sprite;
-    [Tooltip("この画像に対応する音声。アイテム名、または「青い箱に」など。")]
+    [Tooltip("アイテムは「青いコップを」、箱は「青い箱に」の音声。最後の箱にも使う。")]
     [SerializeField] private AudioClip voice;
+
+    [Tooltip("箱専用。複数の箱を指定する時の「青い箱と」の音声。アイテムでは空欄でOK。")]
+    [SerializeField] private AudioClip boxAndVoice;
 
     public string ObjectId => objectId;
     public string DisplayName => displayName;
     public Sprite Sprite => sprite;
     public AudioClip Voice => voice;
+    public AudioClip BoxAndVoice => boxAndVoice;
     public bool IsReady => !string.IsNullOrWhiteSpace(objectId) && sprite != null && voice != null;
 }
 
