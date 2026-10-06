@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3edebadc7c4358b7d3e4e6cee7cd09, type: 3}
+  m_Name: Stage3Objects
+  m_EditorClassIdentifier: 
+  items:
+  - objectId: blue_cup
+    displayName: 青いコップ
+    sprite: {fileID: -7447722783648091699, guid: 96eb0c891d34c5e44912483290aeab9d, type: 3}
+    voice: {fileID: 0}
+  - objectId: yellow_cup
+    displayName: 黄色いコップ
+    sprite: {fileID: -1504379219401341549, guid: 00f5a453b9f70c2478a48d2a0591e5ff, type: 3}
+    voice: {fileID: 0}
+  - objectId: red_cup
+    displayName: 赤いコップ
+    sprite: {fileID: -8826186400413195334, guid: 196a3c4fc1ab3794b9b18aebbcf8b30b, type: 3}
+    voice: {fileID: 0}
+  - objectId: red_book
+    displayName: 赤い本
+    sprite: {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
+    voice: {fileID: 0}
+  boxes:
+  - objectId: red_box
+    displayName: 赤い箱
+    sprite: {fileID: 48715915199795665, guid: a324817ad47049e4395834b3ca8a7b55, type: 3}
+    voice: {fileID: 0}
+  - objectId: yellow_box
+    displayName: 黄色い箱
+    sprite: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
+    voice: {fileID: 0}
+  - objectId: blue_box
+    displayName: 青い箱
+    sprite: {fileID: 49734331898714785, guid: 805cb041a999a784da08ec4defc8ce83, type: 3}
+    voice: {fileID: 0}
+  endVoice: {fileID: 0}
