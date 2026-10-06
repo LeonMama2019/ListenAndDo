@@ -1,0 +1,7 @@
+{
+  "name": "ListenAndDo.Stage3.Tests",
+  "references": ["ListenAndDo.Stage3Logic"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

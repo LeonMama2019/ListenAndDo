@@ -2070,6 +2070,7 @@ GameObject:
   - component: {fileID: 981458192}
   - component: {fileID: 981458194}
   - component: {fileID: 981458193}
+  - component: {fileID: 2800000013}
   m_Layer: 5
   m_Name: box3
   m_TagString: Untagged
@@ -2147,6 +2148,7 @@ GameObject:
   - component: {fileID: 1038166499}
   - component: {fileID: 1038166498}
   - component: {fileID: 1038166503}
+  - component: {fileID: 2800000001}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3542,8 +3544,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Stage2Quiz, Assembly-CSharp
+      - m_Target: {fileID: 2800000001}
+        m_TargetAssemblyTypeName: Stage3Quiz, Assembly-CSharp
         m_MethodName: ReplayInstruction
         m_Mode: 1
         m_Arguments:
@@ -3800,6 +3802,7 @@ GameObject:
   - component: {fileID: 1964114257}
   - component: {fileID: 1964114260}
   - component: {fileID: 1964114259}
+  - component: {fileID: 2800000012}
   m_Layer: 5
   m_Name: box2
   m_TagString: Untagged
@@ -3875,6 +3878,7 @@ GameObject:
   - component: {fileID: 2128648489}
   - component: {fileID: 2128648491}
   - component: {fileID: 2128648490}
+  - component: {fileID: 2800000011}
   m_Layer: 5
   m_Name: box1
   m_TagString: Untagged
@@ -3946,7 +3950,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726813364}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 33975be7afbe4ee0b4ae6e05c40dc8fc, type: 3}
   m_Name: 
@@ -3962,6 +3966,93 @@ MonoBehaviour:
   swipeDistance: 160
   motionSeconds: 1
   transitionDelay: 3
+--- !u!114 &2800000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038166497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fcbf3990a0c4d3cb18d00bea8169900, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Stage3Quiz
+  data: {fileID: 11400000, guid: 23a28b0c965e481d9c574d3fad4de618, type: 2}
+  itemViews:
+  - {fileID: 265771922}
+  - {fileID: 23666905}
+  - {fileID: 1261747012}
+  - {fileID: 215681344}
+  - {fileID: 1660827095}
+  boxes:
+  - {fileID: 2800000011}
+  - {fileID: 2800000012}
+  - {fileID: 2800000013}
+  speaker: {fileID: 1860542618}
+  check: {fileID: 186432207}
+  backReturnPanel: {fileID: 338903853}
+  questionCount: 7
+  nextQuestionDelay: 3
+  placedScale: 0.4
+  dropSeconds: 0.35
+--- !u!114 &2800000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128648488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043ab63391e54b238931f96b666781f9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Stage3BoxTarget
+  boxId: red_box
+  hitArea: {fileID: 0}
+  opening:
+    x: 0.08
+    y: 0.25
+    width: 0.84
+    height: 0.65
+--- !u!114 &2800000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964114256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043ab63391e54b238931f96b666781f9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Stage3BoxTarget
+  boxId: yellow_box
+  hitArea: {fileID: 0}
+  opening:
+    x: 0.08
+    y: 0.25
+    width: 0.84
+    height: 0.65
+--- !u!114 &2800000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981458191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043ab63391e54b238931f96b666781f9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Stage3BoxTarget
+  boxId: blue_box
+  hitArea: {fileID: 0}
+  opening:
+    x: 0.08
+    y: 0.25
+    width: 0.84
+    height: 0.65
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

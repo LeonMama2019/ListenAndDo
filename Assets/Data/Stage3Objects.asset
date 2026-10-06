@@ -16,7 +16,7 @@ MonoBehaviour:
   - objectId: blue_cup
     displayName: "\u9752\u3044\u30B3\u30C3\u30D7"
     sprite: {fileID: -7447722783648091699, guid: 96eb0c891d34c5e44912483290aeab9d, type: 3}
-    voice: {fileID: 0}
+    voice: {fileID: 8300000, guid: b4b38a4f50b92b7408444ce340c7b69a, type: 3}
     boxAndVoice: {fileID: 0}
   - objectId: yellow_cup
     displayName: "\u9EC4\u8272\u3044\u30B3\u30C3\u30D7"

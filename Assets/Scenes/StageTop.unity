@@ -1002,6 +1002,7 @@ GameObject:
   - component: {fileID: 847633100}
   - component: {fileID: 847633099}
   - component: {fileID: 847633101}
+  - component: {fileID: 2800000001}
   m_Layer: 5
   m_Name: Stage3
   m_TagString: Untagged
@@ -2559,6 +2560,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenuButton
   stageNumber: 2
+--- !u!114 &2800000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847633097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a8904b01774d17ac7d141b27cb258c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenuButton
+  stageNumber: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

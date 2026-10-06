@@ -12,6 +12,7 @@ public class StageQuestionResult
     public int wrongAnswerCount;
     public int replayCount;
     public Stage2QuestionLog diceQuestion;
+    public Stage3QuestionLog placementQuestion;
 }
 
 [Serializable]
@@ -64,6 +65,11 @@ public sealed class StageLevelResultRecorder
     public void SetDiceQuestion(Stage2QuestionLog log)
     {
         if (current != null) current.diceQuestion = log;
+    }
+
+    public void SetPlacementQuestion(Stage3QuestionLog log)
+    {
+        if (current != null) current.placementQuestion = log;
     }
 
     public void RecordWrongAnswer()
