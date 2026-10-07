@@ -54,6 +54,22 @@ public class Stage4Data : ScriptableObject
     [Header("持ち物")]
     [SerializeField] private List<Stage4ObjectEntry> objects = new();
 
+    [Header("質問文テンプレート")]
+    [Tooltip("{Object}を持っていたのは誰？")]
+    [SerializeField] private string whoQuestionText = "{Object}を持っていたのは誰？";
+
+    [Tooltip("{Person}は何を持っていましたか？")]
+    [SerializeField] private string whatQuestionText = "{Person}は何を持っていましたか？";
+
+    [Tooltip("{Person}が持っていなかったのはどれ？")]
+    [SerializeField] private string notQuestionText = "{Person}が持っていなかったのはどれ？";
+
+    [Tooltip("CheckパターンA")]
+    [SerializeField] private string checkPatternAText = "{Person}が持っていたのは{Object}ですか？";
+
+    [Tooltip("CheckパターンB")]
+    [SerializeField] private string checkPatternBText = "{Person}は{Object}を持っていましたか？";
+
     [Header("Check質問の音声パーツ")]
     [Tooltip("パターンA: ○○ちゃん +「が持っていたのは」+ アイテム +「ですか？」")]
     [SerializeField] private AudioClip checkHadItemWasVoice;
@@ -65,6 +81,12 @@ public class Stage4Data : ScriptableObject
 
     public IReadOnlyList<Stage4PersonEntry> Persons => persons;
     public IReadOnlyList<Stage4ObjectEntry> Objects => objects;
+
+    public string WhoQuestionText => whoQuestionText;
+    public string WhatQuestionText => whatQuestionText;
+    public string NotQuestionText => notQuestionText;
+    public string CheckPatternAText => checkPatternAText;
+    public string CheckPatternBText => checkPatternBText;
 
     public AudioClip CheckHadItemWasVoice => checkHadItemWasVoice;
     public AudioClip CheckIsItVoice => checkIsItVoice;
