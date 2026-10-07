@@ -54,6 +54,20 @@ public class Stage4Data : ScriptableObject
     [Header("持ち物")]
     [SerializeField] private List<Stage4ObjectEntry> objects = new();
 
+    [Header("Check質問の音声パーツ")]
+    [Tooltip("パターンA: ○○ちゃん +「が持っていたのは」+ アイテム +「ですか？」")]
+    [SerializeField] private AudioClip checkHadItemWasVoice;
+    [SerializeField] private AudioClip checkIsItVoice;
+
+    [Tooltip("パターンB: ○○ちゃん +「は」+ アイテム +「を持っていましたか？」")]
+    [SerializeField] private AudioClip checkPersonWaVoice;
+    [SerializeField] private AudioClip checkHadItemQuestionVoice;
+
     public IReadOnlyList<Stage4PersonEntry> Persons => persons;
     public IReadOnlyList<Stage4ObjectEntry> Objects => objects;
+
+    public AudioClip CheckHadItemWasVoice => checkHadItemWasVoice;
+    public AudioClip CheckIsItVoice => checkIsItVoice;
+    public AudioClip CheckPersonWaVoice => checkPersonWaVoice;
+    public AudioClip CheckHadItemQuestionVoice => checkHadItemQuestionVoice;
 }
