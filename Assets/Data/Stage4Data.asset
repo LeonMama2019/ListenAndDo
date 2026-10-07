@@ -12,6 +12,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3195639ac4eb474ab55f13bd452122c, type: 3}
   m_Name: Stage4Data
   m_EditorClassIdentifier: Assembly-CSharp::Stage4Data
+  levels:
+  - level: 1
+    personCount: 1
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 1
+    questionTypes: 01000000
+  - level: 2
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 1
+    questionTypes: 0000000001000000
+  - level: 3
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 000000000100000002000000
+  - level: 4
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  - level: 5
+    personCount: 3
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 1
+    questionTypes: 0000000001000000
+  - level: 6
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  - level: 7
+    personCount: 3
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  - level: 8
+    personCount: 3
+    minObjectsPerPerson: 2
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  memorizeSeconds: 5
   persons:
   - personId: 1
     displayName: "\u3042\u304B\u306D\u3061\u3083\u3093"
@@ -80,6 +122,11 @@ MonoBehaviour:
     displayName: "\u30D5\u30A9\u30FC\u30AF"
     sprite: {fileID: 4422662579018926940, guid: e0e8744c1f1bb43449a069313ce229c2, type: 3}
     nameVoice: {fileID: 8300000, guid: 460cb9a2286e06f41a718b1b402fd5c6, type: 3}
+  whoQuestionText: "{Object}\u3092\u6301\u3063\u3066\u3044\u305F\u306E\u306F\u8AB0\uFF1F"
+  whatQuestionText: "{Person}\u306F\u4F55\u3092\u6301\u3063\u3066\u3044\u307E\u3057\u305F\u304B\uFF1F"
+  notQuestionText: "{Person}\u304C\u6301\u3063\u3066\u3044\u306A\u304B\u3063\u305F\u306E\u306F\u3069\u308C\uFF1F"
+  checkPatternAText: "{Person}\u304C\u6301\u3063\u3066\u3044\u305F\u306E\u306F{Object}\u3067\u3059\u304B\uFF1F"
+  checkPatternBText: "{Person}\u306F{Object}\u3092\u6301\u3063\u3066\u3044\u307E\u3057\u305F\u304B\uFF1F"
   checkHadItemWasVoice: {fileID: 8300000, guid: 71a484a5d53759b4796379ac4be5c879, type: 3}
   checkIsItVoice: {fileID: 8300000, guid: f9b4fe9ac555a7e41a24816ed9ade3ab, type: 3}
   checkPersonWaVoice: {fileID: 8300000, guid: e58a366a883e9784e86739d95998a436, type: 3}
