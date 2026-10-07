@@ -221,11 +221,12 @@ public class Stage4Quiz : MonoBehaviour
         var pool=new List<Stage4ObjectEntry>(objects); pool.Remove(correct); Shuffle(pool);
         for(int i=0;i<pool.Count && choiceObjects.Count<4;i++)
         {
-            if(isNot && !owned.Contains(pool[i]) && pool[i]!=correct) { choiceObjects.Add(pool[i]); continue; }
             if(!isNot) choiceObjects.Add(pool[i]);
             else if(owned.Contains(pool[i])) choiceObjects.Add(pool[i]);
         }
-        while(choiceObjects.Count<4) choiceObjects.Add(pool[choiceObjects.Count%pool.Count]);
+        // Not は「持っていなかった物」が正解1つだけになるよう、残りは実際に持っていた物で埋める。
+        int repeat=0;
+        while(choiceObjects.Count<4 && owned.Count>0) choiceObjects.Add(owned[repeat++ % owned.Count]);
         Shuffle(choiceObjects);
         for(int i=0;i<4;i++) if(selects[i]!=null){selects[i].sprite=choiceObjects[i].Sprite;selects[i].preserveAspect=true;}
     }
