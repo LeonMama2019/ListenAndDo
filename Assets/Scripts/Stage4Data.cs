@@ -2,6 +2,35 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Stage4QuestionType
+{
+    Who,
+    What,
+    Not,
+    Check
+}
+
+[Serializable]
+public class Stage4LevelSetting
+{
+    [Range(1, 8)]
+    [SerializeField] private int level = 1;
+    [Min(1)]
+    [SerializeField] private int personCount = 1;
+    [Min(1)]
+    [SerializeField] private int minObjectsPerPerson = 1;
+    [Min(1)]
+    [SerializeField] private int maxObjectsPerPerson = 1;
+    [Tooltip("このレベルで出題できる質問タイプ")]
+    [SerializeField] private List<Stage4QuestionType> questionTypes = new();
+
+    public int Level => level;
+    public int PersonCount => personCount;
+    public int MinObjectsPerPerson => minObjectsPerPerson;
+    public int MaxObjectsPerPerson => maxObjectsPerPerson;
+    public IReadOnlyList<Stage4QuestionType> QuestionTypes => questionTypes;
+}
+
 [Serializable]
 public class Stage4PersonEntry
 {
