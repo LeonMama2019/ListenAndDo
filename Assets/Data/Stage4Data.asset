@@ -80,3 +80,7 @@ MonoBehaviour:
     displayName: "\u30D5\u30A9\u30FC\u30AF"
     sprite: {fileID: 4422662579018926940, guid: e0e8744c1f1bb43449a069313ce229c2, type: 3}
     nameVoice: {fileID: 8300000, guid: 460cb9a2286e06f41a718b1b402fd5c6, type: 3}
+  checkHadItemWasVoice: {fileID: 8300000, guid: 71a484a5d53759b4796379ac4be5c879, type: 3}
+  checkIsItVoice: {fileID: 8300000, guid: f9b4fe9ac555a7e41a24816ed9ade3ab, type: 3}
+  checkPersonWaVoice: {fileID: 8300000, guid: e58a366a883e9784e86739d95998a436, type: 3}
+  checkHadItemQuestionVoice: {fileID: 8300000, guid: 171cd88ccd20d3246b21b57cdd6ddfb5, type: 3}
