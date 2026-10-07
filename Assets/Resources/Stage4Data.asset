@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3195639ac4eb474ab55f13bd452122c, type: 3}
+  m_Name: Stage4Data
+  m_EditorClassIdentifier: Assembly-CSharp::Stage4Data
+  levels:
+  - level: 1
+    personCount: 1
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 1
+    questionTypes: 01000000
+  - level: 2
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 1
+    questionTypes: 0000000001000000
+  - level: 3
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 000000000100000002000000
+  - level: 4
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  - level: 5
+    personCount: 3
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 1
+    questionTypes: 0000000001000000
+  - level: 6
+    personCount: 2
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  - level: 7
+    personCount: 3
+    minObjectsPerPerson: 1
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  - level: 8
+    personCount: 3
+    minObjectsPerPerson: 2
+    maxObjectsPerPerson: 2
+    questionTypes: 00000000010000000200000003000000
+  memorizeSeconds: 5
+  persons:
+  - personId: 1
+    displayName: "\u3042\u304B\u306D\u3061\u3083\u3093"
+    frontSprite: {fileID: 9101278813714116849, guid: c8413e20d819be44f87ce3bd2580a99a, type: 3}
+    backSprite: {fileID: -5439765026384770559, guid: c8413e20d819be44f87ce3bd2580a99a, type: 3}
+    nameVoice: {fileID: 8300000, guid: b905e51df5187004eb4df27144b7b5b4, type: 3}
+  - personId: 2
+    displayName: "\u308C\u3093\u3061\u3083\u3093"
+    frontSprite: {fileID: 7094056765176595939, guid: c8413e20d819be44f87ce3bd2580a99a, type: 3}
+    backSprite: {fileID: -5859545116844290178, guid: c8413e20d819be44f87ce3bd2580a99a, type: 3}
+    nameVoice: {fileID: 8300000, guid: 7f4ac0af18030774b912278432d921e0, type: 3}
+  objects:
+  - objectId: 1
+    displayName: "\u3042\u304B\u3044\u308A\u3093\u3054"
+    sprite: {fileID: -7832214784768987486, guid: 550eccf75f7da35469fd93223a97c71a, type: 3}
+    nameVoice: {fileID: 8300000, guid: 21924ef4f2ab01b4181e91e1e90fcae8, type: 3}
+  - objectId: 2
+    displayName: "\u307F\u3069\u308A\u306E\u308A\u3093\u3054"
+    sprite: {fileID: -893702136117968846, guid: 3897ddb9e63cb304596ced522a386ced, type: 3}
+    nameVoice: {fileID: 8300000, guid: 7132764632adba647a17d46f6a7f0455, type: 3}
+  - objectId: 3
+    displayName: "\u3042\u304A\u3044\u307B\u3093"
+    sprite: {fileID: 976429924805457222, guid: 181930525f169bb449b9170eff44c6a0, type: 3}
+    nameVoice: {fileID: 8300000, guid: 9f7fb96bb74df824cb9839bd3093b061, type: 3}
+  - objectId: 4
+    displayName: "\u3042\u304B\u3044\u307B\u3093"
+    sprite: {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
+    nameVoice: {fileID: 8300000, guid: 82b6df91f10f95d4ebaf66641e56b2c9, type: 3}
+  - objectId: 5
+    displayName: "\u304D\u3044\u308D\u3044\u307B\u3093"
+    sprite: {fileID: -6190948392007208175, guid: 9ecf57176de8d384aa072f23b9f65f54, type: 3}
+    nameVoice: {fileID: 8300000, guid: 61e0e8cbc9b0f344180d3ba75412048a, type: 3}
+  - objectId: 6
+    displayName: "\u307F\u3069\u308A\u306E\u307B\u3093"
+    sprite: {fileID: 72498739567925201, guid: d97a606ad008d1b4281c6529754fb0c8, type: 3}
+    nameVoice: {fileID: 8300000, guid: 235300d6b7f51a04888c3cc9f18e5b2b, type: 3}
+  - objectId: 7
+    displayName: "\u304D\u3044\u308D\u3044\u306F\u3053"
+    sprite: {fileID: 7499154508442906066, guid: e0e7f7b46d215c048b1391ef1cdcaa9b, type: 3}
+    nameVoice: {fileID: 8300000, guid: f1cba7764d4a3324bab5fc25fc0f7197, type: 3}
+  - objectId: 8
+    displayName: "\u3042\u304B\u3044\u306F\u3053"
+    sprite: {fileID: 48715915199795665, guid: a324817ad47049e4395834b3ca8a7b55, type: 3}
+    nameVoice: {fileID: 8300000, guid: deb6a34a4d51c3445894f33c5bafbef1, type: 3}
+  - objectId: 9
+    displayName: "\u3042\u304A\u3044\u306F\u3053"
+    sprite: {fileID: 49734331898714785, guid: 805cb041a999a784da08ec4defc8ce83, type: 3}
+    nameVoice: {fileID: 8300000, guid: e546d1a14d8e2e241bb5de01f869b7d2, type: 3}
+  - objectId: 10
+    displayName: "\u3042\u304A\u3044\u30B3\u30C3\u30D7"
+    sprite: {fileID: -7447722783648091699, guid: 96eb0c891d34c5e44912483290aeab9d, type: 3}
+    nameVoice: {fileID: 8300000, guid: ab29cab5fc89c7b46bf35594d1025f4c, type: 3}
+  - objectId: 11
+    displayName: "\u3042\u304B\u3044\u30B3\u30C3\u30D7"
+    sprite: {fileID: -8826186400413195334, guid: 196a3c4fc1ab3794b9b18aebbcf8b30b, type: 3}
+    nameVoice: {fileID: 8300000, guid: e83b875fabf2c164981be15de40890f2, type: 3}
+  - objectId: 12
+    displayName: "\u304D\u3044\u308D\u3044\u30B3\u30C3\u30D7"
+    sprite: {fileID: -1504379219401341549, guid: 00f5a453b9f70c2478a48d2a0591e5ff, type: 3}
+    nameVoice: {fileID: 8300000, guid: 8e2e4d2e29dc6314397b0bfb567eee96, type: 3}
+  - objectId: 13
+    displayName: "\u30B9\u30D7\u30FC\u30F3"
+    sprite: {fileID: -3411414237561161789, guid: f309ca4fd1b43db44a8f2c4b0e14f8c6, type: 3}
+    nameVoice: {fileID: 8300000, guid: bc98155157ece47448e5efa3ea64ee6a, type: 3}
+  - objectId: 14
+    displayName: "\u30D5\u30A9\u30FC\u30AF"
+    sprite: {fileID: 4422662579018926940, guid: e0e8744c1f1bb43449a069313ce229c2, type: 3}
+    nameVoice: {fileID: 8300000, guid: 460cb9a2286e06f41a718b1b402fd5c6, type: 3}
+  whoQuestionText: "{Object}\u3092\u6301\u3063\u3066\u3044\u305F\u306E\u306F\u8AB0\uFF1F"
+  whatQuestionText: "{Person}\u306F\u4F55\u3092\u6301\u3063\u3066\u3044\u307E\u3057\u305F\u304B\uFF1F"
+  notQuestionText: "{Person}\u304C\u6301\u3063\u3066\u3044\u306A\u304B\u3063\u305F\u306E\u306F\u3069\u308C\uFF1F"
+  checkPatternAText: "{Person}\u304C\u6301\u3063\u3066\u3044\u305F\u306E\u306F{Object}\u3067\u3059\u304B\uFF1F"
+  checkPatternBText: "{Person}\u306F{Object}\u3092\u6301\u3063\u3066\u3044\u307E\u3057\u305F\u304B\uFF1F"
+  checkHadItemWasVoice: {fileID: 8300000, guid: 71a484a5d53759b4796379ac4be5c879, type: 3}
+  checkIsItVoice: {fileID: 8300000, guid: f9b4fe9ac555a7e41a24816ed9ade3ab, type: 3}
+  checkPersonWaVoice: {fileID: 8300000, guid: e58a366a883e9784e86739d95998a436, type: 3}
+  checkHadItemQuestionVoice: {fileID: 8300000, guid: 171cd88ccd20d3246b21b57cdd6ddfb5, type: 3}
