@@ -48,6 +48,22 @@ public class Stage4ObjectEntry
 [CreateAssetMenu(fileName = "Stage4Data", menuName = "ListenAndDo/Stage4/Stage4 Data")]
 public class Stage4Data : ScriptableObject
 {
+    [Header("レベル設定")]
+    [Tooltip("Lv1〜8。提示時間は全レベル共通で5秒。")]
+    [SerializeField] private List<Stage4LevelSetting> levels = new()
+    {
+        new Stage4LevelSetting(),
+        new Stage4LevelSetting(),
+        new Stage4LevelSetting(),
+        new Stage4LevelSetting(),
+        new Stage4LevelSetting(),
+        new Stage4LevelSetting(),
+        new Stage4LevelSetting(),
+        new Stage4LevelSetting()
+    };
+
+    [SerializeField] private float memorizeSeconds = 5f;
+
     [Header("人物")]
     [SerializeField] private List<Stage4PersonEntry> persons = new();
 
@@ -78,6 +94,9 @@ public class Stage4Data : ScriptableObject
     [Tooltip("パターンB: ○○ちゃん +「は」+ アイテム +「を持っていましたか？」")]
     [SerializeField] private AudioClip checkPersonWaVoice;
     [SerializeField] private AudioClip checkHadItemQuestionVoice;
+
+    public IReadOnlyList<Stage4LevelSetting> Levels => levels;
+    public float MemorizeSeconds => memorizeSeconds;
 
     public IReadOnlyList<Stage4PersonEntry> Persons => persons;
     public IReadOnlyList<Stage4ObjectEntry> Objects => objects;
