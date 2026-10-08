@@ -285,6 +285,7 @@ public class Stage4Quiz : MonoBehaviour
         {
             yield return Play(targetPerson.NameVoice);
             yield return Play(currentType==Stage4QuestionType.What ? data.WhatQuestionVoice : data.NotQuestionVoice);
+            if(currentType==Stage4QuestionType.What) yield return Play(data.WhatQuestionEndVoice);
         }
         else
         {
