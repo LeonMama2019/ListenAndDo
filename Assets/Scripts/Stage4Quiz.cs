@@ -176,8 +176,8 @@ public class Stage4Quiz : MonoBehaviour
             for(int i=0;i<setting.PersonCount;i++)
             {
                 yield return Play(pPool[i].NameVoice);
-                yield return Play(data.MemorizePromptVoice);
             }
+            yield return Play(data.MemorizePromptVoice);
         }
         yield return new WaitForSecondsRealtime(Mathf.Max(.1f,data.MemorizeSeconds));
         for(int i=0;i<setting.PersonCount;i++)
