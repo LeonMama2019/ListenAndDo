@@ -124,6 +124,8 @@ public class Stage4Data : ScriptableObject
     [SerializeField] private AudioClip whoQuestionVoice;
     [Tooltip("人物名の後に再生する「は何を持っていましたか？」")]
     [SerializeField] private AudioClip whatQuestionVoice;
+    [Tooltip("What質問の続き。what.mp3の後に再生するwomotte.mp3。全文をWhat Question Voiceに入れる場合は空欄。")]
+    [SerializeField] private AudioClip whatQuestionEndVoice;
     [Tooltip("人物名の後に再生する「が持っていなかったのはどれ？」")]
     [SerializeField] private AudioClip notQuestionVoice;
 
@@ -151,6 +153,7 @@ public class Stage4Data : ScriptableObject
     public AudioClip MemorizePromptVoice => memorizePromptVoice;
     public AudioClip WhoQuestionVoice => whoQuestionVoice;
     public AudioClip WhatQuestionVoice => whatQuestionVoice;
+    public AudioClip WhatQuestionEndVoice => whatQuestionEndVoice;
     public AudioClip NotQuestionVoice => notQuestionVoice;
 
     public AudioClip CheckHadItemWasVoice => checkHadItemWasVoice;
