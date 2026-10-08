@@ -115,6 +115,18 @@ public class Stage4Data : ScriptableObject
     [Tooltip("CheckパターンB")]
     [SerializeField] private string checkPatternBText = "{Person}は{Object}を持っていましたか？";
 
+    [Header("記憶前の声かけ")]
+    [Tooltip("人物名の後に再生する「何を持ってる？」。人物名は既存のName Voiceを使います。")]
+    [SerializeField] private AudioClip memorizePromptVoice;
+
+    [Header("Who / What / Not質問の音声パーツ")]
+    [Tooltip("持ち物名の後に再生する「を持っていたのは誰？」")]
+    [SerializeField] private AudioClip whoQuestionVoice;
+    [Tooltip("人物名の後に再生する「は何を持っていましたか？」")]
+    [SerializeField] private AudioClip whatQuestionVoice;
+    [Tooltip("人物名の後に再生する「が持っていなかったのはどれ？」")]
+    [SerializeField] private AudioClip notQuestionVoice;
+
     [Header("Check質問の音声パーツ")]
     [Tooltip("パターンA: ○○ちゃん +「が持っていたのは」+ アイテム +「ですか？」")]
     [SerializeField] private AudioClip checkHadItemWasVoice;
@@ -135,6 +147,11 @@ public class Stage4Data : ScriptableObject
     public string NotQuestionText => notQuestionText;
     public string CheckPatternAText => checkPatternAText;
     public string CheckPatternBText => checkPatternBText;
+
+    public AudioClip MemorizePromptVoice => memorizePromptVoice;
+    public AudioClip WhoQuestionVoice => whoQuestionVoice;
+    public AudioClip WhatQuestionVoice => whatQuestionVoice;
+    public AudioClip NotQuestionVoice => notQuestionVoice;
 
     public AudioClip CheckHadItemWasVoice => checkHadItemWasVoice;
     public AudioClip CheckIsItVoice => checkIsItVoice;
