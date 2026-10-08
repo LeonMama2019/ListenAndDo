@@ -287,7 +287,7 @@ public class Stage4Quiz : MonoBehaviour
         accepting=false;
         if(currentType==Stage4QuestionType.Who)
         {
-            Debug.Log($"Stage4 Who質問: {targetObject.NameVoice?.name ?? \"未設定\"} → {data.WhoQuestionVoice?.name ?? \"未設定\"} → {data.WhoQuestionEndVoice?.name ?? \"未設定\"}", this);
+            Debug.Log("Stage4 Who質問: " + (targetObject.NameVoice?.name ?? "未設定") + " → " + (data.WhoQuestionVoice?.name ?? "未設定") + " → " + (data.WhoQuestionEndVoice?.name ?? "未設定"), this);
             yield return Play(targetObject.NameVoice);
             yield return Play(data.WhoQuestionVoice);
             yield return Play(data.WhoQuestionEndVoice);
