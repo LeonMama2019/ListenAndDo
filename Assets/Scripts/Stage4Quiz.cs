@@ -26,6 +26,7 @@ public class Stage4Quiz : MonoBehaviour
     private Button speaker, yesButton, noButton;
     private Image[] selects = new Image[4];
     private TMP_Text questionLabel;
+    private Image whoQuestionImage;
     private AudioSource voice, checkAudio;
     private StageLevelResultRecorder recorder;
     private Coroutine speaking;
@@ -70,6 +71,7 @@ public class Stage4Quiz : MonoBehaviour
     {
         answerPanel=Find("AnswerPanel")?.gameObject; whoPanel=Find("WhoPanel")?.gameObject;
         whatPanel=Find("WhatPanel")?.gameObject; notPanel=Find("NotPanel")?.gameObject; checkPanel=Find("CheckPanel")?.gameObject;
+        whoQuestionImage=whoPanel!=null ? FindChildImage(whoPanel.transform,"Question") : null;
         checkMark=Find("Check")?.gameObject;
         speaker=Find("Speaker")?.GetComponent<Button>();
         yesButton=Find("YesButton")?.GetComponent<Button>(); noButton=Find("NoButton")?.GetComponent<Button>();
@@ -208,6 +210,13 @@ public class Stage4Quiz : MonoBehaviour
         {
             text=data.WhoQuestionText.Replace("{Object}",targetObject.DisplayName);
             SetPanels(true,false,false,false);
+            if(whoQuestionImage!=null)
+            {
+                whoQuestionImage.sprite=targetObject.Sprite;
+                whoQuestionImage.preserveAspect=true;
+                whoQuestionImage.enabled=true;
+                whoQuestionImage.gameObject.SetActive(true);
+            }
         }
         else if(currentType==Stage4QuestionType.What)
         {
@@ -280,6 +289,7 @@ public class Stage4Quiz : MonoBehaviour
         {
             yield return Play(targetObject.NameVoice);
             yield return Play(data.WhoQuestionVoice);
+            yield return Play(data.WhoQuestionEndVoice);
         }
         else if(currentType==Stage4QuestionType.What || currentType==Stage4QuestionType.Not)
         {
