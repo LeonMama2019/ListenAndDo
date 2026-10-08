@@ -34,7 +34,7 @@ public class Stage4Quiz : MonoBehaviour
     private Stage4QuestionType currentType;
     private Stage4PersonEntry targetPerson;
     private Stage4ObjectEntry targetObject;
-    private bool expectedYes;
+    private bool expectedYes, checkPatternA;
     private double answerStarted;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -59,6 +59,7 @@ public class Stage4Quiz : MonoBehaviour
         if (objects.Count < Mathf.Max(4,maxHeld)) { Debug.LogError("Stage4: 持ち物を4種類以上登録してください。"); enabled=false; return; }
 
         CacheScene();
+        CenterSinglePerson();
         BuildQuestionPlan();
         recorder = new StageLevelResultRecorder(4, level, QuestionCount);
         voice = gameObject.AddComponent<AudioSource>(); voice.playOnAwake=false; voice.spatialBlend=0; SpeechSpeedSource.Bind(voice);
@@ -100,6 +101,17 @@ public class Stage4Quiz : MonoBehaviour
         if(noButton!=null){noButton.onClick.RemoveAllListeners();noButton.onClick.AddListener(()=>AnswerYesNo(false));}
         if(speaker!=null){speaker.onClick.RemoveAllListeners();speaker.onClick.AddListener(Replay);}
         questionLabel=FindQuestionText();
+    }
+
+    private void CenterSinglePerson()
+    {
+        if (setting.PersonCount != 1 || personRoots[0] == null) return;
+        if (personRoots[0] is RectTransform rect)
+        {
+            rect.anchorMin = new Vector2(.5f, rect.anchorMin.y);
+            rect.anchorMax = new Vector2(.5f, rect.anchorMax.y);
+            rect.anchoredPosition = new Vector2(0f, rect.anchoredPosition.y);
+        }
     }
 
     private static Image FindChildImage(Transform root,string n)
@@ -145,7 +157,12 @@ public class Stage4Quiz : MonoBehaviour
             if(personRoots[i]!=null) personRoots[i].gameObject.SetActive(active);
             if(!active) continue;
             var p=pPool[i]; personImages[i].sprite=p.FrontSprite; personImages[i].preserveAspect=true;
-            if(backs[i]!=null) backs[i].SetActive(false);
+            if(backs[i]!=null)
+            {
+                backs[i].SetActive(false);
+                var backImage=backs[i].GetComponent<Image>();
+                if(backImage!=null){backImage.sprite=p.BackSprite;backImage.preserveAspect=true;}
+            }
             int count=random.Next(setting.MinObjectsPerPerson,setting.MaxObjectsPerPerson+1);
             var list=new List<Stage4ObjectEntry>();
             for(int j=0;j<2;j++)
@@ -162,6 +179,15 @@ public class Stage4Quiz : MonoBehaviour
 
     private IEnumerator MemorizeThenAsk(List<Stage4PersonEntry> pPool)
     {
+        // 声かけ終了後にも、設定した秒数だけ持ち物を見る時間を確保する。
+        if(data.MemorizePromptVoice!=null)
+        {
+            for(int i=0;i<setting.PersonCount;i++)
+            {
+                yield return Play(pPool[i].NameVoice);
+                yield return Play(data.MemorizePromptVoice);
+            }
+        }
         yield return new WaitForSecondsRealtime(Mathf.Max(.1f,data.MemorizeSeconds));
         for(int i=0;i<setting.PersonCount;i++)
         {
@@ -202,8 +228,8 @@ public class Stage4Quiz : MonoBehaviour
         {
             expectedYes=random.Next(2)==0;
             if(!expectedYes) targetObject=PickNotOwned(owned);
-            bool patternA=random.Next(2)==0;
-            text=(patternA?data.CheckPatternAText:data.CheckPatternBText).Replace("{Person}",targetPerson.DisplayName).Replace("{Object}",targetObject.DisplayName);
+            checkPatternA=random.Next(2)==0;
+            text=(checkPatternA?data.CheckPatternAText:data.CheckPatternBText).Replace("{Person}",targetPerson.DisplayName).Replace("{Object}",targetObject.DisplayName);
             SetPanels(false,false,false,true);
         }
         SetQuestionText(text);
@@ -254,12 +280,20 @@ public class Stage4Quiz : MonoBehaviour
     private IEnumerator SpeakQuestion()
     {
         accepting=false;
-        if(currentType==Stage4QuestionType.Who) yield return Play(targetObject.NameVoice);
-        else if(currentType==Stage4QuestionType.What || currentType==Stage4QuestionType.Not) yield return Play(targetPerson.NameVoice);
+        if(currentType==Stage4QuestionType.Who)
+        {
+            yield return Play(targetObject.NameVoice);
+            yield return Play(data.WhoQuestionVoice);
+        }
+        else if(currentType==Stage4QuestionType.What || currentType==Stage4QuestionType.Not)
+        {
+            yield return Play(targetPerson.NameVoice);
+            yield return Play(currentType==Stage4QuestionType.What ? data.WhatQuestionVoice : data.NotQuestionVoice);
+        }
         else
         {
             yield return Play(targetPerson.NameVoice);
-            if(random.Next(2)==0){yield return Play(data.CheckHadItemWasVoice);yield return Play(targetObject.NameVoice);yield return Play(data.CheckIsItVoice);}
+            if(checkPatternA){yield return Play(data.CheckHadItemWasVoice);yield return Play(targetObject.NameVoice);yield return Play(data.CheckIsItVoice);}
             else {yield return Play(data.CheckPersonWaVoice);yield return Play(targetObject.NameVoice);yield return Play(data.CheckHadItemQuestionVoice);}
         }
         speaking=null; accepting=true;
