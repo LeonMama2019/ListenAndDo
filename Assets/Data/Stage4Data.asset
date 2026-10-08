@@ -130,6 +130,7 @@ MonoBehaviour:
   memorizePromptVoice: {fileID: 8300000, guid: dd60964ef92d6d14182f49ef47ec9237, type: 3}
   whoQuestionVoice: {fileID: 8300000, guid: d8b4314e4e94df14492924e6373c5e9b, type: 3}
   whatQuestionVoice: {fileID: 8300000, guid: d09980d1d90159d45bb9b066a7d5e9da, type: 3}
+  whatQuestionEndVoice: {fileID: 8300000, guid: 171cd88ccd20d3246b21b57cdd6ddfb5, type: 3}
   notQuestionVoice: {fileID: 8300000, guid: 6dab69c4cc1c6844cb2dea0983b5d59a, type: 3}
   checkHadItemWasVoice: {fileID: 8300000, guid: 71a484a5d53759b4796379ac4be5c879, type: 3}
   checkIsItVoice: {fileID: 8300000, guid: f9b4fe9ac555a7e41a24816ed9ade3ab, type: 3}
