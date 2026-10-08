@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class Stage4Quiz : MonoBehaviour
 {
     private const int QuestionCount = 7;
-    private Stage4Data data;
+    [SerializeField] private Stage4Data data;
     private Stage4LevelSetting setting;
     private readonly System.Random random = new();
     private readonly List<Stage4PersonEntry> people = new();
@@ -37,18 +37,9 @@ public class Stage4Quiz : MonoBehaviour
     private bool expectedYes, checkPatternA;
     private double answerStarted;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void Boot()
-    {
-        if (SceneManager.GetActiveScene().name != "Stage4") return;
-        if (FindFirstObjectByType<Stage4Quiz>() != null) return;
-        new GameObject("Stage4Quiz").AddComponent<Stage4Quiz>();
-    }
-
     private void Start()
     {
-        data = Resources.Load<Stage4Data>("Stage4Data");
-        if (data == null) { Debug.LogError("Stage4: Resources/Stage4Data が見つかりません。"); enabled = false; return; }
+        if (data == null) { Debug.LogError("Stage4: Stage4Quiz の Data に Stage4Data を設定してください。"); enabled = false; return; }
         level = StageLevelMenu.SelectedStage == 4 ? Mathf.Clamp(StageLevelMenu.SelectedLevel,1,8) : 1;
         if (data.Levels == null || data.Levels.Count < level) { Debug.LogError("Stage4: レベル設定が足りません。"); enabled=false; return; }
         setting = data.Levels[level-1];
