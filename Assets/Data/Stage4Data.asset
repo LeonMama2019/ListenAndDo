@@ -129,7 +129,7 @@ MonoBehaviour:
   checkPatternBText: "{Person}\u306F{Object}\u3092\u6301\u3063\u3066\u3044\u307E\u3057\u305F\u304B\uFF1F"
   memorizePromptVoice: {fileID: 8300000, guid: dd60964ef92d6d14182f49ef47ec9237, type: 3}
   whoQuestionVoice: {fileID: 8300000, guid: d8b4314e4e94df14492924e6373c5e9b, type: 3}
-  whoQuestionEndVoice: {fileID: 8300000, guid: dd60964ef92d6d14182f49ef47ec9237, type: 3}
+  whoQuestionEndVoice: {fileID: 8300000, guid: eb14eb22d81460e4987ff11e160bef3e, type: 3}
   whatQuestionVoice: {fileID: 8300000, guid: d09980d1d90159d45bb9b066a7d5e9da, type: 3}
   whatQuestionEndVoice: {fileID: 8300000, guid: 171cd88ccd20d3246b21b57cdd6ddfb5, type: 3}
   notQuestionVoice: {fileID: 8300000, guid: 6dab69c4cc1c6844cb2dea0983b5d59a, type: 3}
