@@ -275,7 +275,7 @@ public class Stage4Quiz : MonoBehaviour
                 if(owned.Exists(x=>SameObject(x,candidate))) continue;
                 choiceObjects.Add(candidate);
             }
-            else if(owned.Contains(pool[i])) choiceObjects.Add(pool[i]);
+            else if(owned.Contains(pool[i]) && !choiceObjects.Exists(x=>SameObject(x,pool[i]))) choiceObjects.Add(pool[i]);
         }
         if(!isNot && choiceObjects.Count<4)
         {
@@ -283,11 +283,16 @@ public class Stage4Quiz : MonoBehaviour
             StopAllCoroutines(); enabled=false;
             return;
         }
-        // Not は「持っていなかった物」が正解1つだけになるよう、残りは実際に持っていた物で埋める。
-        int repeat=0;
-        while(choiceObjects.Count<4 && owned.Count>0) choiceObjects.Add(owned[repeat++ % owned.Count]);
+        // Not は正解1つと、重複しない実際の持ち物だけを表示する。
         Shuffle(choiceObjects);
-        for(int i=0;i<4;i++) if(selects[i]!=null){selects[i].sprite=choiceObjects[i].Sprite;selects[i].preserveAspect=true;}
+        for(int i=0;i<selects.Length;i++)
+        {
+            if(selects[i]==null) continue;
+            bool show=i<choiceObjects.Count;
+            selects[i].gameObject.SetActive(show);
+            selects[i].sprite=show ? choiceObjects[i].Sprite : null;
+            selects[i].preserveAspect=true;
+        }
     }
 
     private static bool SameObject(Stage4ObjectEntry a,Stage4ObjectEntry b)
