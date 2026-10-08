@@ -252,14 +252,32 @@ public class Stage4Quiz : MonoBehaviour
         var pool=new List<Stage4ObjectEntry>(objects); pool.Remove(correct); Shuffle(pool);
         for(int i=0;i<pool.Count && choiceObjects.Count<4;i++)
         {
-            if(!isNot) choiceObjects.Add(pool[i]);
+            if(!isNot)
+            {
+                // 同じID・同じ画像の選択肢と、対象人物の他の持ち物は除外する。
+                var candidate=pool[i];
+                if(choiceObjects.Exists(x=>SameObject(x,candidate))) continue;
+                if(owned.Exists(x=>SameObject(x,candidate))) continue;
+                choiceObjects.Add(candidate);
+            }
             else if(owned.Contains(pool[i])) choiceObjects.Add(pool[i]);
+        }
+        if(!isNot && choiceObjects.Count<4)
+        {
+            Debug.LogError("Stage4: What質問には、正解と重複しない不正解の持ち物が3種類必要です。Stage4Dataの持ち物を確認してください。",this);
+            StopAllCoroutines(); enabled=false;
+            return;
         }
         // Not は「持っていなかった物」が正解1つだけになるよう、残りは実際に持っていた物で埋める。
         int repeat=0;
         while(choiceObjects.Count<4 && owned.Count>0) choiceObjects.Add(owned[repeat++ % owned.Count]);
         Shuffle(choiceObjects);
         for(int i=0;i<4;i++) if(selects[i]!=null){selects[i].sprite=choiceObjects[i].Sprite;selects[i].preserveAspect=true;}
+    }
+
+    private static bool SameObject(Stage4ObjectEntry a,Stage4ObjectEntry b)
+    {
+        return a==b || a.ObjectId==b.ObjectId || a.Sprite==b.Sprite;
     }
 
     private void SetPanels(bool who,bool what,bool not,bool check)
