@@ -1,0 +1,264 @@
+fileFormatVersion: 2
+guid: a0f6ede8731b35b4f91e5af510e815ad
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4718333530036280364
+    second: yesbutton_0
+  - first:
+      213: -8622809979164387632
+    second: yesbutton_1
+  - first:
+      213: 7090888962536190007
+    second: yesbutton_2
+  - first:
+      213: 6138528282115240660
+    second: yesbutton_3
+  - first:
+      213: -3065469698194919920
+    second: yesbutton_4
+  - first:
+      213: 5707112737032254975
+    second: yesbutton_5
+  - first:
+      213: -4003251716012939765
+    second: yesbutton_6
+  - first:
+      213: 3890588591340844415
+    second: yesbutton_7
+  - first:
+      213: 5824121867464400780
+    second: yesbutton_8
+  - first:
+      213: 1752016146687112390
+    second: yesbutton_9
+  - first:
+      213: -6385602296272476010
+    second: yesbutton_10
+  - first:
+      213: -7803022727443396424
+    second: yesbutton_11
+  - first:
+      213: -2012068983107894635
+    second: yesbutton_12
+  - first:
+      213: -2879181897135814688
+    second: yesbutton_13
+  - first:
+      213: -2026092594300044030
+    second: yesbutton_14
+  - first:
+      213: 7809372947130164496
+    second: yesbutton_15
+  - first:
+      213: 71468207618078677
+    second: yesbutton_16
+  - first:
+      213: -7996491671759074449
+    second: yesbutton_17
+  - first:
+      213: -8461579579742725962
+    second: yesbutton_18
+  - first:
+      213: -5248017969965408192
+    second: yesbutton_19
+  - first:
+      213: -2642486829843758217
+    second: yesbutton_20
+  - first:
+      213: 1420671208180318221
+    second: yesbutton_21
+  - first:
+      213: 5959163162942275765
+    second: yesbutton_22
+  - first:
+      213: -4370014179312889155
+    second: yesbutton_23
+  - first:
+      213: 1659128744644400063
+    second: yesbutton_24
+  - first:
+      213: 66564810057854190
+    second: yesbutton_25
+  - first:
+      213: -8823494562025666792
+    second: yesbutton_26
+  - first:
+      213: 8830098184474448557
+    second: yesbutton_27
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: yesbutton_0
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 100
+        width: 2069
+        height: 541
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d36f5a37ac158eb0800000000000000
+      internalID: -4718333530036280364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 29f86c6535b80e04aae3a54a6cbb64f8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      yesbutton_0: -4718333530036280364
+      yesbutton_1: -8622809979164387632
+      yesbutton_10: -6385602296272476010
+      yesbutton_11: -7803022727443396424
+      yesbutton_12: -2012068983107894635
+      yesbutton_13: -2879181897135814688
+      yesbutton_14: -2026092594300044030
+      yesbutton_15: 7809372947130164496
+      yesbutton_16: 71468207618078677
+      yesbutton_17: -7996491671759074449
+      yesbutton_18: -8461579579742725962
+      yesbutton_19: -5248017969965408192
+      yesbutton_2: 7090888962536190007
+      yesbutton_20: -2642486829843758217
+      yesbutton_21: 1420671208180318221
+      yesbutton_22: 5959163162942275765
+      yesbutton_23: -4370014179312889155
+      yesbutton_24: 1659128744644400063
+      yesbutton_25: 66564810057854190
+      yesbutton_26: -8823494562025666792
+      yesbutton_27: 8830098184474448557
+      yesbutton_3: 6138528282115240660
+      yesbutton_4: -3065469698194919920
+      yesbutton_5: 5707112737032254975
+      yesbutton_6: -4003251716012939765
+      yesbutton_7: 3890588591340844415
+      yesbutton_8: 5824121867464400780
+      yesbutton_9: 1752016146687112390
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
