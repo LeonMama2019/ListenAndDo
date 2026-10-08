@@ -147,7 +147,7 @@ public class Stage4Quiz : MonoBehaviour
             bool active=i<setting.PersonCount;
             if(personRoots[i]!=null) personRoots[i].gameObject.SetActive(active);
             if(!active) continue;
-            var p=pPool[i]; personImages[i].sprite=p.FrontSprite; personImages[i].preserveAspect=true;
+            var p=pPool[i]; personImages[i].enabled=true; personImages[i].sprite=p.FrontSprite; personImages[i].preserveAspect=true;
             if(backs[i]!=null)
             {
                 backs[i].SetActive(false);
@@ -182,7 +182,12 @@ public class Stage4Quiz : MonoBehaviour
         yield return new WaitForSecondsRealtime(Mathf.Max(.1f,data.MemorizeSeconds));
         for(int i=0;i<setting.PersonCount;i++)
         {
-            if(backs[i]!=null) backs[i].SetActive(true);
+            if(backs[i]!=null)
+            {
+                backs[i].SetActive(true);
+                // 親オブジェクトは有効のまま、正面の画像だけ隠す。
+                if(personImages[i]!=null) personImages[i].enabled=false;
+            }
             for(int j=0;j<2;j++) if(heldImages[i,j]!=null) heldImages[i,j].gameObject.SetActive(false);
         }
         PrepareQuestion(pPool);
