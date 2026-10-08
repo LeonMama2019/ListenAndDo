@@ -74,7 +74,7 @@ public class Stage4Quiz : MonoBehaviour
         whoQuestionImage=whoPanel!=null ? FindChildImage(whoPanel.transform,"Question") : null;
         checkMark=Find("Check")?.gameObject;
         speaker=Find("Speaker")?.GetComponent<Button>();
-        yesButton=Find("YesButton")?.GetComponent<Button>(); noButton=Find("NoButton")?.GetComponent<Button>();
+        yesButton=FindCheckAnswerButton("YesButton"); noButton=FindCheckAnswerButton("NoButton");
         for(int i=0;i<3;i++)
         {
             personRoots[i]=Find("Person"+(i+1));
@@ -94,6 +94,21 @@ public class Stage4Quiz : MonoBehaviour
         if(noButton!=null){noButton.onClick.RemoveAllListeners();noButton.onClick.AddListener(()=>AnswerYesNo(false));}
         if(speaker!=null){speaker.onClick.RemoveAllListeners();speaker.onClick.AddListener(Replay);}
         questionLabel=FindQuestionText();
+    }
+
+    private Button FindCheckAnswerButton(string buttonName)
+    {
+        if(checkPanel==null) return null;
+        foreach(var t in checkPanel.GetComponentsInChildren<Transform>(true))
+        {
+            if(!string.Equals(t.name,buttonName,StringComparison.OrdinalIgnoreCase)) continue;
+            var button=t.GetComponent<Button>();
+            if(button==null) button=t.gameObject.AddComponent<Button>();
+            if(button.targetGraphic==null) button.targetGraphic=t.GetComponent<Graphic>();
+            return button;
+        }
+        Debug.LogError("Stage4: CheckPanel内に "+buttonName+" を配置してください。",this);
+        return null;
     }
 
     private void CenterSinglePerson()
