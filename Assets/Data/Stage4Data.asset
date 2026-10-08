@@ -127,7 +127,7 @@ MonoBehaviour:
   notQuestionText: "{Person}\u304C\u6301\u3063\u3066\u3044\u306A\u304B\u3063\u305F\u306E\u306F\u3069\u308C\uFF1F"
   checkPatternAText: "{Person}\u304C\u6301\u3063\u3066\u3044\u305F\u306E\u306F{Object}\u3067\u3059\u304B\uFF1F"
   checkPatternBText: "{Person}\u306F{Object}\u3092\u6301\u3063\u3066\u3044\u307E\u3057\u305F\u304B\uFF1F"
-  memorizePromptVoice: {fileID: 8300000, guid: dd60964ef92d6d14182f49ef47ec9237, type: 3}
+  memorizePromptVoice: {fileID: 8300000, guid: eb14eb22d81460e4987ff11e160bef3e, type: 3}
   whoQuestionVoice: {fileID: 8300000, guid: d8b4314e4e94df14492924e6373c5e9b, type: 3}
   whoQuestionEndVoice: {fileID: 8300000, guid: eb14eb22d81460e4987ff11e160bef3e, type: 3}
   whatQuestionVoice: {fileID: 8300000, guid: d09980d1d90159d45bb9b066a7d5e9da, type: 3}
