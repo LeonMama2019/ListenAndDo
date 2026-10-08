@@ -11,78 +11,6 @@ TextureImporter:
   - first:
       213: -3351437683014477202
     second: boy_2
-  - first:
-      213: -2894872713553189208
-    second: boy_3
-  - first:
-      213: -5324700962668548193
-    second: boy_4
-  - first:
-      213: 4291211584809727933
-    second: boy_5
-  - first:
-      213: -1192675475943636855
-    second: boy_6
-  - first:
-      213: 7025526019816917497
-    second: boy_7
-  - first:
-      213: 471098522137798852
-    second: boy_8
-  - first:
-      213: 2481796912076462256
-    second: boy_9
-  - first:
-      213: -6387790459597206061
-    second: boy_10
-  - first:
-      213: 1223880017353024159
-    second: boy_11
-  - first:
-      213: 6879353418701663456
-    second: boy_12
-  - first:
-      213: 3865657168124197316
-    second: boy_13
-  - first:
-      213: 5810624665844178907
-    second: boy_14
-  - first:
-      213: -2071241431114675885
-    second: boy_15
-  - first:
-      213: -1711589583091837626
-    second: boy_16
-  - first:
-      213: -8386686263731185815
-    second: boy_17
-  - first:
-      213: -9040205828850551619
-    second: boy_18
-  - first:
-      213: 8621430246756893956
-    second: boy_19
-  - first:
-      213: 470500996775425079
-    second: boy_20
-  - first:
-      213: 3913626799545694274
-    second: boy_21
-  - first:
-      213: -7845658746397855803
-    second: boy_22
-  - first:
-      213: 722061648546722715
-    second: boy_23
-  - first:
-      213: -2350779193901885138
-    second: boy_24
-  - first:
-      213: 4327605096230658702
-    second: boy_25
-  - first:
-      213: 3138293592204001300
-    second: boy_26
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -194,10 +122,10 @@ TextureImporter:
       name: boy_0
       rect:
         serializedVersion: 2
-        x: 350
-        y: 7
-        width: 440
-        height: 880
+        x: 390
+        y: 10
+        width: 360
+        height: 877
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,13 +141,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: boy_2
+      name: boy_1
       rect:
         serializedVersion: 2
-        x: 996
-        y: 7
-        width: 440
-        height: 880
+        x: 1038
+        y: 10
+        width: 360
+        height: 877
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -228,8 +156,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e6a50191f2d4d71d0800000000000000
-      internalID: -3351437683014477202
+      spriteID: a3df7b90802e279e0800000000000000
+      internalID: -1624987991376659142
       vertices: []
       indices: 
       edges: []
@@ -238,7 +166,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 038d727b15347304393aa774e6b038b7
+    spriteID: 296c405e05d347c4ba9c61943b977159
     internalID: 0
     vertices: []
     indices: 
@@ -250,31 +178,7 @@ TextureImporter:
     nameFileIdTable:
       boy_0: -6157779062412324289
       boy_1: -1624987991376659142
-      boy_10: -6387790459597206061
-      boy_11: 1223880017353024159
-      boy_12: 6879353418701663456
-      boy_13: 3865657168124197316
-      boy_14: 5810624665844178907
-      boy_15: -2071241431114675885
-      boy_16: -1711589583091837626
-      boy_17: -8386686263731185815
-      boy_18: -9040205828850551619
-      boy_19: 8621430246756893956
       boy_2: -3351437683014477202
-      boy_20: 470500996775425079
-      boy_21: 3913626799545694274
-      boy_22: -7845658746397855803
-      boy_23: 722061648546722715
-      boy_24: -2350779193901885138
-      boy_25: 4327605096230658702
-      boy_26: 3138293592204001300
-      boy_3: -2894872713553189208
-      boy_4: -5324700962668548193
-      boy_5: 4291211584809727933
-      boy_6: -1192675475943636855
-      boy_7: 7025526019816917497
-      boy_8: 471098522137798852
-      boy_9: 2481796912076462256
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
