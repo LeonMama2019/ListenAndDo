@@ -2856,7 +2856,7 @@ GameObject:
   - component: {fileID: 1038166499}
   - component: {fileID: 1038166498}
   - component: {fileID: 1038166503}
-  - component: {fileID: 3100000001}
+  - component: {fileID: 1038166504}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2966,6 +2966,19 @@ MonoBehaviour:
   backReturnPanel: {fileID: 338903853}
   levelMenuScene: LevelMenu
   stageNumber: 4
+--- !u!114 &1038166504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038166497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f64bfb9fc8b21d438d462a044a21bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Stage4Quiz
+  data: {fileID: 11400000, guid: daae5aad7ecdacb45b532c586ca72768, type: 2}
 --- !u!1 &1153884751
 GameObject:
   m_ObjectHideFlags: 0
@@ -5271,19 +5284,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenuButton
   stageNumber: 3
---- !u!114 &3100000001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038166497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f64bfb9fc8b21d438d462a044a21bf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Stage4Quiz
-  data: {fileID: 11400000, guid: daae5aad7ecdacb45b532c586ca72768, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
