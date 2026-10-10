@@ -68,7 +68,7 @@ MonoBehaviour:
   - personId: 3
     displayName: "\u307E\u3055\u3068\u304F\u3093"
     frontSprite: {fileID: -6157779062412324289, guid: a06fd08654485264daa2c807504b61b4, type: 3}
-    backSprite: {fileID: -3351437683014477202, guid: a06fd08654485264daa2c807504b61b4, type: 3}
+    backSprite: {fileID: -1624987991376659142, guid: a06fd08654485264daa2c807504b61b4, type: 3}
     nameVoice: {fileID: 8300000, guid: 2f52bfb8295030047961feb7184af7e0, type: 3}
   objects:
   - objectId: 1
