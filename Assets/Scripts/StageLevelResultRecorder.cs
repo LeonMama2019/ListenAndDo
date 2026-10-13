@@ -15,6 +15,7 @@ public class StageQuestionResult
     public List<SpeechSpeedChange> speechSpeedChanges = new();
     public Stage2QuestionLog diceQuestion;
     public Stage3QuestionLog placementQuestion;
+    public string stage5PlacementLog;
 }
 
 [Serializable]
@@ -73,6 +74,11 @@ public sealed class StageLevelResultRecorder
     public void SetPlacementQuestion(Stage3QuestionLog log)
     {
         if (current != null) current.placementQuestion = log;
+    }
+
+    public void SetStage5PlacementLog(string json)
+    {
+        if (current != null) current.stage5PlacementLog = json;
     }
 
     public void RecordWrongAnswer()
