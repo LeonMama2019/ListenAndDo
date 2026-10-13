@@ -41,8 +41,7 @@ MonoBehaviour:
     questionVoice: {fileID: 8300000, guid: d4036461be43f2443871c100076439f7, type: 3}
     tidyPlaces: 00000000
     deskObjects:
-    - {fileID: -716028799, guid: d65a4e186a4b7514c93bf4e50eb626b6, type: 3}
-    - {fileID: 5657766911535312053, guid: d65a4e186a4b7514c93bf4e50eb626b6, type: 3}
+    - {fileID: -6190948392007208175, guid: 9ecf57176de8d384aa072f23b9f65f54, type: 3}
   - taskId: 5
     level: 1
     questionText: "\u9752\u3044\u672C\u3092\u7DD1\u306E\u672C\u4EE5\u5916\u306F\u7247\u4ED8\u3051\u307E\u3057\u3087\u3046"
