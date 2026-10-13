@@ -5,6 +5,19 @@ using UnityEngine;
 [Serializable]
 public class Stage5Question
 {
+    public Stage5Question() { }
+
+    public Stage5Question(string id, int questionLevel, string text, AudioClip voice,
+        IEnumerable<Stage5Place> places, IEnumerable<Sprite> sprites)
+    {
+        taskId = id;
+        level = questionLevel;
+        questionText = text;
+        questionVoice = voice;
+        tidyPlaces = places == null ? new() : new List<Stage5Place>(places);
+        deskObjects = sprites == null ? new() : new List<Sprite>(sprites);
+    }
+
     [Tooltip("問題ごとの固定ID。例: Stage5_Lv1_Q1")]
     [SerializeField] private string taskId;
     [Range(1, 8)]
