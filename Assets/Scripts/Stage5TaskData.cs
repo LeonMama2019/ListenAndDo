@@ -9,18 +9,6 @@ public enum Stage5Place
     Pencase = 2
 }
 
-[Serializable]
-public class Stage5DeskRequirement
-{
-    [Tooltip("本や道具の固定ID。収納枠の名前ではなく物のID。例: Book3 / BookS1 / Pencil")]
-    [SerializeField] private string objectId;
-    [Min(1)]
-    [SerializeField] private int count = 1;
-
-    public string ObjectId => objectId;
-    public int Count => count;
-}
-
 /// <summary>
 /// 1問の最終配置条件。操作順や本の色順は正誤に含めない。
 /// シーンのPanelや本の実行中の位置は保持しない。
@@ -42,15 +30,15 @@ public class Stage5TaskData : ScriptableObject
     [SerializeField] private List<Stage5Place> tidyPlaces = new();
 
     [Header("机に残す物（数は自由）")]
-    [Tooltip("DeskAreaに残す物の固定IDと個数。同じIDは1行にまとめる。")]
-    [SerializeField] private List<Stage5DeskRequirement> deskObjects = new();
+    [Tooltip("DeskAreaに残す本・道具のPrefabをProjectから直接登録。1要素につき1つ。Hierarchyのシーンオブジェクトは登録できません。")]
+    [SerializeField] private List<GameObject> deskObjects = new();
 
     public string TaskId => taskId;
     public int Level => level;
     public string QuestionText => questionText;
     public AudioClip QuestionVoice => questionVoice;
     public IReadOnlyList<Stage5Place> TidyPlaces => tidyPlaces;
-    public IReadOnlyList<Stage5DeskRequirement> DeskObjects => deskObjects;
+    public IReadOnlyList<GameObject> DeskObjects => deskObjects;
 
     // 出題前に設定不備を検出するための検証。実際の配置判定はQuiz側で行う。
     public bool TryValidate(out string error)
@@ -89,17 +77,17 @@ public class Stage5TaskData : ScriptableObject
             error = "机に残す物のリストが無効です。";
             return false;
         }
-        var ids = new HashSet<string>(StringComparer.Ordinal);
+        var objects = new HashSet<GameObject>();
         foreach (var item in deskObjects)
         {
-            if (item == null || string.IsNullOrWhiteSpace(item.ObjectId) || item.Count < 1)
+            if (item == null)
             {
-                error = "机に残す物のIDと1以上の個数を設定してください。";
+                error = "机に残す物のPrefabをアタッチしてください。";
                 return false;
             }
-            if (!ids.Add(item.ObjectId))
+            if (!objects.Add(item))
             {
-                error = "机に残す物の同じIDは1行にまとめてください。";
+                error = "机に残す物の同じPrefabが重複しています。";
                 return false;
             }
         }
