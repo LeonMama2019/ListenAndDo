@@ -141,14 +141,7 @@ public class Stage5Prototype : MonoBehaviour
     {
         status = NewText("Stage5Instruction", new Vector2(0, 245), new Vector2(720, 65));
         status.text = question.QuestionText;
-        var buttonImage = NewImage("Stage5AnswerButton", (RectTransform)transform, null, new Vector2(210, 55));
-        buttonImage.rectTransform.anchoredPosition = new Vector2(230, -260);
-        buttonImage.color = new Color(0.9f, 0.65f, 0.25f);
-        var button = buttonImage.gameObject.AddComponent<Button>();
-        button.targetGraphic = buttonImage;
-        button.onClick.AddListener(CheckAnswer);
-        var label = NewText("Stage5AnswerLabel", Vector2.zero, new Vector2(210, 55), buttonImage.rectTransform);
-        label.text = "できた！";
+
     }
     private TMP_Text NewText(string name, Vector2 position, Vector2 size, RectTransform parent = null)
     {
@@ -348,7 +341,7 @@ public class Stage5Prototype : MonoBehaviour
         if (!correct && !explicitCheck) return;
         attempt.events.Add(new Move { order = attempt.events.Count + 1, seconds = Time.unscaledTime - started,
             action = correct ? "answer_correct" : "answer_incorrect", arrangement = Snapshot() });
-        status.text = correct ? "正解！" : reason;
+        if (!correct) status.text = reason;
         completed = correct;
         attempt.completed = correct;
         if (correct)
@@ -361,7 +354,11 @@ public class Stage5Prototype : MonoBehaviour
                 var image = check.GetComponent<Image>();
                 if (image != null) image.raycastTarget = false;
                 var sound = check.GetComponent<AudioSource>();
-                if (sound != null) sound.Play();
+                if (sound != null)
+                {
+                    if (sound.clip != null) sound.PlayOneShot(sound.clip);
+                    else Debug.LogWarning("CheckのAudioSourceにピンポーンのClipを設定してください。", check);
+                }
             }
         }
         Save();
