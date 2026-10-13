@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c051a0478034f26a213726243481c57, type: 3}
+  m_Name: Stage5Data
+  m_EditorClassIdentifier: Assembly-CSharp::Stage5TaskData
+  taskId: 1
+  level: 1
+  questionText: "\u672C\u3092\u7247\u4ED8\u3051\u3066\u3001\u8D64\u3044\u672C\u3092\u673A\u306E\u4E0A\u306B\u7F6E\u3044\u3066"
+  questionVoice: {fileID: 8300000, guid: bb5978fdbdc21c8418469ac9bccaffce, type: 3}
+  tidyPlaces: 00000000
+  deskObjects:
+  - objectId: 
+    count: 1
