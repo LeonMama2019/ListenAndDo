@@ -16,22 +16,42 @@ public enum Stage5Place
 [CreateAssetMenu(fileName = "Stage5Task", menuName = "ListenAndDo/Stage5/Task Data")]
 public class Stage5TaskData : ScriptableObject
 {
+    [Header("問題一覧：＋で設定一式を追加")]
+    [SerializeField] private List<Stage5Question> questions = new();
+    public IReadOnlyList<Stage5Question> Questions => questions;
+
+    // 以前の1問形式から、入力済みの設定を失わずに移行する。
+    private void OnEnable() => MigrateLegacyQuestion();
+    private void OnValidate() => MigrateLegacyQuestion();
+
+    private void MigrateLegacyQuestion()
+    {
+        if (questions == null)
+            questions = new List<Stage5Question>();
+        if (questions.Count == 0 && !string.IsNullOrWhiteSpace(taskId))
+        {
+            questions.Add(new Stage5Question(taskId, level, questionText,
+                questionVoice, tidyPlaces, deskObjects));
+            taskId = null;
+        }
+    }
+
     [Header("問題")]
     [Tooltip("回答ログに保存する固定の問題ID")]
-    [SerializeField] private string taskId;
+    [SerializeField, HideInInspector] private string taskId;
     [Range(1, 8)]
-    [SerializeField] private int level = 1;
+    [SerializeField, HideInInspector] private int level = 1;
     [TextArea(2, 5)]
-    [SerializeField] private string questionText;
-    [SerializeField] private AudioClip questionVoice;
+    [SerializeField, HideInInspector] private string questionText;
+    [SerializeField, HideInInspector] private AudioClip questionVoice;
 
     [Header("散らかす・片付ける対象の親（複数選択可）")]
     [Tooltip("BookStand / Odougu / Pencaseを選択。選んだ親の子にある物をDeskAreaへ散らかし、同じ親の収納範囲へ戻す。机に残す指定画像の物は例外。本を散らかす時はBookFrontを使用。")]
-    [SerializeField] private List<Stage5Place> tidyPlaces = new();
+    [SerializeField, HideInInspector] private List<Stage5Place> tidyPlaces = new();
 
     [Header("机に残す物（数は自由）")]
     [Tooltip("DeskAreaに残す物の画像素材（Sprite）を直接登録。Stage3と同じ画像の指定方法です。配置判定では机上の物のSpriteと照合します。")]
-    [SerializeField] private List<Sprite> deskObjects = new();
+    [SerializeField, HideInInspector] private List<Sprite> deskObjects = new();
 
     public string TaskId => taskId;
     public int Level => level;
