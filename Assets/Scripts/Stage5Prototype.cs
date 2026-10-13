@@ -12,6 +12,8 @@ public class Stage5Prototype : MonoBehaviour
     [SerializeField] private RectTransform deskArea;
     [SerializeField] private RectTransform bookStand;
     [SerializeField] private float moveSeconds = 0.35f;
+    [SerializeField] private Font japaneseFont;
+    private TMP_FontAsset runtimeFont;
 
     private class Book
     {
@@ -158,6 +160,11 @@ public class Stage5Prototype : MonoBehaviour
         var text = go.GetComponent<TextMeshProUGUI>();
         foreach (var existing in canvas.GetComponentsInChildren<TMP_Text>(true))
             if (existing != text && existing.font != null) { text.font = existing.font; break; }
+        if (japaneseFont != null)
+        {
+            if (runtimeFont == null) runtimeFont = TMP_FontAsset.CreateFontAsset(japaneseFont);
+            text.font = runtimeFont;
+        }
         text.fontSize = 24;
         text.alignment = TextAlignmentOptions.Center;
         text.color = new Color(0.12f, 0.1f, 0.2f);
@@ -344,6 +351,19 @@ public class Stage5Prototype : MonoBehaviour
         status.text = correct ? "正解！" : reason;
         completed = correct;
         attempt.completed = correct;
+        if (correct)
+        {
+            var check = Find("Check");
+            if (check != null)
+            {
+                check.gameObject.SetActive(true);
+                check.SetAsLastSibling();
+                var image = check.GetComponent<Image>();
+                if (image != null) image.raycastTarget = false;
+                var sound = check.GetComponent<AudioSource>();
+                if (sound != null) sound.Play();
+            }
+        }
         Save();
     }
     private bool FullyInsideDesk(Image view)
