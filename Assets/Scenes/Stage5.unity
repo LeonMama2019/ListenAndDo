@@ -2558,7 +2558,7 @@ GameObject:
   - component: {fileID: 1000155050}
   - component: {fileID: 1000155049}
   m_Layer: 5
-  m_Name: Pancase
+  m_Name: Pencase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
