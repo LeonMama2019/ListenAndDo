@@ -18,5 +18,4 @@ MonoBehaviour:
   questionVoice: {fileID: 8300000, guid: bb5978fdbdc21c8418469ac9bccaffce, type: 3}
   tidyPlaces: 00000000
   deskObjects:
-  - objectId: 
-    count: 1
+  - {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
