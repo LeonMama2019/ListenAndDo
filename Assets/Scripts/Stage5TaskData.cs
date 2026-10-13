@@ -36,78 +36,42 @@ public class Stage5TaskData : ScriptableObject
         }
     }
 
-    [Header("問題")]
-    [Tooltip("回答ログに保存する固定の問題ID")]
     [SerializeField, HideInInspector] private string taskId;
-    [Range(1, 8)]
     [SerializeField, HideInInspector] private int level = 1;
-    [TextArea(2, 5)]
     [SerializeField, HideInInspector] private string questionText;
     [SerializeField, HideInInspector] private AudioClip questionVoice;
-
-    [Header("散らかす・片付ける対象の親（複数選択可）")]
-    [Tooltip("BookStand / Odougu / Pencaseを選択。選んだ親の子にある物をDeskAreaへ散らかし、同じ親の収納範囲へ戻す。机に残す指定画像の物は例外。本を散らかす時はBookFrontを使用。")]
     [SerializeField, HideInInspector] private List<Stage5Place> tidyPlaces = new();
-
-    [Header("机に残す物（数は自由）")]
-    [Tooltip("DeskAreaに残す物の画像素材（Sprite）を直接登録。Stage3と同じ画像の指定方法です。配置判定では机上の物のSpriteと照合します。")]
     [SerializeField, HideInInspector] private List<Sprite> deskObjects = new();
 
-    public string TaskId => taskId;
-    public int Level => level;
-    public string QuestionText => questionText;
-    public AudioClip QuestionVoice => questionVoice;
-    public IReadOnlyList<Stage5Place> TidyPlaces => tidyPlaces;
-    public IReadOnlyList<Sprite> DeskObjects => deskObjects;
+    public List<Stage5Question> GetQuestions(int targetLevel)
+    {
+        var result = new List<Stage5Question>();
+        foreach (var question in questions)
+            if (question != null && question.Level == targetLevel)
+                result.Add(question);
+        return result;
+    }
 
-    // 出題前に設定不備を検出するための検証。実際の配置判定はQuiz側で行う。
     public bool TryValidate(out string error)
     {
-        if (string.IsNullOrWhiteSpace(taskId))
+        if (questions == null || questions.Count == 0)
         {
-            error = "Task IDを設定してください。";
+            error = "問題を追加してください。";
             return false;
         }
-        if (level < 1 || level > 8)
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var question in questions)
         {
-            error = "Levelは1〜8にしてください。";
-            return false;
-        }
-        if (string.IsNullOrWhiteSpace(questionText) || questionVoice == null)
-        {
-            error = "問題文と問題文の音声を設定してください。";
-            return false;
-        }
-        if (tidyPlaces == null || tidyPlaces.Count == 0)
-        {
-            error = "片付ける場所を1つ以上設定してください。";
-            return false;
-        }
-        var places = new HashSet<Stage5Place>();
-        foreach (var place in tidyPlaces)
-        {
-            if (!Enum.IsDefined(typeof(Stage5Place), place) || !places.Add(place))
+            if (question == null)
             {
-                error = "片付ける場所が無効、または重複しています。";
+                error = "未設定の問題があります。";
                 return false;
             }
-        }
-        if (deskObjects == null)
-        {
-            error = "机に残す物のリストが無効です。";
-            return false;
-        }
-        var objects = new HashSet<Sprite>();
-        foreach (var item in deskObjects)
-        {
-            if (item == null)
-            {
-                error = "机に残す物の画像（Sprite）をアタッチしてください。";
+            if (!question.TryValidate(out error))
                 return false;
-            }
-            if (!objects.Add(item))
+            if (!ids.Add(question.TaskId))
             {
-                error = "机に残す物の同じ画像（Sprite）が重複しています。";
+                error = $"Task ID {question.TaskId} が重複しています。";
                 return false;
             }
         }
