@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum Stage5Place
 {
@@ -31,15 +30,15 @@ public class Stage5TaskData : ScriptableObject
     [SerializeField] private List<Stage5Place> tidyPlaces = new();
 
     [Header("机に残す物（数は自由）")]
-    [Tooltip("DeskAreaに残す本・道具のImageコンポーネントを登録。ProjectのPrefab内のImageを指定してください。シーンのImageはアセットに保存できません。")]
-    [SerializeField] private List<Image> deskObjects = new();
+    [Tooltip("DeskAreaに残す物の画像素材（Sprite）を直接登録。Stage3と同じ画像の指定方法です。配置判定では机上の物のSpriteと照合します。")]
+    [SerializeField] private List<Sprite> deskObjects = new();
 
     public string TaskId => taskId;
     public int Level => level;
     public string QuestionText => questionText;
     public AudioClip QuestionVoice => questionVoice;
     public IReadOnlyList<Stage5Place> TidyPlaces => tidyPlaces;
-    public IReadOnlyList<Image> DeskObjects => deskObjects;
+    public IReadOnlyList<Sprite> DeskObjects => deskObjects;
 
     // 出題前に設定不備を検出するための検証。実際の配置判定はQuiz側で行う。
     public bool TryValidate(out string error)
@@ -78,17 +77,17 @@ public class Stage5TaskData : ScriptableObject
             error = "机に残す物のリストが無効です。";
             return false;
         }
-        var objects = new HashSet<Image>();
+        var objects = new HashSet<Sprite>();
         foreach (var item in deskObjects)
         {
             if (item == null)
             {
-                error = "机に残す物のImageをアタッチしてください。";
+                error = "机に残す物の画像（Sprite）をアタッチしてください。";
                 return false;
             }
             if (!objects.Add(item))
             {
-                error = "机に残す物の同じImageが重複しています。";
+                error = "机に残す物の同じ画像（Sprite）が重複しています。";
                 return false;
             }
         }
