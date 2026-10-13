@@ -12,7 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c051a0478034f26a213726243481c57, type: 3}
   m_Name: Stage5Data
   m_EditorClassIdentifier: Assembly-CSharp::Stage5TaskData
-  taskId: 1
+  questions:
+  - taskId: 1
+    level: 1
+    questionText: "\u672C\u3092\u7247\u4ED8\u3051\u3066\u3001\u8D64\u3044\u672C\u3092\u673A\u306E\u4E0A\u306B\u7F6E\u3044\u3066"
+    questionVoice: {fileID: 8300000, guid: bb5978fdbdc21c8418469ac9bccaffce, type: 3}
+    tidyPlaces: 00000000
+    deskObjects:
+    - {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
+  - taskId: 2
+    level: 1
+    questionText: "\u30AF\u30DE\u306E\u672C\u4EE5\u5916\u3092\u672C\u7ACB\u3066\u306B\u623B\u3057\u3066"
+    questionVoice: {fileID: 8300000, guid: de26248734b8a3f4f951fa5546280673, type: 3}
+    tidyPlaces: 00000000
+    deskObjects:
+    - {fileID: -716028799, guid: d65a4e186a4b7514c93bf4e50eb626b6, type: 3}
+  taskId: 
   level: 1
   questionText: "\u672C\u3092\u7247\u4ED8\u3051\u3066\u3001\u8D64\u3044\u672C\u3092\u673A\u306E\u4E0A\u306B\u7F6E\u3044\u3066"
   questionVoice: {fileID: 8300000, guid: bb5978fdbdc21c8418469ac9bccaffce, type: 3}
