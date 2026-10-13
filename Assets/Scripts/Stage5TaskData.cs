@@ -25,8 +25,8 @@ public class Stage5TaskData : ScriptableObject
     [SerializeField] private string questionText;
     [SerializeField] private AudioClip questionVoice;
 
-    [Header("片付ける場所（数は自由）")]
-    [Tooltip("指定した場所に属する物を片付ける。ただし机に残す指定物は除く。")]
+    [Header("散らかす・片付ける対象の親（複数選択可）")]
+    [Tooltip("BookStand / Odougu / Pencaseを選択。選んだ親の子にある物をDeskAreaへ散らかし、同じ親の収納範囲へ戻す。机に残す指定画像の物は例外。本を散らかす時はBookFrontを使用。")]
     [SerializeField] private List<Stage5Place> tidyPlaces = new();
 
     [Header("机に残す物（数は自由）")]
