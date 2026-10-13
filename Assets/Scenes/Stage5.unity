@@ -6074,6 +6074,7 @@ MonoBehaviour:
   deskArea: {fileID: 1656851925}
   bookStand: {fileID: 1708382218}
   moveSeconds: 0.35
+  japaneseFont: {fileID: 12800000, guid: 662c8afa42fde924f9daa0e7f6477121, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
