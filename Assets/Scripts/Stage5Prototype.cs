@@ -257,6 +257,7 @@ public class Stage5Prototype : MonoBehaviour
         Log(book, "place", heldFrom, "BookStand/" + slot.id);
         status.text = question.QuestionText;
         busy = false;
+        EvaluateAnswer(false);
     }
     private void DeskClick(Vector2 point)
     {
@@ -289,6 +290,7 @@ public class Stage5Prototype : MonoBehaviour
         Log(book, "place", heldFrom, "DeskArea");
         status.text = question.QuestionText;
         busy = false;
+        EvaluateAnswer(false);
     }
     private IEnumerator Animate(Vector3 target)
     {
@@ -302,20 +304,44 @@ public class Stage5Prototype : MonoBehaviour
         }
         cursor.transform.position = target;
     }
-    private void CheckAnswer()
+    private bool IsCorrect(out string reason)
     {
-        if (!CanAct) return;
-        bool correct = held == null;
+        if (held != null) { reason = "持っている本を置いてね"; return false; }
         foreach (var book in books)
         {
             bool required = false;
-            foreach (var sprite in question.DeskObjects) if (book.front == sprite) required = true;
-            correct &= required ? book.slot == null && book != held && FullyInsideDesk(book.deskView)
-                : book.slot != null && book.slot.book == book && book.spineSize.y <= book.slot.originalSize.y + 0.01f;
+            foreach (var sprite in question.DeskObjects)
+                if (book.front == sprite) required = true;
+            if (required)
+            {
+                if (book.slot != null || !FullyInsideDesk(book.deskView))
+                {
+                    reason = book.id + "を机の上に置いてね";
+                    return false;
+                }
+            }
+            else if (book.slot == null || book.slot.book != book
+                || book.spineSize.y > book.slot.originalSize.y + 0.01f)
+            {
+                reason = book.id + "を本立てに戻してね";
+                return false;
+            }
         }
+        reason = null;
+        return true;
+    }
+
+    private void CheckAnswer() => EvaluateAnswer(true);
+
+    private void EvaluateAnswer(bool explicitCheck)
+    {
+        if (!CanAct) return;
+        bool correct = IsCorrect(out var reason);
+        // Automatic checks only record completion, not intermediate arrangements as mistakes.
+        if (!correct && !explicitCheck) return;
         attempt.events.Add(new Move { order = attempt.events.Count + 1, seconds = Time.unscaledTime - started,
             action = correct ? "answer_correct" : "answer_incorrect", arrangement = Snapshot() });
-        status.text = correct ? "正解！赤い本が机に出せたね" : "机に残す本と、本立てを確認してね";
+        status.text = correct ? "正解！" : reason;
         completed = correct;
         attempt.completed = correct;
         Save();
@@ -326,7 +352,14 @@ public class Stage5Prototype : MonoBehaviour
         var corners = new Vector3[4];
         view.rectTransform.GetWorldCorners(corners);
         foreach (var corner in corners)
-            if (!deskArea.rect.Contains((Vector2)deskArea.InverseTransformPoint(corner))) return false;
+            {
+                Vector2 local = deskArea.InverseTransformPoint(corner);
+                var bounds = deskArea.rect;
+                const float tolerance = 0.5f;
+                if (local.x < bounds.xMin - tolerance || local.x > bounds.xMax + tolerance
+                    || local.y < bounds.yMin - tolerance || local.y > bounds.yMax + tolerance)
+                    return false;
+            }
         return true;
     }
     private IEnumerator Instruction()
