@@ -5,15 +5,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Level 1 / Task 1 review prototype. Uses the authored scene layout as home positions.
+// Stage5 Level 1: play registered book questions in order using audio only.
 public class Stage5Prototype : MonoBehaviour
 {
     [SerializeField] private Stage5TaskData data;
     [SerializeField] private RectTransform deskArea;
     [SerializeField] private RectTransform bookStand;
     [SerializeField] private float moveSeconds = 0.35f;
-    [SerializeField] private Font japaneseFont;
-    private TMP_FontAsset runtimeFont;
+    [SerializeField] private float nextQuestionDelay = 3f;
+    private List<Stage5Question> levelQuestions;
+    private int questionIndex;
+    private StageLevelResultRecorder recorder;
 
     private class Book
     {
@@ -57,7 +59,6 @@ public class Stage5Prototype : MonoBehaviour
     private Stage5Question question;
     private Canvas canvas;
     private Image cursor;
-    private TMP_Text status;
     private AudioSource voice;
     private Book held;
     private string heldFrom;
@@ -77,7 +78,8 @@ public class Stage5Prototype : MonoBehaviour
         foreach (var old in canvas.GetComponentsInChildren<Stage2Quiz>(true)) old.enabled = false;
         foreach (var old in canvas.GetComponentsInChildren<HandSelector>(true)) old.enabled = false;
         Find("Check")?.gameObject.SetActive(false);
-        question = data == null ? null : data.GetQuestions(1).Find(q => q.TaskId == "1");
+        levelQuestions = data == null ? new List<Stage5Question>() : data.GetQuestions(1);
+        question = levelQuestions.Count == 0 ? null : levelQuestions[0];
         if (question == null || !question.TryValidate(out _) || deskArea == null || bookStand == null)
         {
             Debug.LogError("Stage5: Level 1 Task ID 1、音声、DeskArea、BookStandを確認してください。", this);
@@ -119,7 +121,7 @@ public class Stage5Prototype : MonoBehaviour
         cursor = NewImage("Stage5Cursor", (RectTransform)canvas.transform, null, Vector2.one);
         cursor.raycastTarget = false;
         SetAlpha(cursor, 0);
-        CreateControls();
+        foreach (var text in GetComponentsInChildren<TMP_Text>(true)) text.enabled = false;
         voice = gameObject.AddComponent<AudioSource>();
         voice.playOnAwake = false;
         SpeechSpeedSource.Bind(voice);
@@ -129,41 +131,74 @@ public class Stage5Prototype : MonoBehaviour
             speaker.onClick = new Button.ButtonClickedEvent();
             speaker.onClick.AddListener(Replay);
         }
-        foreach (var book in books) Scatter(book);
-        started = Time.unscaledTime;
+        foreach (var entry in levelQuestions)
+        {
+            if (!entry.TryValidate(out var error) || entry.TidyPlaces.Count != 1
+                || entry.TidyPlaces[0] != Stage5Place.BookStand)
+            {
+                Debug.LogError(error ?? "レベル1は本立ての問題を登録してください。", this);
+                enabled = false;
+                return;
+            }
+            foreach (var required in entry.DeskObjects)
+                if (!books.Exists(b => b.front == required))
+                {
+                    Debug.LogError(entry.TaskId + ": BookFrontに対応しない画像: " + required.name, this);
+                    enabled = false;
+                    return;
+                }
+        }
+        recorder = new StageLevelResultRecorder(5, 1, levelQuestions.Count);
+        BeginQuestion();
+    }
+
+    private void BeginQuestion()
+    {
+        question = levelQuestions[questionIndex];
+        completed = false;
+        accepting = false;
+        busy = false;
+        held = null;
+        SetAlpha(cursor, 0);
+        Find("Check")?.gameObject.SetActive(false);
+        foreach (var slot in slots)
+        {
+            slot.book = null;
+            slot.view.rectTransform.sizeDelta = slot.originalSize;
+            slot.view.rectTransform.anchoredPosition = slot.originalPosition;
+            SetAlpha(slot.view, 0);
+        }
+        foreach (var book in books)
+        {
+            if (book.deskView != null)
+            {
+                book.deskView.gameObject.SetActive(false);
+                Destroy(book.deskView.gameObject);
+            }
+            book.deskView = null;
+            book.slot = null;
+            Scatter(book);
+        }
         attempt = new Attempt { attemptId = Guid.NewGuid().ToString("N"), taskId = question.TaskId,
             startedAtUtc = DateTime.UtcNow.ToString("o"), initial = Snapshot() };
+        started = Time.unscaledTime;
         Save();
-        StartCoroutine(Instruction());
+        StartCoroutine(Instruction(true));
     }
 
-    private void CreateControls()
+    private IEnumerator NextQuestion()
     {
-        status = NewText("Stage5Instruction", new Vector2(0, 245), new Vector2(720, 65));
-        status.text = question.QuestionText;
-
-    }
-    private TMP_Text NewText(string name, Vector2 position, Vector2 size, RectTransform parent = null)
-    {
-        var go = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
-        var rect = (RectTransform)go.transform;
-        rect.SetParent(parent != null ? parent : transform, false);
-        rect.sizeDelta = size;
-        rect.anchoredPosition = position;
-        var text = go.GetComponent<TextMeshProUGUI>();
-        foreach (var existing in canvas.GetComponentsInChildren<TMP_Text>(true))
-            if (existing != text && existing.font != null) { text.font = existing.font; break; }
-        if (japaneseFont != null)
+        yield return new WaitForSecondsRealtime(nextQuestionDelay);
+        while (backPanel != null && backPanel.activeInHierarchy) yield return null;
+        questionIndex++;
+        if (questionIndex < levelQuestions.Count) BeginQuestion();
+        else
         {
-            if (runtimeFont == null) runtimeFont = TMP_FontAsset.CreateFontAsset(japaneseFont);
-            text.font = runtimeFont;
+            StageLevelMenu.MarkCompleted(5, 1);
+            StageResultScreenDisplay.OpenAfterGame(5, 1);
         }
-        text.fontSize = 24;
-        text.alignment = TextAlignmentOptions.Center;
-        text.color = new Color(0.12f, 0.1f, 0.2f);
-        text.raycastTarget = false;
-        return text;
     }
+
     private Image NewImage(string name, RectTransform parent, Sprite sprite, Vector2 size)
     {
         var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
@@ -221,11 +256,11 @@ public class Stage5Prototype : MonoBehaviour
     {
         if (!CanAct) return;
         if (held == null) { if (slot.book != null) Pick(slot.book); return; }
-        if (slot.book != null) { status.text = "ここには本が入っているよ"; return; }
+        if (slot.book != null) return;
         // Capacity is the original authored slot HEIGHT only; width does not restrict placement.
         if (held.spineSize.y > slot.originalSize.y + 0.01f)
         {
-            status.text = "この本は高さが合わないよ";
+            recorder.RecordWrongAnswer();
             Log(held, "height_rejected", "Cursor", "BookStand/" + slot.id);
             return;
         }
@@ -255,7 +290,6 @@ public class Stage5Prototype : MonoBehaviour
         held = null;
         SetAlpha(cursor, 0);
         Log(book, "place", heldFrom, "BookStand/" + slot.id);
-        status.text = question.QuestionText;
         busy = false;
         EvaluateAnswer(false);
     }
@@ -288,7 +322,6 @@ public class Stage5Prototype : MonoBehaviour
         held = null;
         SetAlpha(cursor, 0);
         Log(book, "place", heldFrom, "DeskArea");
-        status.text = question.QuestionText;
         busy = false;
         EvaluateAnswer(false);
     }
@@ -341,7 +374,7 @@ public class Stage5Prototype : MonoBehaviour
         if (!correct && !explicitCheck) return;
         attempt.events.Add(new Move { order = attempt.events.Count + 1, seconds = Time.unscaledTime - started,
             action = correct ? "answer_correct" : "answer_incorrect", arrangement = Snapshot() });
-        if (!correct) status.text = reason;
+        if (!correct) recorder.RecordWrongAnswer();
         completed = correct;
         attempt.completed = correct;
         if (correct)
@@ -362,6 +395,12 @@ public class Stage5Prototype : MonoBehaviour
             }
         }
         Save();
+        if (correct)
+        {
+            recorder.SetStage5PlacementLog(JsonUtility.ToJson(attempt));
+            recorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
+            StartCoroutine(NextQuestion());
+        }
     }
     private bool FullyInsideDesk(Image view)
     {
@@ -379,12 +418,17 @@ public class Stage5Prototype : MonoBehaviour
             }
         return true;
     }
-    private IEnumerator Instruction()
+    private IEnumerator Instruction(bool begin = false)
     {
         accepting = false;
         voice.clip = question.QuestionVoice;
         voice.Play();
         while (voice.isPlaying) yield return null;
+        if (begin)
+        {
+            started = Time.unscaledTime;
+            recorder.BeginQuestion(questionIndex + 1, question.TaskId, "", Time.realtimeSinceStartupAsDouble);
+        }
         accepting = true;
     }
     private void Replay()
@@ -393,6 +437,7 @@ public class Stage5Prototype : MonoBehaviour
         attempt.events.Add(new Move { order = attempt.events.Count + 1, seconds = Time.unscaledTime - started,
             action = "replay", arrangement = Snapshot() });
         Save();
+        recorder.RecordReplay();
         StartCoroutine(Instruction());
     }
     private List<Placement> Snapshot()
