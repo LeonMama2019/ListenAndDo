@@ -28,7 +28,7 @@ public class Stage5Prototype : MonoBehaviour
         public Image deskView;
         public Slot slot;
         public bool inCase;
-        public float authoredAngle;
+        public float authoredAngle, currentAngle;
     }
     private class Slot
     {
@@ -189,6 +189,7 @@ public class Stage5Prototype : MonoBehaviour
             book.deskView = null;
             book.slot = null;
             book.inCase = false;
+            book.currentAngle = book.authoredAngle;
             Scatter(book);
         }
         attempt = new Attempt { attemptId = Guid.NewGuid().ToString("N"), taskId = question.TaskId,
@@ -236,7 +237,7 @@ public class Stage5Prototype : MonoBehaviour
                 && other.deskView.gameObject.activeSelf && Overlaps(book.deskView.rectTransform, other.deskView.rectTransform))) break;
             if (tries == 999) { Debug.LogError("DeskAreaが狭く、重ならずに配置できません。", this); enabled = false; }
         }
-        Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else SurfaceClick(e.position); });
+        Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else if (held == book && CaseQuestion) RotateHeld(); else SurfaceClick(e.position); });
     }
     private Vector2 RandomDeskPosition(Vector2 size, float angle)
     {
@@ -266,10 +267,22 @@ public class Stage5Prototype : MonoBehaviour
         held = book;
         cursor.sprite = book.front;
         cursor.rectTransform.sizeDelta = book.frontSize;
-        cursor.rectTransform.localEulerAngles = new Vector3(0, 0, CaseQuestion ? book.authoredAngle : 0);
+        cursor.rectTransform.localEulerAngles = new Vector3(0, 0, CaseQuestion ? book.currentAngle : 0);
         SetAlpha(cursor, 1);
         cursor.transform.SetAsLastSibling();
         Log(book, "pick", heldFrom, "Cursor");
+        if (CaseQuestion) RotateHeld();
+    }
+    private void RotateHeld()
+    {
+        if (!CanAct || held == null || !CaseQuestion) return;
+        float step;
+        if (held.id.Equals("Eraser", StringComparison.OrdinalIgnoreCase)) step = 90f;
+        else if (held.id.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0) step = 180f;
+        else return;
+        held.currentAngle = Mathf.Repeat(held.currentAngle + step, 360f);
+        cursor.rectTransform.localEulerAngles = new Vector3(0, 0, held.currentAngle);
+        Log(held, "rotate", "Cursor", "Cursor");
     }
     private void SlotClick(Slot slot)
     {
@@ -316,7 +329,7 @@ public class Stage5Prototype : MonoBehaviour
     {
         if (!CanAct || held == null) return;
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(deskArea, point, UiCamera, out var local)) return;
-        var half = RotatedHalf(held.frontSize, CaseQuestion ? held.authoredAngle : 0);
+        var half = RotatedHalf(held.frontSize, CaseQuestion ? held.currentAngle : 0);
         var area = deskArea.rect;
         local.x = Mathf.Clamp(local.x, area.xMin + half.x, area.xMax - half.x);
         local.y = Mathf.Clamp(local.y, area.yMin + half.y, area.yMax - half.y);
@@ -332,11 +345,11 @@ public class Stage5Prototype : MonoBehaviour
         if (book.deskView == null)
         {
             book.deskView = NewImage("Scattered_" + book.id, deskArea, book.front, book.frontSize);
-            Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else SurfaceClick(e.position); });
+            Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else if (held == book && CaseQuestion) RotateHeld(); else SurfaceClick(e.position); });
         }
         book.deskView.rectTransform.SetParent(deskArea, false);
         book.inCase = false;
-        book.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, CaseQuestion ? book.authoredAngle : 0);
+        book.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, CaseQuestion ? book.currentAngle : 0);
         book.deskView.rectTransform.anchoredPosition = local;
         SetAlpha(book.deskView, 1);
         book.deskView.transform.SetAsLastSibling();
@@ -437,7 +450,7 @@ public class Stage5Prototype : MonoBehaviour
         probe.raycastTarget = false;
         SetAlpha(probe, 0);
         probe.rectTransform.anchoredPosition = local;
-        probe.rectTransform.localEulerAngles = new Vector3(0, 0, held.authoredAngle);
+        probe.rectTransform.localEulerAngles = new Vector3(0, 0, held.currentAngle);
         bool inside = FullyInside(probe.rectTransform, pencase);
         bool overlaps = books.Exists(other => other != held && other.inCase
             && Overlaps(probe.rectTransform, other.deskView.rectTransform));
@@ -456,7 +469,7 @@ public class Stage5Prototype : MonoBehaviour
         yield return Animate(pencase.TransformPoint(local));
         item.deskView.rectTransform.SetParent(pencase, false);
         item.deskView.rectTransform.anchoredPosition = local;
-        item.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, item.authoredAngle);
+        item.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, item.currentAngle);
         item.inCase = true;
         SetAlpha(item.deskView, 1);
         item.deskView.transform.SetAsLastSibling();
@@ -620,7 +633,7 @@ public class Stage5Prototype : MonoBehaviour
             result.Add(new Placement { objectId = book.id, frontSprite = book.front.name,
                 location = book == held ? "Cursor" : book.inCase ? "Pencase" : book.slot != null ? "BookStand/" + book.slot.id : "DeskArea",
                 position = rect != null ? rect.anchoredPosition : Vector2.zero,
-                rotation = rect != null ? rect.localEulerAngles.z : 0 });
+                rotation = book == held && CaseQuestion ? book.currentAngle : rect != null ? rect.localEulerAngles.z : 0 });
         }
         return result;
     }
