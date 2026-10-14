@@ -114,8 +114,59 @@ MonoBehaviour:
     place: 2
     questionCount: 1
     minObjectKinds: 1
-    maxObjectKinds: 1
+    maxObjectKinds: 2
     targets:
     - objectId: 1
       count: 1
+      quantityVoice: {fileID: 0}
+    - objectId: 2
+      count: 1
+      quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
+    - objectId: 3
+      count: 2
+      quantityVoice: {fileID: 0}
+    - objectId: 4
+      count: 3
+      quantityVoice: {fileID: 0}
+  - level: 2
+    place: 0
+    questionCount: 7
+    minObjectKinds: 1
+    maxObjectKinds: 2
+    targets:
+    - objectId: 4
+      count: 1
+      quantityVoice: {fileID: 0}
+    - objectId: 5
+      count: 1
+      quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
+    - objectId: 6
+      count: 1
+      quantityVoice: {fileID: 0}
+    - objectId: 7
+      count: 1
+      quantityVoice: {fileID: 0}
+  - level: 3
+    place: 1
+    questionCount: 7
+    minObjectKinds: 1
+    maxObjectKinds: 2
+    targets:
+    - objectId: 13
+      count: 1
+      quantityVoice: {fileID: 0}
+    - objectId: 14
+      count: 1
+      quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
+    - objectId: 15
+      count: 2
+      quantityVoice: {fileID: 0}
+    - objectId: 16
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 17
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 18
+      count: 3
       quantityVoice: {fileID: 0}
