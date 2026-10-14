@@ -9,6 +9,9 @@ public class Stage5TaskData : ScriptableObject
 {
     [Header("オブジェクト：名前・画像・名前の音声だけ")]
     [SerializeField] private List<Stage5ObjectEntry> objects = new();
+    [Header("収納先別リスト：所属はここで1回だけ登録")]
+    [SerializeField] private List<Stage5PlaceObjects> placeObjects = new();
+    [SerializeField, HideInInspector] private bool groupsMigrated;
     [Header("質問形式：音声とObjectsを再生順に追加")]
     [SerializeField] private List<Stage5QuestionFormat> questionFormats = new();
     [Header("接続音声「と」")]
@@ -36,21 +39,34 @@ public class Stage5TaskData : ScriptableObject
                 || item.sprite == null || item.voice == null)
             { error = "オブジェクトの名前・画像・音声を確認してください。名前は重複できません。"; return false; }
         }
+        var memberships = new HashSet<string>(StringComparer.Ordinal);
+        var placeIds = new HashSet<Stage5Place>();
+        if (placeObjects == null || placeObjects.Count == 0)
+        { error = "Place Objectsに収納先別の所属を登録してください。"; return false; }
+        foreach (var group in placeObjects)
+        {
+            if (group == null || !Enum.IsDefined(typeof(Stage5Place), group.place) || !placeIds.Add(group.place)
+                || group.objectIds == null)
+            { error = "Place Objectsの収納先が重複または未設定です。"; return false; }
+            foreach (var id in group.objectIds)
+                if (!ids.Contains(id ?? "") || !memberships.Add(id))
+                { error = "Place ObjectsのIDが未登録か、所属が重複しています。"; return false; }
+        }
         var levelIds = new HashSet<int>();
         foreach (var config in levels)
         {
             if (config == null || config.level < 1 || config.level > 8 || !levelIds.Add(config.level)
                 || !ValidPlaces(config.Places) || config.questionCount < 1
                 || config.minObjectKinds < 1 || config.maxObjectKinds < config.minObjectKinds
-                || config.targets == null || config.targets.Count == 0)
-            { error = "出題設定のレベル・収納先・問題数・対象を確認してください。"; return false; }
+                || config.quantityOverrides == null)
+            { error = "出題設定のLevel（1〜8）・Places・問題数を確認してください。"; return false; }
             var targets = new HashSet<string>(StringComparer.Ordinal);
-            foreach (var target in config.targets)
+            foreach (var target in config.quantityOverrides)
             {
                 if (target == null || !ids.Contains(target.objectId ?? "") || target.count < 1
                     || !targets.Add(target.objectId + "#" + target.count)
                     || (target.count > 1 && target.quantityVoice == null))
-                { error = "出題対象の名前・個数を確認してください。複数個は数量だけの音声も登録します（例：2本）。"; return false; }
+                { error = "Quantity OverridesのID・個数・数量音声を確認してください（例：2本）。"; return false; }
             }
             if (config.maxObjectKinds > 1 && conjunctionVoice == null)
             { error = "複数種類を出題する場合は接続音声「と」が必要です。"; return false; }
@@ -74,6 +90,72 @@ public class Stage5TaskData : ScriptableObject
             }
             if (!insertsObjects) { error = format.id + ": Objectsを再生順に入れてください。"; return false; }
         }
+        return true;
+    }
+
+    public bool NeedsGroupMigration => !groupsMigrated;
+    public bool MigrateFromScene(UnityEngine.SceneManagement.Scene scene)
+    {
+        if (groupsMigrated || !scene.IsValid() || !scene.isLoaded) return false;
+        var homes = new Dictionary<Sprite, Stage5Place>();
+        var ambiguous = new HashSet<Sprite>();
+        foreach (var root in scene.GetRootGameObjects())
+            foreach (var parent in root.GetComponentsInChildren<Transform>(true))
+            {
+                Stage5Place home;
+                if (parent.name == "BookStand") home = Stage5Place.BookStand;
+                else if (parent.name == "Pencase") home = Stage5Place.Pencase;
+                else if (parent.name == "Odougu") home = Stage5Place.Odougu;
+                else continue;
+                foreach (Transform child in parent)
+                {
+                    var image = home == Stage5Place.BookStand
+                        ? child.Find("BookFront")?.GetComponent<UnityEngine.UI.Image>()
+                        : child.name == "OdouguArea" ? null : child.GetComponent<UnityEngine.UI.Image>();
+                    if (image == null || image.sprite == null) continue;
+                    if (homes.TryGetValue(image.sprite, out var previous) && previous != home) ambiguous.Add(image.sprite);
+                    else homes[image.sprite] = home;
+                }
+            }
+        foreach (var sprite in ambiguous) homes.Remove(sprite);
+        return MigratePlaceObjects(homes);
+    }
+
+    // Used by the inspector and game before generating questions. Never delete legacy input.
+    public bool MigratePlaceObjects(IReadOnlyDictionary<Sprite, Stage5Place> homes)
+    {
+        if (groupsMigrated) return false;
+        if (homes == null || homes.Count == 0) return false;
+        if (placeObjects == null) placeObjects = new List<Stage5PlaceObjects>();
+        var assigned = new HashSet<string>();
+        foreach (var group in placeObjects)
+            foreach (var id in group.objectIds) assigned.Add(id);
+        foreach (var item in objects)
+        {
+            if (item == null || item.sprite == null || assigned.Contains(item.id)) continue;
+            if (!homes.TryGetValue(item.sprite, out var home)) continue;
+            var group = placeObjects.Find(entry => entry.place == home);
+            if (group == null) { group = new Stage5PlaceObjects { place = home }; placeObjects.Add(group); }
+            group.objectIds.Add(item.id); assigned.Add(item.id);
+        }
+        foreach (var config in levels)
+        {
+            if (config == null) continue;
+            if (config.quantityOverrides == null) config.quantityOverrides = new List<Stage5TargetSetting>();
+            foreach (var target in config.LegacyTargets)
+            {
+                // Single-item candidates are now implicit; 0 in unfinished legacy entries also uses that default.
+                if (target == null || target.count <= 1) continue;
+                var existing = config.quantityOverrides.Find(entry => entry.objectId == target.objectId && entry.count == target.count);
+                if (existing == null) config.quantityOverrides.Add(new Stage5TargetSetting
+                    { objectId = target.objectId, count = target.count, quantityVoice = target.quantityVoice });
+                else if (existing.quantityVoice == null) existing.quantityVoice = target.quantityVoice;
+                else if (target.quantityVoice != null && target.quantityVoice != existing.quantityVoice)
+                    Debug.LogWarning("数量音声に異なる旧設定があります: " + target.objectId + " / " + target.count, this);
+            }
+        }
+        // Unmatched objects stay available in Objects and can be assigned manually.
+        groupsMigrated = true;
         return true;
     }
 
@@ -132,16 +214,29 @@ public class Stage5TaskData : ScriptableObject
             if (!Enum.IsDefined(typeof(Stage5Place), place) || !seen.Add(place)) return false;
         return true;
     }
+    private static bool ContainsPlace(IReadOnlyList<Stage5Place> places, Stage5Place place)
+    {
+        foreach (var entry in places) if (entry == place) return true;
+        return false;
+    }
     private List<List<Target>> Eligible(Stage5QuestionFormat format, Stage5LevelSettings config)
     {
         var groups = new List<List<Target>>();
-        foreach (var setting in config.targets)
+        var seen = new HashSet<string>();
+        foreach (var membership in placeObjects)
         {
-            if (format.objectIds.Count > 0 && !format.objectIds.Contains(setting.objectId)) continue;
-            var item = objects.Find(entry => entry.id == setting.objectId);
-            var group = groups.Find(entries => entries[0].item.sprite == item.sprite);
-            if (group == null) { group = new List<Target>(); groups.Add(group); }
-            group.Add(new Target { item = item, setting = setting });
+            if (!ContainsPlace(config.Places, membership.place)) continue;
+            foreach (var id in membership.objectIds)
+            {
+                if (!seen.Add(id) || (format.objectIds.Count > 0 && !format.objectIds.Contains(id))) continue;
+                var item = objects.Find(entry => entry.id == id);
+                if (item == null) continue;
+                var group = groups.Find(entries => entries[0].item.sprite == item.sprite);
+                if (group == null) { group = new List<Target>(); groups.Add(group); }
+                group.Add(new Target { item = item, setting = new Stage5TargetSetting { objectId = id, count = 1 } });
+                foreach (var setting in config.quantityOverrides)
+                    if (setting.objectId == id && setting.count > 1) group.Add(new Target { item = item, setting = setting });
+            }
         }
         return groups;
     }
@@ -178,7 +273,10 @@ public class Stage5LevelSettings : ISerializationCallbackReceiver
     [Min(1)] public int questionCount = 7;
     [Min(1)] public int minObjectKinds = 1;
     [Min(1)] public int maxObjectKinds = 1;
-    public List<Stage5TargetSetting> targets = new();
+    [SerializeField, HideInInspector] private List<Stage5TargetSetting> targets = new();
+    public IReadOnlyList<Stage5TargetSetting> LegacyTargets => targets ?? (IReadOnlyList<Stage5TargetSetting>)Array.Empty<Stage5TargetSetting>();
+    [Tooltip("通常は空欄で全て単品。鉛筆2本など追加したい数量だけ登録")]
+    public List<Stage5TargetSetting> quantityOverrides = new();
 }
 
 [Serializable]
@@ -212,3 +310,38 @@ public class Stage5QuestionFormat
     public List<Stage5VoicePart> parts = new();
 }
 
+
+
+[Serializable]
+public class Stage5PlaceObjects
+{
+    public Stage5Place place;
+    [Tooltip("この収納先に所属するObjectsのID。登録は1回だけ")]
+    public List<string> objectIds = new();
+}
+
+#if UNITY_EDITOR
+[UnityEditor.CustomEditor(typeof(Stage5TaskData))]
+public class Stage5TaskDataInspector : UnityEditor.Editor
+{
+    private void OnEnable()
+    {
+        var data = target as Stage5TaskData;
+        if (data == null || !data.NeedsGroupMigration) return;
+        const string path = "Assets/Scenes/Stage5.unity";
+        if (UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEditor.SceneAsset>(path) == null) return;
+        var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenPreviewScene(path);
+        try
+        {
+            UnityEditor.Undo.RecordObject(data, "Migrate Stage5 place memberships");
+            if (data.MigrateFromScene(scene)) UnityEditor.EditorUtility.SetDirty(data);
+        }
+        finally { UnityEditor.SceneManagement.EditorSceneManager.ClosePreviewScene(scene); }
+    }
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        UnityEditor.EditorGUILayout.HelpBox("Place Objectsで所属を1回だけ登録。LevelsはPlacesを選ぶだけです。単品は自動で候補になり、数量の追加条件だけQuantity Overridesに入れます。", UnityEditor.MessageType.Info);
+    }
+}
+#endif

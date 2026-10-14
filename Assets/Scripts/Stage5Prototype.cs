@@ -105,6 +105,7 @@ public class Stage5Prototype : MonoBehaviour
         odouguArea = Find("OdouguArea") as RectTransform;
         foreach (var front in canvas.GetComponentsInChildren<Transform>(true))
             if (front.name == "BookFront") front.gameObject.SetActive(false);
+        if (data != null) data.MigrateFromScene(gameObject.scene);
         levelQuestions = data == null ? new List<Stage5Question>() : data.GetQuestions(level);
         question = levelQuestions.Count == 0 ? null : levelQuestions[0];
         if (question == null || !question.TryValidate(out _) || deskArea == null)
