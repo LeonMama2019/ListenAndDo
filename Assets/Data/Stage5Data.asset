@@ -12,7 +12,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c051a0478034f26a213726243481c57, type: 3}
   m_Name: Stage5Data
   m_EditorClassIdentifier: Assembly-CSharp::Stage5TaskData
-  objects: []
-  questionFormats: []
-  conjunctionVoice: {fileID: 0}
-  levels: []
+  objects:
+  - id: 1
+    sprite: {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+    voice: {fileID: 8300000, guid: 9d443dfeca9287d488cea07fa6f9b5d3, type: 3}
+  - id: 2
+    sprite: {fileID: 6579298820036695858, guid: 81793d369047a7743b3a7516edaee350, type: 3}
+    voice: {fileID: 8300000, guid: d0b89897e983433479e58ca8a65175b2, type: 3}
+  - id: 3
+    sprite: {fileID: 8859225441076862958, guid: caa8aed993a8b084197726b7793e7d0e, type: 3}
+    voice: {fileID: 8300000, guid: 54da6bdce5f0c0342952bc9f33b2df19, type: 3}
+  questionFormats:
+  - id: 1
+    level: 1
+    objectIds: []
+    parts:
+    - kind: 1
+      voice: {fileID: 0}
+      text: 
+    - kind: 0
+      voice: {fileID: 8300000, guid: 5cb1905da07e71946b6b039a016e18e9, type: 3}
+      text: "\u3092\u51FA\u3057\u3066\u3001\u4ED6\u306F\u3057\u307E\u3063\u3066\u306D"
+  - id: 2
+    level: 1
+    objectIds:
+    - "\u4EE5\u5916\u306F\u7247\u4ED8\u3051\u307E\u3057\u3087\u3046"
+    parts:
+    - kind: 1
+      voice: {fileID: 0}
+      text: 
+    - kind: 0
+      voice: {fileID: 8300000, guid: 19af8713da297ad4082977311b470fa7, type: 3}
+      text: "\u4EE5\u5916\u306F\u7247\u4ED8\u3051\u307E\u3057\u3087\u3046"
+  - id: 3
+    level: 1
+    objectIds:
+    - 
+    parts:
+    - kind: 1
+      voice: {fileID: 0}
+      text: 
+    - kind: 0
+      voice: {fileID: 8300000, guid: 19af8713da297ad4082977311b470fa7, type: 3}
+      text: "\u4EE5\u5916\u306F\u7247\u4ED8\u3051\u307E\u3057\u3087\u3046"
+  conjunctionVoice: {fileID: 8300000, guid: d8623a788c087ae42b64f0910bd15ab5, type: 3}
+  levels:
+  - level: 0
+    place: 0
+    questionCount: 0
+    minObjectKinds: 0
+    maxObjectKinds: 0
+    targets: []
