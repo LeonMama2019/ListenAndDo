@@ -22,6 +22,51 @@ MonoBehaviour:
   - id: 3
     sprite: {fileID: 8859225441076862958, guid: caa8aed993a8b084197726b7793e7d0e, type: 3}
     voice: {fileID: 8300000, guid: 54da6bdce5f0c0342952bc9f33b2df19, type: 3}
+  - id: 4
+    sprite: {fileID: -221715023102359881, guid: 7f19f9d57565ffb499bd856373d99efe, type: 3}
+    voice: {fileID: 8300000, guid: 82b6df91f10f95d4ebaf66641e56b2c9, type: 3}
+  - id: 5
+    sprite: {fileID: 976429924805457222, guid: 181930525f169bb449b9170eff44c6a0, type: 3}
+    voice: {fileID: 8300000, guid: 9f7fb96bb74df824cb9839bd3093b061, type: 3}
+  - id: 6
+    sprite: {fileID: 72498739567925201, guid: d97a606ad008d1b4281c6529754fb0c8, type: 3}
+    voice: {fileID: 8300000, guid: 235300d6b7f51a04888c3cc9f18e5b2b, type: 3}
+  - id: 7
+    sprite: {fileID: -6190948392007208175, guid: 9ecf57176de8d384aa072f23b9f65f54, type: 3}
+    voice: {fileID: 8300000, guid: 61e0e8cbc9b0f344180d3ba75412048a, type: 3}
+  - id: 8
+    sprite: {fileID: 8313599978237657229, guid: 0fd6a15518094f849970bb5fc14dd641, type: 3}
+    voice: {fileID: 8300000, guid: 65a669e5536da5846b01fda7e2635745, type: 3}
+  - id: 9
+    sprite: {fileID: 4778623488045181069, guid: d65a4e186a4b7514c93bf4e50eb626b6, type: 3}
+    voice: {fileID: 8300000, guid: 30e1369495c8496469a860cdb5f4aad3, type: 3}
+  - id: 10
+    sprite: {fileID: 8523858213348063537, guid: d65a4e186a4b7514c93bf4e50eb626b6, type: 3}
+    voice: {fileID: 8300000, guid: 8960755397fd999469d425f5a54f6874, type: 3}
+  - id: 11
+    sprite: {fileID: 5657766911535312053, guid: d65a4e186a4b7514c93bf4e50eb626b6, type: 3}
+    voice: {fileID: 8300000, guid: fcd057f742b287f409f0d83b0b8b42e2, type: 3}
+  - id: 12
+    sprite: {fileID: -716028799, guid: d65a4e186a4b7514c93bf4e50eb626b6, type: 3}
+    voice: {fileID: 8300000, guid: 241cdcb44a949ed499d9465ae2849932, type: 3}
+  - id: 13
+    sprite: {fileID: 4590956600923668345, guid: 8a92f41e6b7f150448a49b2a9a7217f6, type: 3}
+    voice: {fileID: 8300000, guid: 795ea73fef760f346b78f775dc3c478d, type: 3}
+  - id: 14
+    sprite: {fileID: 7384515168655976234, guid: 060aaff55f0af0f4ab24daceb926504c, type: 3}
+    voice: {fileID: 8300000, guid: 8edd37c0027e9cb468f6ea6c2ce4b413, type: 3}
+  - id: 15
+    sprite: {fileID: -709768274109351568, guid: d8f2491a4a17d4a4e98274298c068557, type: 3}
+    voice: {fileID: 8300000, guid: 80478196ca3039c4692f43292b02ce4c, type: 3}
+  - id: 16
+    sprite: {fileID: -4174624928600890918, guid: 4d448095384cd6448a39c61bb9cb3df5, type: 3}
+    voice: {fileID: 8300000, guid: 9982fd58a9e1b4a478cb3daf068bc8b2, type: 3}
+  - id: 17
+    sprite: {fileID: -7827045836371682005, guid: 12d3b95ec0064c2478d39b38060fce80, type: 3}
+    voice: {fileID: 8300000, guid: b03dbad3041b9624cbe5fd599bf19af4, type: 3}
+  - id: 18
+    sprite: {fileID: 7766721758921934520, guid: 2fe4913e345470945a1e80f595523173, type: 3}
+    voice: {fileID: 8300000, guid: 1f8acd2ee180e504bb266aa56e3c310e, type: 3}
   questionFormats:
   - id: 1
     level: 1
@@ -35,8 +80,7 @@ MonoBehaviour:
       text: "\u3092\u51FA\u3057\u3066\u3001\u4ED6\u306F\u3057\u307E\u3063\u3066\u306D"
   - id: 2
     level: 1
-    objectIds:
-    - "\u4EE5\u5916\u306F\u7247\u4ED8\u3051\u307E\u3057\u3087\u3046"
+    objectIds: []
     parts:
     - kind: 1
       voice: {fileID: 0}
@@ -47,19 +91,31 @@ MonoBehaviour:
   - id: 3
     level: 1
     objectIds:
-    - 
+    - 2
     parts:
     - kind: 1
       voice: {fileID: 0}
       text: 
     - kind: 0
-      voice: {fileID: 8300000, guid: 19af8713da297ad4082977311b470fa7, type: 3}
-      text: "\u4EE5\u5916\u306F\u7247\u4ED8\u3051\u307E\u3057\u3087\u3046"
+      voice: {fileID: 8300000, guid: c60febaf743b4c746b21187f654fe1a2, type: 3}
+      text: "\u3067\u306F\u8D64\u25CE\u3092\u4ED8\u3051\u3066\u3044\u304D\u307E\u3059\u3002\u3044\u3089\u306A\u3044\u3082\u306E\u306F\u3057\u307E\u3063\u3066\u306D"
+  - id: 4
+    level: 3
+    objectIds:
+    - 14
+    - 15
+    parts:
+    - kind: 0
+      voice: {fileID: 0}
+      text: "\u8272\u5857\u308A\u3092\u3044\u307E\u3059\u3002\u4F7F\u308F\u306A\u3044\u7269\u306F\u3057\u307E\u3044\u307E\u3057\u3087\u3046"
   conjunctionVoice: {fileID: 8300000, guid: d8623a788c087ae42b64f0910bd15ab5, type: 3}
   levels:
   - level: 0
-    place: 0
-    questionCount: 0
-    minObjectKinds: 0
-    maxObjectKinds: 0
-    targets: []
+    place: 2
+    questionCount: 1
+    minObjectKinds: 1
+    maxObjectKinds: 1
+    targets:
+    - objectId: 1
+      count: 1
+      quantityVoice: {fileID: 0}
