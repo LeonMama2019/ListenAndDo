@@ -74,6 +74,52 @@ MonoBehaviour:
     tidyPlaces: 02000000
     deskObjects:
     - {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+  - taskId: 9
+    level: 1
+    questionText: "\u925B\u7B46\u30922\u672C\u51FA\u3057\u3066\u4ED6\u306E\u925B\u7B46\u306F\u9589\u307E\u3063\u3066\u306D"
+    questionVoice: {fileID: 8300000, guid: 4425334e9b684c74f965a4661cfc13de, type: 3}
+    tidyPlaces: 02000000
+    deskObjects:
+    - {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+  - taskId: 10
+    level: 1
+    questionText: "\u8D64\u925B\u7B46\u3060\u3051\u51FA\u3057\u3066"
+    questionVoice: {fileID: 8300000, guid: 4c0718ecafa734941bdc1b9c85a7e136, type: 3}
+    tidyPlaces: 02000000
+    deskObjects:
+    - {fileID: 6579298820036695858, guid: 81793d369047a7743b3a7516edaee350, type: 3}
+  - taskId: 11
+    level: 1
+    questionText: "\u8D64\u925B\u7B46\u3068\u925B\u7B46\u3092\uFF11\u672C\u51FA\u3057\u3066"
+    questionVoice: {fileID: 8300000, guid: 6fa4b06d3f8e9d445927cf82e793238b, type: 3}
+    tidyPlaces: 02000000
+    deskObjects:
+    - {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+    - {fileID: 6579298820036695858, guid: 81793d369047a7743b3a7516edaee350, type: 3}
+  - taskId: 12
+    level: 1
+    questionText: "\u925B\u7B46\u3068\u6D88\u3057\u30B4\u30E0\u3060\u3051\u51FA\u3057\u3066"
+    questionVoice: {fileID: 8300000, guid: 1633ec28aab4fc444b3afe5eccaa2b9b, type: 3}
+    tidyPlaces: 02000000
+    deskObjects:
+    - {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+    - {fileID: 8859225441076862958, guid: caa8aed993a8b084197726b7793e7d0e, type: 3}
+  - taskId: 13
+    level: 1
+    questionText: "\u8D64\u925B\u7B46\u3068\u6D88\u3057\u30B4\u30E0\u4EE5\u5916\u306F\u3057\u307E\u3063\u3066\u306D"
+    questionVoice: {fileID: 8300000, guid: fa4bcb561e592f043889abfae49635f4, type: 3}
+    tidyPlaces: 02000000
+    deskObjects:
+    - {fileID: 6579298820036695858, guid: 81793d369047a7743b3a7516edaee350, type: 3}
+    - {fileID: 8859225441076862958, guid: caa8aed993a8b084197726b7793e7d0e, type: 3}
+  - taskId: 14
+    level: 1
+    questionText: "\u6D88\u3057\u30B4\u30E0\u3092\u51FA\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u4ED6\u306F\u3057\u307E\u3063\u3066\u3044\u3044\u3067\u3059\u3088"
+    questionVoice: {fileID: 8300000, guid: d8323d37a19c2054899648b8cd54f381, type: 3}
+    tidyPlaces: 02000000
+    deskObjects:
+    - {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+    - {fileID: 8859225441076862958, guid: caa8aed993a8b084197726b7793e7d0e, type: 3}
   taskId: 
   level: 1
   questionText: "\u672C\u3092\u7247\u4ED8\u3051\u3066\u3001\u8D64\u3044\u672C\u3092\u673A\u306E\u4E0A\u306B\u7F6E\u3044\u3066"
