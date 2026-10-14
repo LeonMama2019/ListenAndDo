@@ -83,7 +83,7 @@ public class Stage5TaskData : ScriptableObject
         if (!TryValidate(out var error)) { Debug.LogError(error, this); return result; }
         var config = levels.Find(entry => entry.level == targetLevel);
         if (config == null) { Debug.LogError("選択レベルの出題設定がありません。", this); return result; }
-        var formats = questionFormats.FindAll(format => (format.level == 0 || format.level == targetLevel)
+        var formats = questionFormats.FindAll(format => (format.level <= targetLevel)
             && Eligible(format, config).Count >= config.minObjectKinds);
         if (formats.Count == 0) { Debug.LogError("対象数に合う質問形式がありません。", this); return result; }
         for (int n = 0; n < config.questionCount; n++)
@@ -184,7 +184,7 @@ public class Stage5VoicePart
 public class Stage5QuestionFormat
 {
     public string id;
-    [Tooltip("0は全レベル共通")] [Range(0, 8)] public int level;
+    [Tooltip("使用開始レベル。1ならレベル1以降、3ならレベル3以降。0も全レベルで使用できます。")] [Range(0, 8)] public int level;
     [Tooltip("空欄は出題設定の全対象。塗り絵などでは対応する名前だけを指定")]
     public List<string> objectIds = new();
     public List<Stage5VoicePart> parts = new();
