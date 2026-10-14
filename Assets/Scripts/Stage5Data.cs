@@ -27,7 +27,7 @@ public class Stage5Question
     [SerializeField] private AudioClip questionVoice;
     [Tooltip("選択した親の子をDeskAreaへ散らかし、同じ場所へ片付ける。本はBookFrontを使う。")]
     [SerializeField] private List<Stage5Place> tidyPlaces = new();
-    [Tooltip("机に残す画像素材を直接登録。本はBookFrontのSprite。個数指定は不要。")]
+    [Tooltip("机に残す画像素材を直接登録。本はBookFrontのSprite。Pencaseでは指定画像と同じ種類を1個だけ残す。")]
     [SerializeField] private List<Sprite> deskObjects = new();
 
     public string TaskId => taskId;
