@@ -20,7 +20,7 @@ public class Stage5TaskData : ScriptableObject
     {
         public Stage5ObjectEntry item;
         public Stage5TargetSetting setting;
-        public AudioClip Voice => setting.count == 1 ? item.voice : setting.quantityVoice;
+
     }
 
     public bool TryValidate(out string error)
@@ -40,7 +40,7 @@ public class Stage5TaskData : ScriptableObject
         foreach (var config in levels)
         {
             if (config == null || config.level < 1 || config.level > 8 || !levelIds.Add(config.level)
-                || !Enum.IsDefined(typeof(Stage5Place), config.place) || config.questionCount < 1
+                || !ValidPlaces(config.Places) || config.questionCount < 1
                 || config.minObjectKinds < 1 || config.maxObjectKinds < config.minObjectKinds
                 || config.targets == null || config.targets.Count == 0)
             { error = "出題設定のレベル・収納先・問題数・対象を確認してください。"; return false; }
@@ -50,7 +50,7 @@ public class Stage5TaskData : ScriptableObject
                 if (target == null || !ids.Contains(target.objectId ?? "") || target.count < 1
                     || !targets.Add(target.objectId + "#" + target.count)
                     || (target.count > 1 && target.quantityVoice == null))
-                { error = "出題対象の名前・個数を確認してください。複数個は個数込みの音声も登録します。"; return false; }
+                { error = "出題対象の名前・個数を確認してください。複数個は数量だけの音声も登録します（例：2本）。"; return false; }
             }
             if (config.maxObjectKinds > 1 && conjunctionVoice == null)
             { error = "複数種類を出題する場合は接続音声「と」が必要です。"; return false; }
@@ -111,18 +111,27 @@ public class Stage5TaskData : ScriptableObject
                     for (int i = 0; i < selected.Count; i++)
                     {
                         if (i > 0) { clips.Add(conjunctionVoice); text.Append("と"); }
-                        clips.Add(selected[i].Voice);
+                        clips.Add(selected[i].item.voice);
+                        if (selected[i].setting.count > 1) clips.Add(selected[i].setting.quantityVoice);
                         text.Append(selected[i].item.id).Append("×").Append(selected[i].setting.count);
                     }
             }
             var question = new Stage5Question("Random_Lv" + targetLevel + "_" + (n + 1) + "_" + format.id,
-                targetLevel, text.ToString(), null, new[] { config.place }, sprites);
+                targetLevel, text.ToString(), null, config.Places, sprites);
             question.RuntimeVoices = clips;
             result.Add(question);
         }
         return result;
     }
 
+    private static bool ValidPlaces(IReadOnlyList<Stage5Place> places)
+    {
+        if (places == null || places.Count == 0) return false;
+        var seen = new HashSet<Stage5Place>();
+        foreach (var place in places)
+            if (!Enum.IsDefined(typeof(Stage5Place), place) || !seen.Add(place)) return false;
+        return true;
+    }
     private List<List<Target>> Eligible(Stage5QuestionFormat format, Stage5LevelSettings config)
     {
         var groups = new List<List<Target>>();
@@ -149,10 +158,23 @@ public class Stage5ObjectEntry
 }
 
 [Serializable]
-public class Stage5LevelSettings
+public class Stage5LevelSettings : ISerializationCallbackReceiver
 {
     [Range(1, 8)] public int level = 1;
-    public Stage5Place place;
+    [SerializeField, HideInInspector] private Stage5Place place;
+    [SerializeField, HideInInspector] private bool placesMigrated;
+    [Tooltip("散らかして元に戻す収納先を複数指定できます")]
+    public List<Stage5Place> places = new();
+    public IReadOnlyList<Stage5Place> Places { get { MigratePlace(); return places; } }
+    private void MigratePlace()
+    {
+        if (placesMigrated) return;
+        if (places == null) places = new List<Stage5Place>();
+        if (places.Count == 0) places.Add(place);
+        placesMigrated = true;
+    }
+    public void OnBeforeSerialize() => MigratePlace();
+    public void OnAfterDeserialize() => MigratePlace();
     [Min(1)] public int questionCount = 7;
     [Min(1)] public int minObjectKinds = 1;
     [Min(1)] public int maxObjectKinds = 1;
@@ -166,7 +188,7 @@ public class Stage5TargetSetting
     public string objectId;
     [Tooltip("机に残す個数。同じ名前で個数違いを登録すると、その個数も抽選します")]
     [Min(1)] public int count = 1;
-    [Tooltip("2個以上の場合だけ指定。例：鉛筆2本。1個ならObjectsの名前の音声を使います")]
+    [Tooltip("2個以上の場合だけ指定。例：2本。名前の音声の後ろに続けて再生します")]
     public AudioClip quantityVoice;
 }
 
@@ -189,3 +211,4 @@ public class Stage5QuestionFormat
     public List<string> objectIds = new();
     public List<Stage5VoicePart> parts = new();
 }
+

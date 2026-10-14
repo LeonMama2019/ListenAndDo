@@ -15,7 +15,15 @@ public class Stage5Prototype : MonoBehaviour
     [SerializeField] private float nextQuestionDelay = 3f;
     private RectTransform pencase;
     private int level;
-    private bool CaseQuestion => question.TidyPlaces.Count == 1 && question.TidyPlaces[0] == Stage5Place.Pencase;
+    private RectTransform odougu, odouguArea;
+    private bool Uses(Stage5Place place) => question != null && ContainsPlace(question.TidyPlaces, place);
+    private static bool ContainsPlace(IReadOnlyList<Stage5Place> places, Stage5Place place)
+    {
+        foreach (var entry in places) if (entry == place) return true;
+        return false;
+    }
+    private RectTransform HomeArea(Book item) => item.home == Stage5Place.Pencase ? pencase : odouguArea;
+    private bool FreeItem(Book item) => item != null && item.home != Stage5Place.BookStand;
     private List<Stage5Question> levelQuestions;
     private int questionIndex;
     private StageLevelResultRecorder recorder;
@@ -28,6 +36,7 @@ public class Stage5Prototype : MonoBehaviour
         public Image deskView;
         public Slot slot;
         public bool inCase;
+        public Stage5Place home;
         public float authoredAngle, currentAngle;
     }
     private class Slot
@@ -43,6 +52,8 @@ public class Stage5Prototype : MonoBehaviour
         public string objectId, frontSprite, location;
         public Vector2 position;
         public float rotation;
+        public int drawOrder, stackLayer;
+        public List<string> overlappingBelow = new();
     }
     [Serializable] private class Move
     {
@@ -58,6 +69,8 @@ public class Stage5Prototype : MonoBehaviour
         public List<Placement> initial;
         public List<Move> events = new();
         public bool completed;
+        public List<Placement> finalArrangement;
+        public int maxStackDepth;
         public string redPencilPlacement;
         public Vector2 redPencilPosition;
         public List<string> pencilOrder = new();
@@ -88,37 +101,29 @@ public class Stage5Prototype : MonoBehaviour
         Find("Check")?.gameObject.SetActive(false);
         level = StageLevelMenu.SelectedStage == 5 ? StageLevelMenu.SelectedLevel : 1;
         pencase = Find("Pencase") as RectTransform;
+        odougu = Find("Odougu") as RectTransform;
+        odouguArea = Find("OdouguArea") as RectTransform;
         foreach (var front in canvas.GetComponentsInChildren<Transform>(true))
             if (front.name == "BookFront") front.gameObject.SetActive(false);
         levelQuestions = data == null ? new List<Stage5Question>() : data.GetQuestions(level);
         question = levelQuestions.Count == 0 ? null : levelQuestions[0];
-        if (question == null || !question.TryValidate(out _) || deskArea == null || bookStand == null)
+        if (question == null || !question.TryValidate(out _) || deskArea == null)
         {
             Debug.LogError("Stage5: 選択レベルの問題、音声、DeskArea、BookStandを確認してください。", this);
             enabled = false;
             return;
         }
-        if (CaseQuestion)
+        if (Uses(Stage5Place.Pencase) && !RegisterFreeItems(pencase, pencase, Stage5Place.Pencase)) return;
+        if (Uses(Stage5Place.Odougu) && !RegisterFreeItems(odougu, odouguArea, Stage5Place.Odougu)) return;
+        if (Uses(Stage5Place.BookStand))
         {
-            if (pencase == null) { Debug.LogError("Pencaseがありません。", this); enabled = false; return; }
-            foreach (Transform child in pencase)
-            {
-                var image = child.GetComponent<Image>();
-                if (image == null || image.sprite == null) continue;
-                books.Add(new Book { id = child.name, front = image.sprite,
-                    frontSize = image.rectTransform.rect.size, authoredAngle = image.rectTransform.localEulerAngles.z });
-                image.gameObject.SetActive(false);
-            }
-            Bind(pencase.gameObject, e => CaseClick(e.position));
-        }
-        else
-        {
+            if (bookStand == null) { Debug.LogError("BookStandがありません。", this); enabled = false; return; }
             foreach (Transform child in bookStand)
             {
                 var spine = child.GetComponent<Image>();
                 var front = child.Find("BookFront")?.GetComponent<Image>();
                 if (spine == null || front == null) continue;
-                var book = new Book { id = child.name, front = front.sprite, spine = spine.sprite,
+                var book = new Book { id = child.name, home = Stage5Place.BookStand, front = front.sprite, spine = spine.sprite,
                     frontSize = front.rectTransform.rect.size, spineSize = spine.rectTransform.rect.size };
                 var slot = new Slot { id = child.name, view = spine, originalSize = spine.rectTransform.sizeDelta,
                     originalPosition = spine.rectTransform.anchoredPosition, originalLocalPosition = spine.rectTransform.localPosition };
@@ -126,12 +131,8 @@ public class Stage5Prototype : MonoBehaviour
                 spine.raycastTarget = true;
                 SetAlpha(spine, 0);
                 Bind(spine.gameObject, e => { if (held == null) SlotClick(slot); else ShelfClick(e.position); });
-                books.Add(book);
-                slots.Add(slot);
+                books.Add(book); slots.Add(slot);
             }
-        }
-        if (!CaseQuestion)
-        {
             var shelfImage = bookStand.GetComponent<Image>();
             if (shelfImage != null) shelfImage.raycastTarget = true;
             Bind(bookStand.gameObject, e => ShelfClick(e.position));
@@ -154,8 +155,7 @@ public class Stage5Prototype : MonoBehaviour
         }
         foreach (var entry in levelQuestions)
         {
-            var expected = CaseQuestion ? Stage5Place.Pencase : Stage5Place.BookStand;
-            if (!entry.TryValidate(out var error) || entry.TidyPlaces.Count != 1 || entry.TidyPlaces[0] != expected)
+            if (!entry.TryValidate(out var error) || !SamePlaces(entry.TidyPlaces, question.TidyPlaces))
             {
                 Debug.LogError(error ?? "対象の親と机に残す画像を確認してください。", this);
                 enabled = false; return;
@@ -168,6 +168,45 @@ public class Stage5Prototype : MonoBehaviour
         BeginQuestion();
     }
 
+    private static bool SamePlaces(IReadOnlyList<Stage5Place> a, IReadOnlyList<Stage5Place> b)
+    {
+        if (a.Count != b.Count) return false;
+        foreach (var place in a) if (!ContainsPlace(b, place)) return false;
+        return true;
+    }
+    private bool RegisterFreeItems(RectTransform parent, RectTransform area, Stage5Place home)
+    {
+        if (parent == null || area == null)
+        { Debug.LogError(home + "の親または収納Areaがありません。", this); enabled = false; return false; }
+        foreach (Transform child in parent)
+        {
+            if (child == area) continue;
+            var image = child.GetComponent<Image>();
+            if (image == null || image.sprite == null) continue;
+            books.Add(new Book { id = child.name, home = home, front = image.sprite,
+                frontSize = image.rectTransform.rect.size, authoredAngle = image.rectTransform.localEulerAngles.z });
+            image.gameObject.SetActive(false);
+        }
+        var graphic = area.GetComponent<Image>();
+        if (graphic == null) graphic = area.gameObject.AddComponent<Image>();
+        // The authored Area is a hit region; do not display its placeholder artwork.
+        if (area != parent) SetAlpha(graphic, 0);
+        graphic.raycastTarget = true;
+        Bind(area.gameObject, e => ContainerClick(home, e.position));
+        if (area != parent) Bind(parent.gameObject, e => ContainerClick(home, e.position));
+        return true;
+    }
+    private static bool AllowsOverlap(Book a, Book b)
+    {
+        return a.home == Stage5Place.Odougu && b.home == Stage5Place.Odougu
+            && Stackable(a.id) && Stackable(b.id);
+    }
+    private static bool Stackable(string id)
+    {
+        string key = id.Replace(" ", "").ToLowerInvariant();
+        return key == "colorpencil" || key == "coloredpencil" || key == "colordpencil"
+            || key == "crayon" || key == "scissors" || key == "tape";
+    }
     private void BeginQuestion()
     {
         question = levelQuestions[questionIndex];
@@ -195,8 +234,8 @@ public class Stage5Prototype : MonoBehaviour
             book.slot = null;
             book.inCase = false;
             book.currentAngle = book.authoredAngle;
-            Scatter(book);
         }
+        foreach (var book in books) Scatter(book);
         attempt = new Attempt { attemptId = Guid.NewGuid().ToString("N"), taskId = question.TaskId,
             level = level, startedAtUtc = DateTime.UtcNow.ToString("o"), initial = Snapshot() };
         started = Time.unscaledTime;
@@ -227,22 +266,23 @@ public class Stage5Prototype : MonoBehaviour
         image.rectTransform.sizeDelta = size;
         image.sprite = sprite;
         image.preserveAspect = true;
-        if (CaseQuestion) { image.useSpriteMesh = true; image.preserveAspect = false; }
+        image.useSpriteMesh = true;
         return image;
     }
     private void Scatter(Book book)
     {
         book.deskView = NewImage("Scattered_" + book.id, deskArea, book.front, book.frontSize);
+        book.deskView.preserveAspect = !FreeItem(book);
         float angle = UnityEngine.Random.Range(-65f, 65f);
         book.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, angle);
         for (int tries = 0; tries < 1000; tries++)
         {
             book.deskView.rectTransform.anchoredPosition = RandomDeskPosition(book.frontSize, angle);
-            if (!CaseQuestion || !books.Exists(other => other != book && other.deskView != null
+            if (!FreeItem(book) || !books.Exists(other => other != book && other.home == book.home && !AllowsOverlap(book, other) && other.deskView != null
                 && other.deskView.gameObject.activeSelf && Overlaps(book.deskView.rectTransform, other.deskView.rectTransform))) break;
             if (tries == 999) { Debug.LogError("DeskAreaが狭く、重ならずに配置できません。", this); enabled = false; }
         }
-        Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else if (held == book && CaseQuestion) RotateHeld(); else SurfaceClick(e.position); });
+        Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else if (held == book && FreeItem(book)) RotateHeld(); else SurfaceClick(e.position); });
     }
     private Vector2 RandomDeskPosition(Vector2 size, float angle)
     {
@@ -266,23 +306,24 @@ public class Stage5Prototype : MonoBehaviour
     private void Pick(Book book)
     {
         if (!CanAct || held != null) return;
-        heldFrom = book.inCase ? "Pencase" : book.slot == null ? "DeskArea" : "BookStand/" + book.slot.id;
+        heldFrom = book.inCase ? book.home.ToString() : book.slot == null ? "DeskArea" : "BookStand/" + book.slot.id;
         if (book.slot != null) { SetAlpha(book.slot.view, 0); book.slot.book = null; book.slot = null; }
         else SetAlpha(book.deskView, 0);
         held = book;
+        cursor.preserveAspect = !FreeItem(book);
         cursor.sprite = book.front;
         cursor.rectTransform.sizeDelta = book.frontSize;
-        cursor.rectTransform.localEulerAngles = new Vector3(0, 0, CaseQuestion ? book.currentAngle : 0);
+        cursor.rectTransform.localEulerAngles = new Vector3(0, 0, FreeItem(book) ? book.currentAngle : 0);
         SetAlpha(cursor, 1);
         cursor.transform.SetAsLastSibling();
         Log(book, "pick", heldFrom, "Cursor");
-        if (CaseQuestion) RotateHeld();
+        if (FreeItem(book)) RotateHeld();
     }
     private void RotateHeld()
     {
-        if (!CanAct || held == null || !CaseQuestion) return;
+        if (!CanAct || !FreeItem(held)) return;
         float step;
-        if (held.id.Equals("Eraser", StringComparison.OrdinalIgnoreCase)) step = 90f;
+        if (held.home == Stage5Place.Odougu || held.id.Equals("Eraser", StringComparison.OrdinalIgnoreCase)) step = 90f;
         else if (held.id.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0) step = 180f;
         else return;
         held.currentAngle = Mathf.Repeat(held.currentAngle + step, 360f);
@@ -291,7 +332,7 @@ public class Stage5Prototype : MonoBehaviour
     }
     private void ShelfClick(Vector2 screenPoint)
     {
-        if (!CanAct || held == null || CaseQuestion) return;
+        if (!CanAct || held == null || held.home != Stage5Place.BookStand) return;
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(bookStand, screenPoint, UiCamera, out var point)) return;
         bool left = point.x < bookStand.rect.center.x;
         Slot best = null;
@@ -314,7 +355,7 @@ public class Stage5Prototype : MonoBehaviour
     {
         if (!CanAct) return;
         if (held == null) { if (slot.book != null) Pick(slot.book); return; }
-        if (slot.book != null) return;
+        if (held.home != Stage5Place.BookStand || slot.book != null) return;
         // Capacity is the original authored slot HEIGHT only; width does not restrict placement.
         if (held.spineSize.y > slot.originalSize.y + 0.01f)
         {
@@ -355,7 +396,7 @@ public class Stage5Prototype : MonoBehaviour
     {
         if (!CanAct || held == null) return;
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(deskArea, point, UiCamera, out var local)) return;
-        var half = RotatedHalf(held.frontSize, CaseQuestion ? held.currentAngle : 0);
+        var half = RotatedHalf(held.frontSize, FreeItem(held) ? held.currentAngle : 0);
         var area = deskArea.rect;
         local.x = Mathf.Clamp(local.x, area.xMin + half.x, area.xMax - half.x);
         local.y = Mathf.Clamp(local.y, area.yMin + half.y, area.yMax - half.y);
@@ -365,17 +406,19 @@ public class Stage5Prototype : MonoBehaviour
     {
         busy = true;
         var book = held;
+        cursor.preserveAspect = !FreeItem(book);
         cursor.sprite = book.front;
         cursor.rectTransform.sizeDelta = book.frontSize;
         yield return Animate(deskArea.TransformPoint(local));
         if (book.deskView == null)
         {
             book.deskView = NewImage("Scattered_" + book.id, deskArea, book.front, book.frontSize);
-            Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else if (held == book && CaseQuestion) RotateHeld(); else SurfaceClick(e.position); });
+            Bind(book.deskView.gameObject, e => { if (held == null) Pick(book); else if (held == book && FreeItem(book)) RotateHeld(); else SurfaceClick(e.position); });
         }
+        book.deskView.preserveAspect = !FreeItem(book);
         book.deskView.rectTransform.SetParent(deskArea, false);
         book.inCase = false;
-        book.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, CaseQuestion ? book.currentAngle : 0);
+        book.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, FreeItem(book) ? book.currentAngle : 0);
         book.deskView.rectTransform.anchoredPosition = local;
         SetAlpha(book.deskView, 1);
         book.deskView.transform.SetAsLastSibling();
@@ -405,22 +448,33 @@ public class Stage5Prototype : MonoBehaviour
     }
     private bool IsCorrect(out string reason)
     {
-        if (held != null) { reason = "持っている本を置いてね"; return false; }
-        if (CaseQuestion) return IsCaseCorrect(out reason);
+        if (held != null) { reason = "持っている物を置いてね"; return false; }
         var remaining = new List<Sprite>(question.DeskObjects);
-        foreach (var book in books)
+        foreach (var item in books)
         {
-            if (book.slot == null)
+            if (item.inCase)
             {
-                if (!FullyInsideDesk(book.deskView) || !remaining.Remove(book.front))
-                { reason = "指定の物を指定数だけ机に置いてね"; return false; }
+                if (!FreeItem(item) || item.deskView.rectTransform.parent != HomeArea(item)
+                    || !FullyInside(item.deskView.rectTransform, HomeArea(item)))
+                { reason = "元の収納先に収めてね"; return false; }
             }
-            else if (book.slot.book != book || book.spineSize.y > book.slot.originalSize.y + 0.01f)
-            { reason = "本立てに戻してね"; return false; }
+            else if (item.slot != null)
+            {
+                if (item.home != Stage5Place.BookStand || item.slot.book != item
+                    || item.spineSize.y > item.slot.originalSize.y + 0.01f)
+                { reason = "本立てに戻してね"; return false; }
+            }
+            else if (!FullyInsideDesk(item.deskView) || !remaining.Remove(item.front))
+            { reason = "指定の物を指定数だけ机に残してね"; return false; }
         }
-        if (remaining.Count > 0) { reason = "机に残す物が足りません"; return false; }
-        reason = null;
-        return true;
+        for (int i = 0; i < books.Count; i++)
+            for (int j = i + 1; j < books.Count; j++)
+                if (books[i].inCase && books[j].inCase && books[i].home == books[j].home
+                    && !AllowsOverlap(books[i], books[j])
+                    && Overlaps(books[i].deskView.rectTransform, books[j].deskView.rectTransform))
+                { reason = "重ならないように置いてね"; return false; }
+        reason = remaining.Count == 0 ? null : "机に残す物が足りません";
+        return remaining.Count == 0;
     }
 
     private void CheckAnswer() => EvaluateAnswer(true);
@@ -463,36 +517,39 @@ public class Stage5Prototype : MonoBehaviour
     }
     private void SurfaceClick(Vector2 point)
     {
-        if (!CaseQuestion && RectTransformUtility.RectangleContainsScreenPoint(bookStand, point, UiCamera)) ShelfClick(point);
-        else if (CaseQuestion && RectTransformUtility.RectangleContainsScreenPoint(pencase, point, UiCamera)) CaseClick(point);
+        if (Uses(Stage5Place.BookStand) && RectTransformUtility.RectangleContainsScreenPoint(bookStand, point, UiCamera)) ShelfClick(point);
+        else if (Uses(Stage5Place.Pencase) && RectTransformUtility.RectangleContainsScreenPoint(pencase, point, UiCamera)) ContainerClick(Stage5Place.Pencase, point);
+        else if (Uses(Stage5Place.Odougu) && RectTransformUtility.RectangleContainsScreenPoint(odouguArea, point, UiCamera)) ContainerClick(Stage5Place.Odougu, point);
         else DeskClick(point);
     }
-    private void CaseClick(Vector2 point)
+    private void ContainerClick(Stage5Place home, Vector2 point)
     {
         if (!CanAct || held == null) return;
-        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(pencase, point, UiCamera, out var local)) return;
-        var probe = NewImage("PlacementProbe", pencase, held.front, held.frontSize);
+        if (held.home != home)
+        { Log(held, "wrong_container_rejected", "Cursor", home.ToString()); return; }
+        var area = HomeArea(held);
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(area, point, UiCamera, out var local)) return;
+        var probe = NewImage("PlacementProbe", area, held.front, held.frontSize);
+        probe.preserveAspect = false;
         probe.raycastTarget = false;
         SetAlpha(probe, 0);
         probe.rectTransform.anchoredPosition = local;
         probe.rectTransform.localEulerAngles = new Vector3(0, 0, held.currentAngle);
-        bool inside = FullyInside(probe.rectTransform, pencase);
-        bool overlaps = books.Exists(other => other != held && other.inCase
-            && Overlaps(probe.rectTransform, other.deskView.rectTransform));
+        bool inside = FullyInside(probe.rectTransform, area);
+        bool overlaps = books.Exists(other => other != held && other.inCase && other.home == home
+            && !AllowsOverlap(held, other) && Overlaps(probe.rectTransform, other.deskView.rectTransform));
         Destroy(probe.gameObject);
         if (!inside || overlaps)
-        {
-            Log(held, inside ? "overlap_rejected" : "outside_rejected", "Cursor", "Pencase");
-            return;
-        }
-        StartCoroutine(PlaceCase(local));
+        { Log(held, inside ? "overlap_rejected" : "outside_rejected", "Cursor", home.ToString()); return; }
+        StartCoroutine(PlaceContainer(local));
     }
-    private IEnumerator PlaceCase(Vector2 local)
+    private IEnumerator PlaceContainer(Vector2 local)
     {
         busy = true;
         var item = held;
-        yield return Animate(pencase.TransformPoint(local));
-        item.deskView.rectTransform.SetParent(pencase, false);
+        var area = HomeArea(item);
+        yield return Animate(area.TransformPoint(local));
+        item.deskView.rectTransform.SetParent(area, false);
         item.deskView.rectTransform.anchoredPosition = local;
         item.deskView.rectTransform.localEulerAngles = new Vector3(0, 0, item.currentAngle);
         item.inCase = true;
@@ -500,29 +557,9 @@ public class Stage5Prototype : MonoBehaviour
         item.deskView.transform.SetAsLastSibling();
         held = null;
         SetAlpha(cursor, 0);
-        Log(item, "place", heldFrom, "Pencase");
+        Log(item, "place", heldFrom, item.home.ToString());
         busy = false;
         EvaluateAnswer(false);
-    }
-    private bool IsCaseCorrect(out string reason)
-    {
-        var remaining = new List<Sprite>(question.DeskObjects);
-        foreach (var item in books)
-        {
-            if (!item.inCase)
-            {
-                if (!FullyInsideDesk(item.deskView) || !remaining.Remove(item.front))
-                { reason = "指定の物を机に残してね"; return false; }
-            }
-            else if (!FullyInside(item.deskView.rectTransform, pencase))
-            { reason = "ペンケースに収めてね"; return false; }
-        }
-        for (int i = 0; i < books.Count; i++)
-            for (int j = i + 1; j < books.Count; j++)
-                if (books[i].inCase && books[j].inCase && Overlaps(books[i].deskView.rectTransform, books[j].deskView.rectTransform))
-                { reason = "重ならないように置いてね"; return false; }
-        reason = null;
-        return remaining.Count == 0;
     }
     private static Vector3[] VisibleVertices(RectTransform rect)
     {
@@ -592,13 +629,13 @@ public class Stage5Prototype : MonoBehaviour
     }
     private void RecordRedPencil()
     {
-        if (!CaseQuestion || attempt == null) return;
+        if (!Uses(Stage5Place.Pencase) || attempt == null) return;
         var red = books.Find(b => b.id.Equals("Redpencil", StringComparison.OrdinalIgnoreCase));
         if (red == null) return;
         attempt.redPencilPosition = red.deskView.rectTransform.anchoredPosition;
         if (red == held) { attempt.redPencilPlacement = "held"; attempt.pencilOrder.Clear(); return; }
         if (!red.inCase) { attempt.redPencilPlacement = "desk"; attempt.pencilOrder.Clear(); return; }
-        var pencils = books.FindAll(b => b.inCase && b != held && b.id.StartsWith("Pencil", StringComparison.OrdinalIgnoreCase));
+        var pencils = books.FindAll(b => b.home == Stage5Place.Pencase && b.inCase && b != held && b.id.StartsWith("Pencil", StringComparison.OrdinalIgnoreCase));
         pencils.Add(red);
         // Sort across the authored pencil direction, keeping eraser out of the pencil order.
         float angle = red.authoredAngle * Mathf.Deg2Rad;
@@ -655,13 +692,34 @@ public class Stage5Prototype : MonoBehaviour
     private List<Placement> Snapshot()
     {
         var result = new List<Placement>();
+        var storedTools = books.FindAll(item => item.home == Stage5Place.Odougu && item.inCase && item != held);
+        storedTools.Sort((a, b) => a.deskView.transform.GetSiblingIndex().CompareTo(b.deskView.transform.GetSiblingIndex()));
+        var depths = new Dictionary<Book, int>();
+        var below = new Dictionary<Book, List<string>>();
+        foreach (var item in storedTools)
+        {
+            int depth = 1;
+            var lowerIds = new List<string>();
+            foreach (var lower in storedTools)
+            {
+                if (lower == item) break;
+                if (!Overlaps(item.deskView.rectTransform, lower.deskView.rectTransform)) continue;
+                lowerIds.Add(lower.id);
+                depth = Mathf.Max(depth, depths[lower] + 1);
+            }
+            depths[item] = depth;
+            below[item] = lowerIds;
+        }
         foreach (var book in books)
         {
-            var rect = book.slot != null ? book.slot.view.rectTransform : book.deskView?.rectTransform;
+            var rect = book == held ? cursor.rectTransform : book.slot != null ? book.slot.view.rectTransform : book.deskView?.rectTransform;
             result.Add(new Placement { objectId = book.id, frontSprite = book.front.name,
-                location = book == held ? "Cursor" : book.inCase ? "Pencase" : book.slot != null ? "BookStand/" + book.slot.id : "DeskArea",
+                location = book == held ? "Cursor" : book.inCase ? book.home.ToString() : book.slot != null ? "BookStand/" + book.slot.id : "DeskArea",
                 position = rect != null ? rect.anchoredPosition : Vector2.zero,
-                rotation = book == held && CaseQuestion ? book.currentAngle : rect != null ? rect.localEulerAngles.z : 0 });
+                rotation = book == held && FreeItem(book) ? book.currentAngle : rect != null ? rect.localEulerAngles.z : 0,
+                drawOrder = rect != null ? rect.GetSiblingIndex() : -1,
+                stackLayer = depths.TryGetValue(book, out var depth) ? depth : 0,
+                overlappingBelow = below.TryGetValue(book, out var ids) ? ids : new List<string>() });
         }
         return result;
     }
@@ -674,6 +732,10 @@ public class Stage5Prototype : MonoBehaviour
     private void Save()
     {
         RecordRedPencil();
+        attempt.finalArrangement = Snapshot();
+        attempt.maxStackDepth = 0;
+        foreach (var placement in attempt.finalArrangement)
+            attempt.maxStackDepth = Mathf.Max(attempt.maxStackDepth, placement.stackLayer);
         string json = JsonUtility.ToJson(attempt);
         PlayerPrefs.SetString("ListenAndDo.Stage5.Prototype." + attempt.attemptId, json);
         PlayerPrefs.SetString("ListenAndDo.Stage5.Prototype.Latest", json);
@@ -693,3 +755,4 @@ public class Stage5Prototype : MonoBehaviour
         return null;
     }
 }
+
