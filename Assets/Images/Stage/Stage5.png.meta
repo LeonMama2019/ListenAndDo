@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b05361727e68d63428454be23d4fc7fb
+guid: 7e6416dc83da01c468c39eaf2fb1f3da
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2415782219255434996
-    second: Stage5_0
+      213: 1215236538267848787
+    second: Stage5_banner_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stage5_0
+      name: Stage5_banner_0
       rect:
         serializedVersion: 2
-        x: 34
-        y: 56
-        width: 367
-        height: 458
+        x: 36
+        y: 100
+        width: 953
+        height: 1332
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c013396feda697ed0800000000000000
-      internalID: -2415782219255434996
+      spriteID: 350d78561336dd010800000000000000
+      internalID: 1215236538267848787
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 3759bc1bf3ab0244cbbb17525b113f00
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stage5_0: -2415782219255434996
+      Stage5_banner_0: 1215236538267848787
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

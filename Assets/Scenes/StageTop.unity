@@ -1123,6 +1123,7 @@ GameObject:
   - component: {fileID: 1041185558}
   - component: {fileID: 1041185557}
   - component: {fileID: 1041185559}
+  - component: {fileID: 1041185560}
   m_Layer: 5
   m_Name: Stage5
   m_TagString: Untagged
@@ -1147,7 +1148,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 698, y: -155}
-  m_SizeDelta: {x: 300, y: 400}
+  m_SizeDelta: {x: 200, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1041185557
 MonoBehaviour:
@@ -1169,7 +1170,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2415782219255434996, guid: b05361727e68d63428454be23d4fc7fb, type: 3}
+  m_Sprite: {fileID: 1215236538267848787, guid: 7e6416dc83da01c468c39eaf2fb1f3da, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1231,6 +1232,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1041185560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041185555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a8904b01774d17ac7d141b27cb258c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenuButton
+  stageNumber: 5
 --- !u!1 &1320734808
 GameObject:
   m_ObjectHideFlags: 0
