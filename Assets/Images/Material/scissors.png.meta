@@ -116,12 +116,12 @@ TextureImporter:
       name: scissors_0
       rect:
         serializedVersion: 2
-        x: 48
-        y: 32
-        width: 1187
-        height: 1185
+        x: 307
+        y: 29
+        width: 635
+        height: 1196
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 9a9af28832ca50e4ea0f61757d80e732
     internalID: 0
     vertices: []
     indices: 
