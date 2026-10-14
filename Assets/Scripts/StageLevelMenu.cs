@@ -75,8 +75,28 @@ public class StageLevelMenu : MonoBehaviour
 
     private void Start()
     {
+        var back = Find("Back");
+        if (back != null)
+        {
+            var image = back.GetComponent<Image>();
+            var button = back.GetComponent<Button>() ?? back.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.None;
+            button.onClick = new Button.ButtonClickedEvent();
+            button.onClick.AddListener(ReturnToStageTop);
+        }
         for (int level = 1; level <= 8; level++) ConnectLevel(level);
         UpdateUnlockedCount();
+    }
+
+    public void ReturnToStageTop()
+    {
+        if (!Application.CanStreamedLevelBeLoaded("StageTop"))
+        {
+            Debug.LogError("Add StageTop to Build Profiles.", this);
+            return;
+        }
+        SceneManager.LoadScene("StageTop");
     }
 
     private void UpdateUnlockedCount()
