@@ -15,6 +15,10 @@ public class StageLevelMenu : MonoBehaviour
         public Sprite unlocked;
         public Sprite locked;
     }
+    [Tooltip("Stage5で設定済みのレベルだけを有効にするためのデータ")]
+    [SerializeField] private Stage5TaskData stage5Data;
+    private bool IsConfigured(int level) => SelectedStage != 5 || (stage5Data != null && stage5Data.HasLevel(level));
+
     // Index 0 = Level2, index 6 = Level8.
     [SerializeField] private LevelImages[] levelImages = new LevelImages[7];
 
@@ -103,7 +107,7 @@ public class StageLevelMenu : MonoBehaviour
     {
         int unlockedCount = 0;
         for (int level = 1; level <= 8; level++)
-            if (IsUnlocked(SelectedStage, level)) unlockedCount++;
+            if (IsConfigured(level) && IsUnlocked(SelectedStage, level)) unlockedCount++;
 
         Transform count = Find("count");
         if (count == null) return;
@@ -116,7 +120,7 @@ public class StageLevelMenu : MonoBehaviour
         Transform target = Find("Level" + level);
         if (target == null) return;
         Image image = target.GetComponent<Image>();
-        bool unlocked = IsUnlocked(SelectedStage, level);
+        bool unlocked = IsConfigured(level) && IsUnlocked(SelectedStage, level);
         if (level >= 2 && image != null)
         {
             LevelImages images = levelImages != null && level - 2 < levelImages.Length
@@ -136,7 +140,7 @@ public class StageLevelMenu : MonoBehaviour
 
     public void PlayLevel(int level)
     {
-        if (!IsUnlocked(SelectedStage, level)) return;
+        if (!IsConfigured(level) || !IsUnlocked(SelectedStage, level)) return;
         string scene = "Stage" + SelectedStage;
         if (!Application.CanStreamedLevelBeLoaded(scene))
         {
@@ -155,3 +159,4 @@ public class StageLevelMenu : MonoBehaviour
         return null;
     }
 }
+

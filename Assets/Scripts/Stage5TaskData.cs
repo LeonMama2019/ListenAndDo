@@ -88,7 +88,7 @@ public class Stage5TaskData : ScriptableObject
                 { error = format.id + ": 音声パーツが未設定です。"; return false; }
                 if (part.kind == Stage5VoicePartKind.Objects) insertsObjects = true;
             }
-            if (!insertsObjects) { error = format.id + ": Objectsを再生順に入れてください。"; return false; }
+            if (!insertsObjects && format.objectIds.Count != 1) { error = format.id + ": Objectsを再生順に入れるか、文脈で決まる対象IDを1つ指定してください。"; return false; }
         }
         return true;
     }
@@ -159,29 +159,105 @@ public class Stage5TaskData : ScriptableObject
         return true;
     }
 
+    public bool HasLevel(int level) => levels != null && levels.Exists(entry => entry != null && entry.level == level);
+
     public List<Stage5Question> GetQuestions(int targetLevel)
+        => BuildQuestions(targetLevel, null);
+
+    public List<Stage5Question> GetQuestions(int targetLevel, UnityEngine.SceneManagement.Scene scene)
+    {
+        var config = levels?.Find(entry => entry != null && entry.level == targetLevel);
+        if (config == null) { Debug.LogError("選択レベルの出題設定がありません。", this); return new(); }
+        var counts = new Dictionary<Sprite, int>();
+        foreach (var root in scene.GetRootGameObjects())
+            foreach (var parent in root.GetComponentsInChildren<Transform>(true))
+            {
+                Stage5Place home;
+                if (parent.name == "BookStand") home = Stage5Place.BookStand;
+                else if (parent.name == "Pencase") home = Stage5Place.Pencase;
+                else if (parent.name == "Odougu") home = Stage5Place.Odougu;
+                else continue;
+                if (!ContainsPlace(config.Places, home)) continue;
+                foreach (Transform child in parent)
+                {
+                    var image = home == Stage5Place.BookStand
+                        ? child.Find("BookFront")?.GetComponent<UnityEngine.UI.Image>()
+                        : child.name == "OdouguArea" ? null : child.GetComponent<UnityEngine.UI.Image>();
+                    if (image == null || image.sprite == null) continue;
+                    counts.TryGetValue(image.sprite, out int count);
+                    counts[image.sprite] = count + 1;
+                }
+            }
+        return BuildQuestions(targetLevel, counts);
+    }
+
+    private bool PlayableFormat(Stage5QuestionFormat format)
+    {
+        if (format == null || string.IsNullOrWhiteSpace(format.id) || format.level < 0 || format.level > 8
+            || format.parts == null || format.parts.Count == 0 || format.objectIds == null) return false;
+        bool hasObjects = false;
+        foreach (var part in format.parts)
+        {
+            if (part == null || !Enum.IsDefined(typeof(Stage5VoicePartKind), part.kind)
+                || (part.kind == Stage5VoicePartKind.Audio && part.voice == null)) return false;
+            if (part.kind == Stage5VoicePartKind.Objects) hasObjects = true;
+        }
+        // A context-only instruction is unambiguous only with one fixed target.
+        return hasObjects || (format.objectIds.Count == 1);
+    }
+    private static bool InsertsObjects(Stage5QuestionFormat format)
+        => format.parts.Exists(part => part.kind == Stage5VoicePartKind.Objects);
+
+    private List<Stage5Question> BuildQuestions(int targetLevel, IReadOnlyDictionary<Sprite, int> counts)
     {
         var result = new List<Stage5Question>();
-        if (!TryValidate(out var error)) { Debug.LogError(error, this); return result; }
-        var config = levels.Find(entry => entry.level == targetLevel);
-        if (config == null) { Debug.LogError("選択レベルの出題設定がありません。", this); return result; }
-        var formats = questionFormats.FindAll(format => (format.level <= targetLevel)
-            && Eligible(format, config).Count >= config.minObjectKinds);
-        if (formats.Count == 0) { Debug.LogError("対象数に合う質問形式がありません。", this); return result; }
+        var config = levels?.Find(entry => entry != null && entry.level == targetLevel);
+        if (config == null || !ValidPlaces(config.Places) || config.questionCount < 1
+            || config.minObjectKinds < 1 || config.maxObjectKinds < config.minObjectKinds
+            || objects == null || placeObjects == null || questionFormats == null)
+        { Debug.LogError("選択レベルの出題設定を確認してください。", this); return result; }
+        var formats = new List<Stage5QuestionFormat>();
+        var seenFormats = new HashSet<string>();
+        foreach (var format in questionFormats)
+        {
+            if (format == null || format.level > targetLevel) continue;
+            if (!PlayableFormat(format))
+            { Debug.LogWarning("Stage5: 未完成の質問形式を除外: " + format?.id, this); continue; }
+            var pool = Eligible(format, config, counts);
+            if (pool.Count < config.minObjectKinds || (!InsertsObjects(format) && config.minObjectKinds != 1)) continue;
+            if (seenFormats.Add(format.id)) formats.Add(format);
+        }
+        if (formats.Count == 0)
+        { Debug.LogError("音声と対象が揃った質問形式がありません。", this); return result; }
+        // Report unfinished or impossible quantity conditions without changing the authored data.
+        if (config.quantityOverrides != null)
+            foreach (var setting in config.quantityOverrides)
+            {
+                var item = setting == null ? null : objects.Find(entry => entry != null && entry.id == setting.objectId);
+                bool impossible = counts != null && item != null && item.sprite != null
+                    && (!counts.TryGetValue(item.sprite, out var available) || setting.count > available);
+                if (setting == null || item == null || setting.count < 1 || impossible
+                    || (setting.count > 1 && setting.quantityVoice == null))
+                    Debug.LogWarning("Stage5: 未完成または実物の個数を超える数量条件は出題しません。ID=" + setting?.objectId, this);
+            }
         for (int n = 0; n < config.questionCount; n++)
         {
             var format = formats[UnityEngine.Random.Range(0, formats.Count)];
-            var pool = Eligible(format, config);
-            int kinds = UnityEngine.Random.Range(config.minObjectKinds, Math.Min(config.maxObjectKinds, pool.Count) + 1);
+            var pool = Eligible(format, config, counts);
+            int maximum = Math.Min(config.maxObjectKinds, pool.Count);
+            if (conjunctionVoice == null) maximum = Math.Min(maximum, 1);
+            if (maximum < config.minObjectKinds)
+            { Debug.LogError("複数種類の出題には接続音声が必要です。", this); return new(); }
+            int kinds = InsertsObjects(format) ? UnityEngine.Random.Range(config.minObjectKinds, maximum + 1) : 1;
             var selected = new List<Target>();
             var sprites = new List<Sprite>();
             for (int i = 0; i < kinds; i++)
             {
                 int index = UnityEngine.Random.Range(0, pool.Count);
                 var variants = pool[index];
-                var target = variants[UnityEngine.Random.Range(0, variants.Count)];
-                pool.RemoveAt(index);
-                selected.Add(target);
+                // Implicit context must not silently ask for a random quantity.
+                var target = InsertsObjects(format) ? variants[UnityEngine.Random.Range(0, variants.Count)] : variants[0];
+                pool.RemoveAt(index); selected.Add(target);
                 for (int j = 0; j < target.setting.count; j++) sprites.Add(target.item.sprite);
             }
             var clips = new List<AudioClip>();
@@ -200,8 +276,7 @@ public class Stage5TaskData : ScriptableObject
             }
             var question = new Stage5Question("Random_Lv" + targetLevel + "_" + (n + 1) + "_" + format.id,
                 targetLevel, text.ToString(), null, config.Places, sprites);
-            question.RuntimeVoices = clips;
-            result.Add(question);
+            question.RuntimeVoices = clips; result.Add(question);
         }
         return result;
     }
@@ -219,23 +294,28 @@ public class Stage5TaskData : ScriptableObject
         foreach (var entry in places) if (entry == place) return true;
         return false;
     }
-    private List<List<Target>> Eligible(Stage5QuestionFormat format, Stage5LevelSettings config)
+    private List<List<Target>> Eligible(Stage5QuestionFormat format, Stage5LevelSettings config, IReadOnlyDictionary<Sprite, int> counts)
     {
         var groups = new List<List<Target>>();
         var seen = new HashSet<string>();
         foreach (var membership in placeObjects)
         {
-            if (!ContainsPlace(config.Places, membership.place)) continue;
+            if (membership == null || membership.objectIds == null || !ContainsPlace(config.Places, membership.place)) continue;
             foreach (var id in membership.objectIds)
             {
                 if (!seen.Add(id) || (format.objectIds.Count > 0 && !format.objectIds.Contains(id))) continue;
-                var item = objects.Find(entry => entry.id == id);
-                if (item == null) continue;
+                var item = objects.Find(entry => entry != null && entry.id == id);
+                if (item == null || item.sprite == null || item.voice == null) continue;
+                int available = int.MaxValue;
+                if (counts != null && (!counts.TryGetValue(item.sprite, out available) || available < 1)) continue;
                 var group = groups.Find(entries => entries[0].item.sprite == item.sprite);
                 if (group == null) { group = new List<Target>(); groups.Add(group); }
                 group.Add(new Target { item = item, setting = new Stage5TargetSetting { objectId = id, count = 1 } });
-                foreach (var setting in config.quantityOverrides)
-                    if (setting.objectId == id && setting.count > 1) group.Add(new Target { item = item, setting = setting });
+                if (config.quantityOverrides != null)
+                    foreach (var setting in config.quantityOverrides)
+                        if (setting != null && setting.objectId == id && setting.count > 1 && setting.count <= available
+                            && setting.quantityVoice != null && !group.Exists(target => target.setting.count == setting.count))
+                            group.Add(new Target { item = item, setting = setting });
             }
         }
         return groups;
@@ -345,3 +425,4 @@ public class Stage5TaskDataInspector : UnityEditor.Editor
     }
 }
 #endif
+

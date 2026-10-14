@@ -67,6 +67,8 @@ public class Stage5Prototype : MonoBehaviour
         public string attemptId, taskId, startedAtUtc;
         public int level = 1;
         public List<Placement> initial;
+        public List<string> requestedObjects = new();
+        public List<string> instructionClips = new();
         public List<Move> events = new();
         public bool completed;
         public List<Placement> finalArrangement;
@@ -106,7 +108,7 @@ public class Stage5Prototype : MonoBehaviour
         foreach (var front in canvas.GetComponentsInChildren<Transform>(true))
             if (front.name == "BookFront") front.gameObject.SetActive(false);
         if (data != null) data.MigrateFromScene(gameObject.scene);
-        levelQuestions = data == null ? new List<Stage5Question>() : data.GetQuestions(level);
+        levelQuestions = data == null ? new List<Stage5Question>() : data.GetQuestions(level, gameObject.scene);
         question = levelQuestions.Count == 0 ? null : levelQuestions[0];
         if (question == null || !question.TryValidate(out _) || deskArea == null)
         {
@@ -239,6 +241,8 @@ public class Stage5Prototype : MonoBehaviour
         foreach (var book in books) Scatter(book);
         attempt = new Attempt { attemptId = Guid.NewGuid().ToString("N"), taskId = question.TaskId,
             level = level, startedAtUtc = DateTime.UtcNow.ToString("o"), initial = Snapshot() };
+        foreach (var sprite in question.DeskObjects) attempt.requestedObjects.Add(sprite.name);
+        foreach (var clip in question.GetVoices()) if (clip != null) attempt.instructionClips.Add(clip.name);
         started = Time.unscaledTime;
         Save();
         StartCoroutine(Instruction(true));
@@ -756,4 +760,5 @@ public class Stage5Prototype : MonoBehaviour
         return null;
     }
 }
+
 
