@@ -45,6 +45,7 @@ public class BackReturnController : MonoBehaviour
         }
 
         returning = true;
+        StageLevelMenu.SelectStageForMenu(stageNumber);
         // Keep stage selection only. Do not save an unfinished quiz result.
         PlayerPrefs.SetInt(SelectedStageKey, stageNumber);
         PlayerPrefs.SetString(SelectedStageSceneKey, gameObject.scene.name);

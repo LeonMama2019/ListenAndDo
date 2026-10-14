@@ -28,9 +28,15 @@ public class StageLevelMenu : MonoBehaviour
     public static void OpenStageMenu(int stage)
     {
         if (stage < 1) return;
+        SelectStageForMenu(stage);
+        SceneManager.LoadScene("LevelMenu");
+    }
+
+    public static void SelectStageForMenu(int stage)
+    {
+        if (stage < 1) return;
         SelectedStage = stage;
         SelectedLevel = 1;
-        SceneManager.LoadScene("LevelMenu");
     }
 
     public static void OpenStage(int stage)

@@ -1811,10 +1811,10 @@ MonoBehaviour:
   stageBanners:
   - {fileID: 293613099931406437, guid: ba466a25879e5674dacbe9b8d1b20b48, type: 3}
   - {fileID: 3032400113675930684, guid: b2cd041ce5ffef746ac887e5465833ef, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: -7651895242900624139, guid: 3c778e062bfa6324c982806d3a71178d, type: 3}
+  - {fileID: -2864136866974846581, guid: 62c738c9295ecb7458a6d28d1b710bc0, type: 3}
+  - {fileID: 1215236538267848787, guid: 7e6416dc83da01c468c39eaf2fb1f3da, type: 3}
+  - {fileID: 2017219279448594060, guid: d284cc6bff1ce894ba30ae8a42dea6b4, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
