@@ -614,8 +614,136 @@ public class Stage5Prototype : MonoBehaviour
         }
         return true;
     }
-    // Test rendered tight sprite meshes; transparent margins do not block placement.
+    private static readonly Dictionary<Sprite, List<Rect>> scissorsMasks = new();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetScissorsMasks() => scissorsMasks.Clear();
+
+    private static bool IsScissors(RectTransform rect)
+    {
+        var image = rect.GetComponent<Image>();
+        return image != null && image.sprite != null
+            && image.sprite.name.StartsWith("scissors", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static Rect DrawRect(RectTransform transform)
+    {
+        var image = transform.GetComponent<Image>();
+        var size = transform.rect.size;
+        if (image.preserveAspect)
+        {
+            float ratio = image.sprite.rect.width / image.sprite.rect.height;
+            if (size.x / size.y > ratio) size.x = size.y * ratio;
+            else size.y = size.x / ratio;
+        }
+        return new Rect(transform.rect.center - size * 0.5f, size);
+    }
+
+    // Exact horizontal runs of non-transparent source pixels. Equal runs on adjacent rows
+    // are merged, retaining handle holes and the empty space next to the blade.
+    private static List<Rect> ScissorsMask(Sprite sprite)
+    {
+        if (scissorsMasks.TryGetValue(sprite, out var cached)) return cached;
+        if (!sprite.texture.isReadable || sprite.packed)
+        {
+            Debug.LogError("Stage5: scissors画像はRead/Writeを有効にし、Sprite Atlasに含めず使用してください。");
+            scissorsMasks[sprite] = null;
+            return null;
+        }
+        var pixels = sprite.texture.GetPixels32();
+        int textureWidth = sprite.texture.width;
+        int xOffset = Mathf.RoundToInt(sprite.rect.x), yOffset = Mathf.RoundToInt(sprite.rect.y);
+        int width = Mathf.RoundToInt(sprite.rect.width), height = Mathf.RoundToInt(sprite.rect.height);
+        const byte minimumAlpha = 26; // Ignore almost invisible antialiased edges (10%).
+        var runs = new List<Rect>();
+        var previous = new Dictionary<long, int>();
+        for (int y = 0; y < height; y++)
+        {
+            var current = new Dictionary<long, int>();
+            int x = 0;
+            while (x < width)
+            {
+                while (x < width && pixels[(yOffset + y) * textureWidth + xOffset + x].a < minimumAlpha) x++;
+                int start = x;
+                while (x < width && pixels[(yOffset + y) * textureWidth + xOffset + x].a >= minimumAlpha) x++;
+                if (start == x) continue;
+                long key = ((long)start << 32) | (uint)x;
+                if (previous.TryGetValue(key, out int index))
+                {
+                    var run = runs[index]; run.yMax = (y + 1f) / height; runs[index] = run;
+                    current[key] = index;
+                }
+                else
+                {
+                    current[key] = runs.Count;
+                    runs.Add(Rect.MinMaxRect((float)start / width, (float)y / height, (float)x / width, (y + 1f) / height));
+                }
+            }
+            previous = current;
+        }
+        scissorsMasks[sprite] = runs;
+        return runs;
+    }
+
+    private static Vector2[] RunCorners(RectTransform item, Rect normalized, RectTransform space)
+    {
+        var draw = DrawRect(item);
+        float x0 = draw.xMin + normalized.xMin * draw.width, x1 = draw.xMin + normalized.xMax * draw.width;
+        float y0 = draw.yMin + normalized.yMin * draw.height, y1 = draw.yMin + normalized.yMax * draw.height;
+        return new[] {
+            (Vector2)space.InverseTransformPoint(item.TransformPoint(new Vector3(x0, y0))),
+            (Vector2)space.InverseTransformPoint(item.TransformPoint(new Vector3(x0, y1))),
+            (Vector2)space.InverseTransformPoint(item.TransformPoint(new Vector3(x1, y1))),
+            (Vector2)space.InverseTransformPoint(item.TransformPoint(new Vector3(x1, y0))) };
+    }
+    private static bool QuadsOverlap(Vector2[] a, Vector2[] b)
+    {
+        foreach (var polygon in new[] { a, b })
+            for (int i = 0; i < 2; i++)
+            {
+                var edge = polygon[i + 1] - polygon[i];
+                var axis = new Vector2(-edge.y, edge.x).normalized;
+                float aMin = float.PositiveInfinity, aMax = float.NegativeInfinity;
+                float bMin = float.PositiveInfinity, bMax = float.NegativeInfinity;
+                for (int j = 0; j < 4; j++)
+                {
+                    float pa = Vector2.Dot(a[j], axis), pb = Vector2.Dot(b[j], axis);
+                    aMin = Mathf.Min(aMin, pa); aMax = Mathf.Max(aMax, pa);
+                    bMin = Mathf.Min(bMin, pb); bMax = Mathf.Max(bMax, pb);
+                }
+                if (aMax <= bMin + 0.00001f || bMax <= aMin + 0.00001f) return false;
+            }
+        return true;
+    }
+
     private static bool Overlaps(RectTransform first, RectTransform second)
+    {
+        if (!IsScissors(first) && !IsScissors(second)) return MeshOverlaps(first, second);
+        if (!IsScissors(first)) { var swap = first; first = second; second = swap; }
+        var mask = ScissorsMask(first.GetComponent<Image>().sprite);
+        if (mask == null) return MeshOverlaps(first, second);
+        var full = new Rect(0, 0, 1, 1);
+        var otherRect = RunCorners(second, full, second);
+        if (!QuadsOverlap(RunCorners(first, full, second), otherRect)) return false;
+        List<Rect> otherMask = null;
+        if (IsScissors(second))
+        {
+            otherMask = ScissorsMask(second.GetComponent<Image>().sprite);
+            if (otherMask == null) return MeshOverlaps(first, second);
+        }
+        foreach (var run in mask)
+        {
+            var quad = RunCorners(first, run, second);
+            if (!QuadsOverlap(quad, otherRect)) continue;
+            if (otherMask == null) return true;
+            foreach (var otherRun in otherMask)
+                if (QuadsOverlap(quad, RunCorners(second, otherRun, second))) return true;
+        }
+        return false;
+    }
+
+    // Existing mesh rule is kept unchanged for pairs without scissors.
+    private static bool MeshOverlaps(RectTransform first, RectTransform second)
     {
         var a = VisibleVertices(first); var b = VisibleVertices(second);
         var space = first.GetComponentInParent<Canvas>().rootCanvas.transform;
@@ -777,5 +905,6 @@ public class Stage5Prototype : MonoBehaviour
         return null;
     }
 }
+
 
 
