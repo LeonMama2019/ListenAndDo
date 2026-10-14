@@ -125,10 +125,16 @@ public class Stage5Prototype : MonoBehaviour
                 front.raycastTarget = false;
                 spine.raycastTarget = true;
                 SetAlpha(spine, 0);
-                Bind(spine.gameObject, e => SlotClick(slot));
+                Bind(spine.gameObject, e => { if (held == null) SlotClick(slot); else ShelfClick(e.position); });
                 books.Add(book);
                 slots.Add(slot);
             }
+        }
+        if (!CaseQuestion)
+        {
+            var shelfImage = bookStand.GetComponent<Image>();
+            if (shelfImage != null) shelfImage.raycastTarget = true;
+            Bind(bookStand.gameObject, e => ShelfClick(e.position));
         }
         var areaImage = deskArea.GetComponent<Image>();
         if (areaImage != null) { SetAlpha(areaImage, 0); areaImage.raycastTarget = true; }
@@ -283,6 +289,27 @@ public class Stage5Prototype : MonoBehaviour
         held.currentAngle = Mathf.Repeat(held.currentAngle + step, 360f);
         cursor.rectTransform.localEulerAngles = new Vector3(0, 0, held.currentAngle);
         Log(held, "rotate", "Cursor", "Cursor");
+    }
+    private void ShelfClick(Vector2 screenPoint)
+    {
+        if (!CanAct || held == null || CaseQuestion) return;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(bookStand, screenPoint, UiCamera, out var point)) return;
+        bool left = point.x < bookStand.rect.center.x;
+        Slot best = null;
+        foreach (var slot in slots)
+        {
+            Vector2 center = bookStand.InverseTransformPoint(slot.view.rectTransform.parent.TransformPoint(slot.originalLocalPosition));
+            if ((center.x < bookStand.rect.center.x) != left || slot.book != null
+                || held.spineSize.y > slot.originalSize.y + 0.01f) continue;
+            // Keep tall spaces available when a smaller book fits a shorter space.
+            if (best == null || slot.originalSize.y < best.originalSize.y) best = slot;
+        }
+        if (best == null)
+        {
+            Log(held, "side_unavailable", "Cursor", left ? "BookStand/Left" : "BookStand/Right");
+            return;
+        }
+        StartCoroutine(Store(best));
     }
     private void SlotClick(Slot slot)
     {
@@ -439,7 +466,8 @@ public class Stage5Prototype : MonoBehaviour
     }
     private void SurfaceClick(Vector2 point)
     {
-        if (CaseQuestion && RectTransformUtility.RectangleContainsScreenPoint(pencase, point, UiCamera)) CaseClick(point);
+        if (!CaseQuestion && RectTransformUtility.RectangleContainsScreenPoint(bookStand, point, UiCamera)) ShelfClick(point);
+        else if (CaseQuestion && RectTransformUtility.RectangleContainsScreenPoint(pencase, point, UiCamera)) CaseClick(point);
         else DeskClick(point);
     }
     private void CaseClick(Vector2 point)
