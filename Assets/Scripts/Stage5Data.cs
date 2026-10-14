@@ -36,6 +36,8 @@ public class Stage5Question
     public AudioClip QuestionVoice => questionVoice;
     public IReadOnlyList<Stage5Place> TidyPlaces => tidyPlaces;
     public IReadOnlyList<Sprite> DeskObjects => deskObjects;
+    [NonSerialized] public List<AudioClip> RuntimeVoices;
+    public IReadOnlyList<AudioClip> GetVoices() => RuntimeVoices ?? new List<AudioClip> { questionVoice };
 
     public bool TryValidate(out string error)
     {
@@ -44,7 +46,7 @@ public class Stage5Question
             error = "Task IDとLevel（1〜8）を設定してください。";
             return false;
         }
-        if (string.IsNullOrWhiteSpace(questionText) || questionVoice == null)
+        if (RuntimeVoices == null && (string.IsNullOrWhiteSpace(questionText) || questionVoice == null))
         {
             error = $"{taskId}: 問題文と音声を設定してください。";
             return false;
@@ -68,12 +70,11 @@ public class Stage5Question
             error = $"{taskId}: 机に残す画像リストが無効です。";
             return false;
         }
-        var sprites = new HashSet<Sprite>();
         foreach (var sprite in deskObjects)
         {
-            if (sprite == null || !sprites.Add(sprite))
+            if (sprite == null)
             {
-                error = $"{taskId}: 机に残す画像が未設定、または重複しています。";
+                error = $"{taskId}: 机に残す画像が未設定です。";
                 return false;
             }
         }

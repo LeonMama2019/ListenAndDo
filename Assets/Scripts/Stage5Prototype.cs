@@ -155,14 +155,13 @@ public class Stage5Prototype : MonoBehaviour
         foreach (var entry in levelQuestions)
         {
             var expected = CaseQuestion ? Stage5Place.Pencase : Stage5Place.BookStand;
-            if (!entry.TryValidate(out var error) || entry.TidyPlaces.Count != 1 || entry.TidyPlaces[0] != expected
-                || (CaseQuestion && entry.DeskObjects.Count != 1))
+            if (!entry.TryValidate(out var error) || entry.TidyPlaces.Count != 1 || entry.TidyPlaces[0] != expected)
             {
                 Debug.LogError(error ?? "対象の親と机に残す画像を確認してください。", this);
                 enabled = false; return;
             }
             foreach (var required in entry.DeskObjects)
-                if (!books.Exists(b => b.front == required))
+                if (books.FindAll(b => b.front == required).Count < CountRequired(entry, required))
                 { Debug.LogError(entry.TaskId + ": 対応する子オブジェクトがありません。", this); enabled = false; return; }
         }
         recorder = new StageLevelResultRecorder(5, level, levelQuestions.Count);
@@ -398,30 +397,28 @@ public class Stage5Prototype : MonoBehaviour
         }
         cursor.transform.position = target;
     }
+    private static int CountRequired(Stage5Question entry, Sprite sprite)
+    {
+        int count = 0;
+        foreach (var required in entry.DeskObjects) if (required == sprite) count++;
+        return count;
+    }
     private bool IsCorrect(out string reason)
     {
         if (held != null) { reason = "持っている本を置いてね"; return false; }
         if (CaseQuestion) return IsCaseCorrect(out reason);
+        var remaining = new List<Sprite>(question.DeskObjects);
         foreach (var book in books)
         {
-            bool required = false;
-            foreach (var sprite in question.DeskObjects)
-                if (book.front == sprite) required = true;
-            if (required)
+            if (book.slot == null)
             {
-                if (book.slot != null || !FullyInsideDesk(book.deskView))
-                {
-                    reason = book.id + "を机の上に置いてね";
-                    return false;
-                }
+                if (!FullyInsideDesk(book.deskView) || !remaining.Remove(book.front))
+                { reason = "指定の物を指定数だけ机に置いてね"; return false; }
             }
-            else if (book.slot == null || book.slot.book != book
-                || book.spineSize.y > book.slot.originalSize.y + 0.01f)
-            {
-                reason = book.id + "を本立てに戻してね";
-                return false;
-            }
+            else if (book.slot.book != book || book.spineSize.y > book.slot.originalSize.y + 0.01f)
+            { reason = "本立てに戻してね"; return false; }
         }
+        if (remaining.Count > 0) { reason = "机に残す物が足りません"; return false; }
         reason = null;
         return true;
     }
@@ -509,14 +506,13 @@ public class Stage5Prototype : MonoBehaviour
     }
     private bool IsCaseCorrect(out string reason)
     {
-        int deskCount = 0;
+        var remaining = new List<Sprite>(question.DeskObjects);
         foreach (var item in books)
         {
             if (!item.inCase)
             {
-                if (!FullyInsideDesk(item.deskView) || item.front != question.DeskObjects[0])
+                if (!FullyInsideDesk(item.deskView) || !remaining.Remove(item.front))
                 { reason = "指定の物を机に残してね"; return false; }
-                deskCount++;
             }
             else if (!FullyInside(item.deskView.rectTransform, pencase))
             { reason = "ペンケースに収めてね"; return false; }
@@ -526,7 +522,7 @@ public class Stage5Prototype : MonoBehaviour
                 if (books[i].inCase && books[j].inCase && Overlaps(books[i].deskView.rectTransform, books[j].deskView.rectTransform))
                 { reason = "重ならないように置いてね"; return false; }
         reason = null;
-        return deskCount == 1;
+        return remaining.Count == 0;
     }
     private static Vector3[] VisibleVertices(RectTransform rect)
     {
@@ -633,13 +629,17 @@ public class Stage5Prototype : MonoBehaviour
     private IEnumerator Instruction(bool begin = false)
     {
         accepting = false;
-        voice.clip = question.QuestionVoice;
-        voice.Play();
-        while (voice.isPlaying) yield return null;
+        foreach (var clip in question.GetVoices())
+        {
+            if (clip == null) continue;
+            voice.clip = clip;
+            voice.Play();
+            while (voice.isPlaying) yield return null;
+        }
         if (begin)
         {
             started = Time.unscaledTime;
-            recorder.BeginQuestion(questionIndex + 1, question.TaskId, "", Time.realtimeSinceStartupAsDouble);
+            recorder.BeginQuestion(questionIndex + 1, question.TaskId, question.QuestionText, Time.realtimeSinceStartupAsDouble);
         }
         accepting = true;
     }
