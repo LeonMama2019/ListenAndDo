@@ -152,10 +152,10 @@ TextureImporter:
       name: clay_0
       rect:
         serializedVersion: 2
-        x: 116
-        y: 101
-        width: 1299
-        height: 783
+        x: 121
+        y: 99
+        width: 1294
+        height: 785
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
