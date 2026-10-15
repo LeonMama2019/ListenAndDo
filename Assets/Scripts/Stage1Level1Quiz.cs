@@ -68,6 +68,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     private TouchObjectEntry correctEntry;
 
     public bool IsRunning { get; private set; }
+    public Stage1Tutorial ActiveTutorial => tutorialPanel != null && tutorialPanel.IsActive ? tutorialPanel : null;
 
     private void Awake()
     {
@@ -225,6 +226,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     // Speakerボタンの On Click() から呼ぶ。
     public void ReplayInstruction()
     {
+        if (ActiveTutorial != null) { ActiveTutorial.ReplayInstruction(); return; }
         if (!IsRunning || draw.Count == 0 || (checkObject != null && checkObject.activeSelf)) return;
 
         resultRecorder.RecordReplay();
@@ -265,6 +267,7 @@ public class Stage1Level1Quiz : MonoBehaviour
 
     public void TouchObject(TouchObjectTarget target)
     {
+        if (ActiveTutorial != null) { ActiveTutorial.TouchObject(target); return; }
         if (!IsRunning || !acceptingInput || !selectedHand.HasValue)
             return;
 
