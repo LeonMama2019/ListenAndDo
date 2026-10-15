@@ -42,8 +42,14 @@ public class HandSelector : MonoBehaviour, IPointerClickHandler
 
     public void SelectHand()
     {
-        // チュートリアル2の右手では、手の名前と次の説明が重ならないようにする。
-        bool advancedTutorial = tutorialOnSelect != null && tutorialOnSelect.OnRightHandSelected();
+        var tutorial = level1Quiz != null ? level1Quiz.ActiveTutorial : tutorialOnSelect;
+        bool advancedTutorial = false;
+        if (tutorial != null && tutorial.IsActive)
+        {
+            if (handSide != HandSide.Right || !tutorial.WaitingForRightHand) return;
+            advancedTutorial = tutorial.OnRightHandSelected();
+            if (!advancedTutorial) return;
+        }
         bool inQuiz = level1Quiz != null && level1Quiz.IsRunning;
         if (inQuiz && !level1Quiz.SelectHand(handSide)) return;
         if (!advancedTutorial && !inQuiz && voiceClip != null)
