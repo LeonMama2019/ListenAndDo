@@ -188,10 +188,9 @@ public class Stage2Tutorial : MonoBehaviour
     {
         PlayerPrefs.SetInt(CompletionKey, 1);
         PlayerPrefs.Save();
-        var callback = completed;
         completed = null;
         gameObject.SetActive(false);
-        callback?.Invoke();
+        StageLevelMenu.OpenStageMenu(2);
     }
 
     private void QueueTransition(int next)
