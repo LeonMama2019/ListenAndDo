@@ -914,7 +914,8 @@ public class Stage5Prototype : MonoBehaviour
     private bool StartFirstTutorial()
     {
         tutorialRoot = Find("Tutorial");
-        if (level != 1 || PlayerPrefs.GetInt(TutorialDoneKey, 0) != 0 || tutorialRoot == null) return false;
+        if (level != 1 || tutorialRoot == null
+            || (!StageLevelMenu.IsTutorialReplay(5) && PlayerPrefs.GetInt(TutorialDoneKey, 0) != 0)) return false;
         foreach (Stage5Place home in Enum.GetValues(typeof(Stage5Place)))
         {
             var parent = TutorialHome(home);
@@ -1143,7 +1144,8 @@ public class Stage5Prototype : MonoBehaviour
         if (tutorialStep != 7 || tutorialBusy) return;
         PlayerPrefs.SetInt(TutorialDoneKey, 1);
         PlayerPrefs.Save();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(gameObject.scene.name);
+        if (!StageLevelMenu.ReturnFromTutorial(5))
+            UnityEngine.SceneManagement.SceneManager.LoadScene(gameObject.scene.name);
     }
 
 
