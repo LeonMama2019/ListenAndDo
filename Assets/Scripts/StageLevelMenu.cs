@@ -9,6 +9,17 @@ public class StageLevelMenu : MonoBehaviour
 {
     public static int SelectedStage { get; private set; } = 1;
     public static int SelectedLevel { get; private set; } = 1;
+    [SerializeField] private Transform tutorialButton;
+    private static int requestedTutorialStage;
+    public static bool IsTutorialReplay(int stage) => requestedTutorialStage == stage;
+    public static bool ReturnFromTutorial(int stage)
+    {
+        if (!IsTutorialReplay(stage)) return false;
+        requestedTutorialStage = 0;
+        OpenStageMenu(stage);
+        return true;
+    }
+
     [Serializable]
     private class LevelImages
     {
@@ -27,6 +38,7 @@ public class StageLevelMenu : MonoBehaviour
     {
         SelectedStage = 1;
         SelectedLevel = 1;
+        requestedTutorialStage = 0;
     }
 
     public static void OpenStageMenu(int stage)
@@ -39,6 +51,7 @@ public class StageLevelMenu : MonoBehaviour
     public static void SelectStageForMenu(int stage)
     {
         if (stage < 1) return;
+        requestedTutorialStage = 0;
         SelectedStage = stage;
         SelectedLevel = 1;
     }
@@ -52,6 +65,7 @@ public class StageLevelMenu : MonoBehaviour
             Debug.LogError("Add scene to Build Profiles: " + scene);
             return;
         }
+        requestedTutorialStage = 0;
         SelectedStage = stage;
         SelectedLevel = 1;
         SceneManager.LoadScene(scene);
@@ -91,6 +105,7 @@ public class StageLevelMenu : MonoBehaviour
         }
         for (int level = 1; level <= 8; level++) ConnectLevel(level);
         UpdateUnlockedCount();
+        ConnectTutorial();
     }
 
     public void ReturnToStageTop()
@@ -138,6 +153,36 @@ public class StageLevelMenu : MonoBehaviour
         button.onClick.AddListener(() => PlayLevel(level));
     }
 
+    private void ConnectTutorial()
+    {
+        var target = tutorialButton != null ? tutorialButton : Find("HowToPlay");
+        if (target == null) return;
+        bool supported = SelectedStage == 1 || SelectedStage == 2 || SelectedStage == 5;
+        target.gameObject.SetActive(supported);
+        if (!supported) return;
+        var image = target.GetComponent<Image>();
+        if (image != null) image.raycastTarget = true;
+        var button = target.GetComponent<Button>() ?? target.gameObject.AddComponent<Button>();
+        button.targetGraphic = image;
+        button.transition = Selectable.Transition.None;
+        button.onClick = new Button.ButtonClickedEvent();
+        button.onClick.AddListener(PlayTutorial);
+    }
+
+    public void PlayTutorial()
+    {
+        if (SelectedStage != 1 && SelectedStage != 2 && SelectedStage != 5) return;
+        string scene = "Stage" + SelectedStage;
+        if (!Application.CanStreamedLevelBeLoaded(scene))
+        {
+            Debug.LogError("Add scene to Build Profiles: " + scene, this);
+            return;
+        }
+        SelectedLevel = 1;
+        requestedTutorialStage = SelectedStage;
+        SceneManager.LoadScene(scene);
+    }
+
     public void PlayLevel(int level)
     {
         if (!IsConfigured(level) || !IsUnlocked(SelectedStage, level)) return;
@@ -147,6 +192,7 @@ public class StageLevelMenu : MonoBehaviour
             Debug.LogError("Add scene to Build Profiles: " + scene);
             return;
         }
+        requestedTutorialStage = 0;
         SelectedLevel = level;
         SceneManager.LoadScene(scene);
     }
