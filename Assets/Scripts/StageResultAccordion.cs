@@ -51,9 +51,6 @@ public class StageResultAccordion : MonoBehaviour
     [Header("Detailを開いた時の▼画像")]
     [SerializeField] private Sprite openArrowSprite;
 
-    [Header("Detail下の余白")]
-    [SerializeField] private float expandedBottomPadding = 20f;
-
     private const float OpenedRowShift = 105f;
 
     private void Awake()
