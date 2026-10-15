@@ -314,7 +314,17 @@ public class Stage5Prototype : MonoBehaviour
     }
     private void Update()
     {
+        // Tutorial narration locks storage, but must never freeze the held cursor.
+        if (tutorialHeld != null && cursor != null)
+        {
+            FollowCursor();
+            return;
+        }
         if (held == null || cursor == null || busy) return;
+        FollowCursor();
+    }
+    private void FollowCursor()
+    {
         Vector2 point = Input.touchCount > 0 ? Input.GetTouch(0).position : (Vector2)Input.mousePosition;
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)canvas.transform, point, UiCamera, out var local))
             cursor.rectTransform.anchoredPosition = local;
@@ -901,6 +911,7 @@ public class Stage5Prototype : MonoBehaviour
     private TutorialItem tutorialHeld;
     private int tutorialStep;
     private bool tutorialBusy;
+    private bool tutorialAnimating;
     private AudioSource tutorialVoice;
     private Coroutine tutorialNarration;
     private class TutorialItem
@@ -978,7 +989,7 @@ public class Stage5Prototype : MonoBehaviour
     private RectTransform TutorialHome(Stage5Place home)
         => home == Stage5Place.BookStand ? bookStand : home == Stage5Place.Pencase ? pencase : odougu;
 
-    private void ShowTutorial(int step, Stage5Place? selected = null)
+    private void ShowTutorial(int step, Stage5Place? selected = null, AudioClip objectVoice = null)
     {
         tutorialStep = step;
         foreach (Transform child in tutorialRoot) child.gameObject.SetActive(false);
@@ -998,12 +1009,18 @@ public class Stage5Prototype : MonoBehaviour
         if (tutorialNarration != null) StopCoroutine(tutorialNarration);
         tutorialVoice.Stop();
         Transform spoken = selected.HasValue ? panel?.Find(selected.Value.ToString()) : panel;
-        tutorialNarration = StartCoroutine(TutorialSpeak(spoken));
+        tutorialNarration = StartCoroutine(TutorialSpeak(spoken, objectVoice));
     }
 
-    private IEnumerator TutorialSpeak(Transform panel)
+    private IEnumerator TutorialSpeak(Transform panel, AudioClip objectVoice)
     {
         tutorialBusy = true;
+        if (objectVoice != null)
+        {
+            tutorialVoice.clip = objectVoice;
+            tutorialVoice.Play();
+            while (tutorialVoice.isPlaying) yield return null;
+        }
         if (panel != null)
             foreach (var source in panel.GetComponentsInChildren<AudioSource>(false))
                 if (source.clip != null)
@@ -1017,19 +1034,22 @@ public class Stage5Prototype : MonoBehaviour
 
     private void TutorialPick(TutorialItem item)
     {
-        if (tutorialBusy || tutorialStep > 4 || tutorialHeld != null || item.stored
+        if (tutorialAnimating || tutorialStep > 4 || tutorialHeld != null || item.stored
             || tutorialFinished.Contains(item.home) || (backPanel != null && backPanel.activeInHierarchy)) return;
         tutorialHeld = item;
-        // Update() already follows the pointer using held; tutorial uses its own cursor below.
+        // Place the sprite at the pointer immediately, including during narration.
         SetAlpha(item.view, 0);
         cursor.sprite = item.view.sprite;
         cursor.rectTransform.sizeDelta = item.view.rectTransform.sizeDelta;
         cursor.transform.position = item.view.transform.position;
+        FollowCursor();
         SetAlpha(cursor, 1);
         cursor.transform.SetAsLastSibling();
         foreach (var entry in tutorialHomes)
             TutorialHome(entry.Key).gameObject.SetActive(entry.Key == item.home);
-        ShowTutorial(2 + tutorialFinished.Count, item.home);
+        var objectVoice = item.home == Stage5Place.Odougu && data != null
+            ? data.GetObjectVoice(item.view.sprite) : null;
+        ShowTutorial(2 + tutorialFinished.Count, item.home, objectVoice);
     }
 
     private void TutorialStore(Stage5Place home)
@@ -1041,6 +1061,7 @@ public class Stage5Prototype : MonoBehaviour
 
     private IEnumerator TutorialStoreGroup(Stage5Place home)
     {
+        tutorialAnimating = true;
         tutorialBusy = true;
         tutorialHomes[home].alpha = 1;
         var selected = tutorialHeld;
@@ -1058,6 +1079,7 @@ public class Stage5Prototype : MonoBehaviour
             TutorialHome(entry.Key).gameObject.SetActive(true);
         }
         tutorialBusy = false;
+        tutorialAnimating = false;
         if (tutorialFinished.Count < 3) ShowTutorial(2 + tutorialFinished.Count);
         else StartCoroutine(TutorialSpecials());
     }
@@ -1093,6 +1115,7 @@ public class Stage5Prototype : MonoBehaviour
 
     private IEnumerator TutorialSpecials()
     {
+        tutorialAnimating = true;
         foreach (var spec in new[] { "Clay", "Paste" })
         {
             ShowTutorial(spec == "Clay" ? 5 : 6);
@@ -1114,6 +1137,7 @@ public class Stage5Prototype : MonoBehaviour
         }
         foreach (var front in canvas.GetComponentsInChildren<Transform>(true))
             if (front.name == "BookFront") front.gameObject.SetActive(false);
+        tutorialAnimating = false;
         ShowTutorial(7);
     }
 
@@ -1127,9 +1151,7 @@ public class Stage5Prototype : MonoBehaviour
                 if (tutorialHeld != null)
                 {
                     tutorialHomes[tutorialHeld.home].alpha = alpha;
-                    Vector2 point = Input.touchCount > 0 ? Input.GetTouch(0).position : (Vector2)Input.mousePosition;
-                    if (RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)canvas.transform, point, UiCamera, out var local))
-                        cursor.rectTransform.anchoredPosition = local;
+                    // Pointer following runs in Update independently of narration.
                 }
                 else if (tutorialStep <= 4)
                     foreach (var item in tutorialItems)
