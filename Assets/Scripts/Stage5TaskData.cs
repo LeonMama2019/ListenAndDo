@@ -210,6 +210,7 @@ public class Stage5TaskData : ScriptableObject
 
     private List<Stage5Question> BuildQuestions(int targetLevel, IReadOnlyDictionary<Sprite, int> counts)
     {
+        questionKeyObjects.Clear();
         var result = new List<Stage5Question>();
         var config = levels?.Find(entry => entry != null && entry.level == targetLevel);
         if (config == null || !ValidPlaces(config.Places) || config.questionCount < 1
@@ -303,21 +304,31 @@ public class Stage5TaskData : ScriptableObject
         return result;
     }
 
-    private static string QuestionKey(Stage5QuestionFormat format, List<Target> selected)
+    private readonly List<UnityEngine.Object> questionKeyObjects = new();
+
+    private int QuestionObjectKey(UnityEngine.Object value)
+    {
+        int index = questionKeyObjects.IndexOf(value);
+        if (index >= 0) return index;
+        questionKeyObjects.Add(value);
+        return questionKeyObjects.Count - 1;
+    }
+
+    private string QuestionKey(Stage5QuestionFormat format, List<Target> selected)
     {
         var targets = new List<string>();
         foreach (var target in selected)
-            targets.Add(target.item.sprite.GetInstanceID() + ":" + target.setting.count);
+            targets.Add(QuestionObjectKey(target.item.sprite) + ":" + target.setting.count);
         targets.Sort(StringComparer.Ordinal);
         var parts = new List<string>();
         foreach (var part in format.parts)
-            parts.Add(part.kind == Stage5VoicePartKind.Objects ? "objects" : "audio:" + part.voice.GetInstanceID());
+            parts.Add(part.kind == Stage5VoicePartKind.Objects ? "objects" : "audio:" + QuestionObjectKey(part.voice));
         return string.Join(",", parts) + "|" + string.Join(",", targets);
     }
 
     // Search combinations only when the random draw repeats. Stop at the first valid alternative.
     // No retry cap: even one rare alternative prevents an immediate repeat.
-    private static List<Target> FindDifferentTargets(Stage5QuestionFormat format, List<List<Target>> pool,
+    private List<Target> FindDifferentTargets(Stage5QuestionFormat format, List<List<Target>> pool,
         int remaining, int start, List<Target> selected, string previousKey)
     {
         if (remaining == 0)
