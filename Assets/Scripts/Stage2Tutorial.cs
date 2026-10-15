@@ -45,6 +45,8 @@ public class Stage2Tutorial : MonoBehaviour
         rect.offsetMin = rect.offsetMax = Vector2.zero;
         inputSurface.GetComponent<Image>().color = Color.clear;
         inputSurface.AddComponent<Stage2TutorialInput>().Tutorial = this;
+        ConnectStepButton(4);
+        ConnectStepButton(5);
         Show(1);
     }
     private void Show(int number)
@@ -61,6 +63,7 @@ public class Stage2Tutorial : MonoBehaviour
         foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
         if (motion != null) { StopCoroutine(motion); motion = null; }
         for (int i = 0; i < steps.Length; i++) steps[i].SetActive(i == step - 1);
+        if (inputSurface != null) inputSurface.GetComponent<Image>().raycastTarget = step <= 3;
         StartStepArrowBlink();
         var stepAudio = steps[step - 1].GetComponent<AudioSource>();
         if (stepAudio != null && stepAudio.clip != null)
@@ -76,7 +79,7 @@ public class Stage2Tutorial : MonoBehaviour
             if (step == 2 || step == 3) motion = StartCoroutine(AnimateSwipe());
         }
     }
-    private void StartStepArrowBlink()
+    private void StartStepArrowBlink(bool reachedTop = false)
     {
         if (step != 2 && step != 4) return;
         Transform arrow = null;
@@ -89,6 +92,11 @@ public class Stage2Tutorial : MonoBehaviour
         if (arrow == null)
         {
             Debug.LogWarning("Stage2 Tutorial " + step + ": 子のArrow2がありません。", this);
+            return;
+        }
+        if (step == 2 && !reachedTop)
+        {
+            arrow.gameObject.SetActive(false);
             return;
         }
         arrow.gameObject.SetActive(true);
@@ -149,12 +157,43 @@ public class Stage2Tutorial : MonoBehaviour
         {
             int expected = step == 2 ? 2 : 4;
             bool directionCorrect = step == 2 ? delta.y > Mathf.Abs(delta.x) : delta.x > Mathf.Abs(delta.y);
-            if (directionCorrect && tutorialDie.CurrentValue == expected) QueueTransition(step + 1);
+            if (directionCorrect && tutorialDie.CurrentValue == expected)
+            {
+                if (step == 2) StartStepArrowBlink(true);
+                QueueTransition(step + 1);
+            }
             else tutorialDie.ResetTutorialOrientation();
         }
-        else if (step == 4 && !isSwipe) QueueTransition(5);
-        else if (step == 5 && !isSwipe) QueueTransition(6);
+
     }
+    private void ConnectStepButton(int number)
+    {
+        var buttons = steps[number - 1].GetComponentsInChildren<Button>(true);
+        foreach (var button in buttons)
+        {
+            button.onClick = new Button.ButtonClickedEvent();
+            button.onClick.AddListener(() => PressStepButton(number));
+            if (button.targetGraphic != null) button.targetGraphic.raycastTarget = true;
+        }
+        if (buttons.Length == 0)
+            Debug.LogWarning("Stage2 Tutorial " + number + ": Buttonがありません。", this);
+    }
+    private void PressStepButton(int number)
+    {
+        if (transitioning || step != number) return;
+        if (number == 4) Show(5);
+        else if (number == 5) CompleteTutorial();
+    }
+    private void CompleteTutorial()
+    {
+        PlayerPrefs.SetInt(CompletionKey, 1);
+        PlayerPrefs.Save();
+        var callback = completed;
+        completed = null;
+        gameObject.SetActive(false);
+        callback?.Invoke();
+    }
+
     private void QueueTransition(int next)
     {
         transitioning = true;
@@ -173,10 +212,7 @@ public class Stage2Tutorial : MonoBehaviour
         }
         else
         {
-            PlayerPrefs.SetInt(CompletionKey, 1); PlayerPrefs.Save();
-            var callback = completed; completed = null;
-            gameObject.SetActive(false);
-            callback?.Invoke();
+            CompleteTutorial();
         }
     }
     private void OnDisable()
