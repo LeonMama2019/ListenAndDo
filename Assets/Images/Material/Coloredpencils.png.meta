@@ -119,10 +119,10 @@ TextureImporter:
       name: Coloredpencils_0
       rect:
         serializedVersion: 2
-        x: 97
-        y: 154
-        width: 836
-        height: 1228
+        x: 99
+        y: 161
+        width: 825
+        height: 1214
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
