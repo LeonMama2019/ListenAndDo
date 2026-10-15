@@ -19,6 +19,12 @@ public class Stage5TaskData : ScriptableObject
     [Header("出題設定：レベル・収納先・対象・個数")]
     [SerializeField] private List<Stage5LevelSettings> levels = new();
 
+    public AudioClip GetObjectVoice(Sprite sprite)
+    {
+        var entry = objects?.Find(item => item != null && item.sprite == sprite && item.voice != null);
+        return entry?.voice;
+    }
+
     private class Target
     {
         public Stage5ObjectEntry item;
