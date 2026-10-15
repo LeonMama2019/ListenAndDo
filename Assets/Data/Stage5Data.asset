@@ -412,7 +412,7 @@ MonoBehaviour:
     - objectId: 
       count: 2
       quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
-  - level: 7
+  - level: 8
     place: 1
     placesMigrated: 1
     places: 010000000200000000000000
