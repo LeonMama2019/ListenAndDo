@@ -1183,11 +1183,18 @@ MonoBehaviour:
   step4: {fileID: 1153884751}
   okButton: {fileID: 2300000101}
   rightHandBlink: {fileID: 981458197}
-  tutorial1: {fileID: 8300000, guid: 79723e21de43eb848ab1fa2cd5b84010, type: 3}
+  tutorial1: {fileID: 8300000, guid: 778d8d5be26a3bc428368dcbcbb1acb0, type: 3}
   tutorial2: {fileID: 8300000, guid: 778d8d5be26a3bc428368dcbcbb1acb0, type: 3}
   tutorial3: {fileID: 8300000, guid: a94c372f34bfdf64a962fe6e0e22e44b, type: 3}
   tutorial4: {fileID: 8300000, guid: ef867386b0d9e774aa3a98a08d42a89a, type: 3}
   level1Quiz: {fileID: 1038166502}
+  stage1Data: {fileID: 11400000, guid: 98897b124aaa2fb4dabcc5c53c2ba154, type: 2}
+  object1: {fileID: 1162528727}
+  checkObject: {fileID: 186432207}
+  speaker: {fileID: 1860542618}
+  rightHandInstruction: {fileID: 8300000, guid: 08c030a0057fe6b47be8bf70c97df258, type: 3}
+  objectHintDelay: 1.5
+  correctDelay: 1.5
 --- !u!82 &726813369
 AudioSource:
   m_ObjectHideFlags: 0
