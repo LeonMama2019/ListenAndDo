@@ -936,7 +936,8 @@ public class Stage5Prototype : MonoBehaviour
                 enabled = false;
                 return true;
             }
-            var group = parent.GetComponent<CanvasGroup>() ?? parent.gameObject.AddComponent<CanvasGroup>();
+            var group = parent.GetComponent<CanvasGroup>();
+            if (group == null) group = parent.gameObject.AddComponent<CanvasGroup>();
             tutorialHomes.Add(home, group);
             foreach (Transform child in parent)
             {
@@ -957,7 +958,8 @@ public class Stage5Prototype : MonoBehaviour
             Bind(parent.gameObject, e => TutorialStore(home));
             if (home == Stage5Place.Odougu && odouguArea != null)
             {
-                var areaGraphic = odouguArea.GetComponent<Image>() ?? odouguArea.gameObject.AddComponent<Image>();
+                var areaGraphic = odouguArea.GetComponent<Image>();
+                if (areaGraphic == null) areaGraphic = odouguArea.gameObject.AddComponent<Image>();
                 SetAlpha(areaGraphic, 0);
                 areaGraphic.raycastTarget = true;
                 Bind(odouguArea.gameObject, e => TutorialStore(home));
@@ -1174,7 +1176,8 @@ public class Stage5Prototype : MonoBehaviour
     private static void SetAlpha(Image image, float alpha) { var color = image.color; color.a = alpha; image.color = color; }
     private static void Bind(GameObject go, Action<UnityEngine.EventSystems.PointerEventData> action)
     {
-        var click = go.GetComponent<Stage5ClickTarget>() ?? go.AddComponent<Stage5ClickTarget>();
+        var click = go.GetComponent<Stage5ClickTarget>();
+        if (click == null) click = go.AddComponent<Stage5ClickTarget>();
         click.Bind(action);
     }
     private static bool IsTutorialChild(Transform child)
