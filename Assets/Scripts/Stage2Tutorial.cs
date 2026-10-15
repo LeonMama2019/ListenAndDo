@@ -19,6 +19,7 @@ public class Stage2Tutorial : MonoBehaviour
     [SerializeField, Min(0f)] private float transitionDelay = 3f;
     private bool transitioning;
     private Coroutine transition;
+    private UIBlink stepArrowBlink;
 
     public void Begin(Action onCompleted)
     {
@@ -49,6 +50,7 @@ public class Stage2Tutorial : MonoBehaviour
     private void Show(int number)
     {
         if (step == number) return;
+        StopStepArrowBlink();
         step = number;
         // Step 4 preserves the successful face from step 3 and does not allow rolls.
         if (step != 4 && die != null)
@@ -59,6 +61,7 @@ public class Stage2Tutorial : MonoBehaviour
         foreach (var childAudio in GetComponentsInChildren<AudioSource>(true)) childAudio.Stop();
         if (motion != null) { StopCoroutine(motion); motion = null; }
         for (int i = 0; i < steps.Length; i++) steps[i].SetActive(i == step - 1);
+        StartStepArrowBlink();
         var stepAudio = steps[step - 1].GetComponent<AudioSource>();
         if (stepAudio != null && stepAudio.clip != null)
         {
@@ -73,6 +76,29 @@ public class Stage2Tutorial : MonoBehaviour
             if (step == 2 || step == 3) motion = StartCoroutine(AnimateSwipe());
         }
     }
+    private void StartStepArrowBlink()
+    {
+        if (step != 2 && step != 4) return;
+        var arrow = steps[step - 1].transform.Find("Arrow2");
+        if (arrow == null)
+        {
+            Debug.LogWarning("Stage2 Tutorial " + step + ": 子のArrow2がありません。", this);
+            return;
+        }
+        arrow.gameObject.SetActive(true);
+        var graphic = arrow.GetComponent<Graphic>();
+        if (graphic == null) return;
+        graphic.raycastTarget = false;
+        stepArrowBlink = arrow.GetComponent<UIBlink>();
+        if (stepArrowBlink == null) stepArrowBlink = arrow.gameObject.AddComponent<UIBlink>();
+        stepArrowBlink.StartBlinking();
+    }
+    private void StopStepArrowBlink()
+    {
+        if (stepArrowBlink != null) stepArrowBlink.StopBlinking();
+        stepArrowBlink = null;
+    }
+
     private IEnumerator AnimateSwipe()
     {
         Canvas.ForceUpdateCanvases();
@@ -149,6 +175,7 @@ public class Stage2Tutorial : MonoBehaviour
     }
     private void OnDisable()
     {
+        StopStepArrowBlink();
         if (transition != null) StopCoroutine(transition);
         transition = null;
         transitioning = false;
