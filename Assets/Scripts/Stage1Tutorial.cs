@@ -38,6 +38,14 @@ public class Stage1Tutorial : MonoBehaviour
     {
         if (currentStep == 4)
         {
+            if (StageLevelMenu.IsTutorialReplay(1))
+            {
+                PlayerPrefs.SetInt(CompletionKey, 1);
+                PlayerPrefs.Save();
+                audioSource.Stop();
+                StageLevelMenu.ReturnFromTutorial(1);
+                return;
+            }
             if (level1Quiz != null && level1Quiz.BeginQuiz())
             {
                 PlayerPrefs.SetInt(CompletionKey, 1);
