@@ -103,15 +103,14 @@ public class Stage1Tutorial : MonoBehaviour
     {
         yield return Question();
         objectBlink.StartBlinking();
-        yield return new WaitForSecondsRealtime(objectHintDelay);
-        ShowStep(3);
         acceptingObject = true;
-        yield return Say(tutorial3);
+        yield return new WaitForSecondsRealtime(objectHintDelay);
+        yield return Say(tutorial2);
     }
 
     public void TouchObject(TouchObjectTarget target)
     {
-        if (!IsActive || target != object1 || currentStep != 3 || !acceptingObject) return;
+        if (!IsActive || target != object1 || currentStep != 2 || !acceptingObject) return;
         acceptingObject = false;
         StopAllCoroutines();
         audioSource.Stop();
@@ -122,6 +121,7 @@ public class Stage1Tutorial : MonoBehaviour
 
     private IEnumerator ShowCorrect()
     {
+        ShowStep(3);
         checkObject.SetActive(true);
         var sound = checkObject.GetComponent<AudioSource>();
         if (sound != null && sound.clip != null) sound.PlayOneShot(sound.clip);
@@ -131,6 +131,7 @@ public class Stage1Tutorial : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
+        yield return Say(tutorial3);
         checkObject.SetActive(false);
         ShowStep(4);
         speakerBlink.StartBlinking();
