@@ -105,11 +105,14 @@ public class Stage2Quiz : MonoBehaviour
         if ((Slow ? endSlow : end) == null) { Debug.LogError("Stage2 end audio is missing.", this); return; }
         recorder = new StageLevelResultRecorder(2, level, questionCount);
         var tutorial = Find("Tutorial")?.GetComponent<Stage2Tutorial>();
-        if (level == 1 && tutorial != null && PlayerPrefs.GetInt(Stage2Tutorial.CompletionKey, 0) != 1)
+        if (level == 1 && tutorial != null && (StageLevelMenu.IsTutorialReplay(2) || PlayerPrefs.GetInt(Stage2Tutorial.CompletionKey, 0) != 1))
         {
             if (check != null) check.SetActive(false);
             if (mouse != null) mouse.SetActive(false);
-            tutorial.Begin(NextQuestion);
+            tutorial.Begin(() =>
+            {
+                if (!StageLevelMenu.ReturnFromTutorial(2)) NextQuestion();
+            });
         }
         else NextQuestion();
     }
