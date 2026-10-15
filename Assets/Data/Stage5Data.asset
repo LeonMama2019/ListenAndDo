@@ -153,13 +153,24 @@ MonoBehaviour:
     - kind: 0
       voice: {fileID: 8300000, guid: 53a46efdc57cde2459b9a1d4c25ee7a3, type: 3}
       text: "\u51FA\u3057\u3066\u304F\u3060\u3055\u3044"
+  - id: 7
+    level: 0
+    objectIds:
+    - 18
+    parts:
+    - kind: 1
+      voice: {fileID: 0}
+      text: 
+    - kind: 0
+      voice: {fileID: 8300000, guid: 53a46efdc57cde2459b9a1d4c25ee7a3, type: 3}
+      text: "\u51FA\u3057\u3066\u304F\u3060\u3055\u3044"
   conjunctionVoice: {fileID: 8300000, guid: d8623a788c087ae42b64f0910bd15ab5, type: 3}
   levels:
   - level: 1
     place: 2
     placesMigrated: 1
     places: 02000000
-    questionCount: 1
+    questionCount: 5
     minObjectKinds: 1
     maxObjectKinds: 2
     targets:
@@ -342,6 +353,72 @@ MonoBehaviour:
     questionCount: 7
     minObjectKinds: 1
     maxObjectKinds: 2
+    targets:
+    - objectId: 13
+      count: 1
+      quantityVoice: {fileID: 0}
+    - objectId: 14
+      count: 1
+      quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
+    - objectId: 15
+      count: 2
+      quantityVoice: {fileID: 0}
+    - objectId: 16
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 17
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 18
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 18
+      count: 3
+      quantityVoice: {fileID: 0}
+    quantityOverrides:
+    - objectId: 
+      count: 2
+      quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
+  - level: 7
+    place: 1
+    placesMigrated: 1
+    places: 010000000200000000000000
+    questionCount: 7
+    minObjectKinds: 2
+    maxObjectKinds: 3
+    targets:
+    - objectId: 13
+      count: 1
+      quantityVoice: {fileID: 0}
+    - objectId: 14
+      count: 1
+      quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
+    - objectId: 15
+      count: 2
+      quantityVoice: {fileID: 0}
+    - objectId: 16
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 17
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 18
+      count: 3
+      quantityVoice: {fileID: 0}
+    - objectId: 18
+      count: 3
+      quantityVoice: {fileID: 0}
+    quantityOverrides:
+    - objectId: 
+      count: 2
+      quantityVoice: {fileID: 8300000, guid: e0cbf5b3a8775cf46b15704b8a4496a9, type: 3}
+  - level: 7
+    place: 1
+    placesMigrated: 1
+    places: 010000000200000000000000
+    questionCount: 7
+    minObjectKinds: 2
+    maxObjectKinds: 4
     targets:
     - objectId: 13
       count: 1
