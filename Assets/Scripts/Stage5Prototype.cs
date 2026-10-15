@@ -109,6 +109,7 @@ public class Stage5Prototype : MonoBehaviour
         odouguArea = Find("OdouguArea") as RectTransform;
         foreach (var front in canvas.GetComponentsInChildren<Transform>(true))
             if (front.name == "BookFront") front.gameObject.SetActive(false);
+        if (StartFirstTutorial()) return;
         if (data != null) data.MigrateFromScene(gameObject.scene);
         levelQuestions = data == null ? new List<Stage5Question>() : data.GetQuestions(level, gameObject.scene);
         question = levelQuestions.Count == 0 ? null : levelQuestions[0];
@@ -891,17 +892,279 @@ public class Stage5Prototype : MonoBehaviour
         PlayerPrefs.SetString("ListenAndDo.Stage5.Prototype.Latest", json);
         PlayerPrefs.Save();
     }
+
+    private const string TutorialDoneKey = "ListenAndDo.Stage5.Tutorial.Completed";
+    private Transform tutorialRoot;
+    private readonly List<TutorialItem> tutorialItems = new();
+    private readonly HashSet<Stage5Place> tutorialFinished = new();
+    private readonly Dictionary<Stage5Place, CanvasGroup> tutorialHomes = new();
+    private TutorialItem tutorialHeld;
+    private int tutorialStep;
+    private bool tutorialBusy;
+    private AudioSource tutorialVoice;
+    private Coroutine tutorialNarration;
+    private class TutorialItem
+    {
+        public Image original, view;
+        public Stage5Place home;
+        public string id;
+        public bool stored;
+    }
+
+    private bool StartFirstTutorial()
+    {
+        tutorialRoot = Find("Tutorial");
+        if (level != 1 || PlayerPrefs.GetInt(TutorialDoneKey, 0) != 0 || tutorialRoot == null) return false;
+        foreach (Stage5Place home in Enum.GetValues(typeof(Stage5Place)))
+        {
+            var parent = TutorialHome(home);
+            if (parent == null)
+            {
+                Debug.LogError("Stage5 Tutorial: " + home + "がありません。", this);
+                enabled = false;
+                return true;
+            }
+            var group = parent.GetComponent<CanvasGroup>() ?? parent.gameObject.AddComponent<CanvasGroup>();
+            tutorialHomes.Add(home, group);
+            foreach (Transform child in parent)
+            {
+                var original = child.GetComponent<Image>();
+                var front = home == Stage5Place.BookStand ? child.Find("BookFront")?.GetComponent<Image>() : original;
+                if (child.name == "OdouguArea" || original == null || front == null || front.sprite == null) continue;
+                var item = new TutorialItem { original = original, home = home, id = child.name };
+                item.view = NewImage("Tutorial_" + child.name, deskArea, front.sprite, front.rectTransform.rect.size);
+                item.view.rectTransform.anchoredPosition = RandomDeskPosition(front.rectTransform.rect.size, 0);
+                // Preserve authored placement for the return animation; only the copy moves.
+                original.gameObject.SetActive(false);
+                if (home == Stage5Place.BookStand) front.gameObject.SetActive(false);
+                tutorialItems.Add(item);
+                Bind(item.view.gameObject, e => TutorialPick(item));
+            }
+            var graphic = parent.GetComponent<Image>();
+            if (graphic != null) graphic.raycastTarget = true;
+            Bind(parent.gameObject, e => TutorialStore(home));
+            if (home == Stage5Place.Odougu && odouguArea != null)
+            {
+                var areaGraphic = odouguArea.GetComponent<Image>() ?? odouguArea.gameObject.AddComponent<Image>();
+                SetAlpha(areaGraphic, 0);
+                areaGraphic.raycastTarget = true;
+                Bind(odouguArea.gameObject, e => TutorialStore(home));
+            }
+        }
+        cursor = NewImage("TutorialCursor", (RectTransform)canvas.transform, null, Vector2.one);
+        cursor.raycastTarget = false;
+        SetAlpha(cursor, 0);
+        tutorialVoice = gameObject.AddComponent<AudioSource>();
+        tutorialVoice.playOnAwake = false;
+        SpeechSpeedSource.Bind(tutorialVoice);
+        Find("Speaker")?.gameObject.SetActive(false);
+        tutorialRoot.gameObject.SetActive(true);
+        tutorialRoot.SetAsLastSibling();
+        foreach (var graphic in tutorialRoot.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+        foreach (var text in tutorialRoot.GetComponentsInChildren<TMP_Text>(true)) text.enabled = true;
+        var close = tutorialRoot.Find("Button")?.GetComponent<Button>();
+        if (close != null)
+        {
+            close.onClick = new Button.ButtonClickedEvent();
+            close.onClick.AddListener(FinishTutorial);
+            if (close.targetGraphic != null) close.targetGraphic.raycastTarget = true;
+        }
+        ShowTutorial(1);
+        StartCoroutine(TutorialPulse());
+        return true;
+    }
+
+    private RectTransform TutorialHome(Stage5Place home)
+        => home == Stage5Place.BookStand ? bookStand : home == Stage5Place.Pencase ? pencase : odougu;
+
+    private void ShowTutorial(int step, Stage5Place? selected = null)
+    {
+        tutorialStep = step;
+        foreach (Transform child in tutorialRoot) child.gameObject.SetActive(false);
+        var panel = tutorialRoot.Find(step.ToString());
+        if (panel != null)
+        {
+            panel.gameObject.SetActive(true);
+            if (step >= 2 && step <= 4)
+                foreach (Transform child in panel)
+                    child.gameObject.SetActive(selected.HasValue && child.name.Trim().Trim('\'').Trim() == selected.Value.ToString());
+        }
+        // Reuse the authored selection prompt while waiting for another category.
+        if (step >= 2 && step <= 4 && !selected.HasValue)
+            tutorialRoot.Find("1")?.gameObject.SetActive(true);
+        var button = tutorialRoot.Find("Button");
+        if (button != null) button.gameObject.SetActive(step == 7);
+        if (tutorialNarration != null) StopCoroutine(tutorialNarration);
+        tutorialVoice.Stop();
+        Transform spoken = selected.HasValue ? panel?.Find(selected.Value.ToString()) : panel;
+        tutorialNarration = StartCoroutine(TutorialSpeak(spoken));
+    }
+
+    private IEnumerator TutorialSpeak(Transform panel)
+    {
+        tutorialBusy = true;
+        if (panel != null)
+            foreach (var source in panel.GetComponentsInChildren<AudioSource>(false))
+                if (source.clip != null)
+                {
+                    tutorialVoice.clip = source.clip;
+                    tutorialVoice.Play();
+                    while (tutorialVoice.isPlaying) yield return null;
+                }
+        tutorialBusy = false;
+    }
+
+    private void TutorialPick(TutorialItem item)
+    {
+        if (tutorialBusy || tutorialStep > 4 || tutorialHeld != null || item.stored
+            || tutorialFinished.Contains(item.home) || (backPanel != null && backPanel.activeInHierarchy)) return;
+        tutorialHeld = item;
+        // Update() already follows the pointer using held; tutorial uses its own cursor below.
+        SetAlpha(item.view, 0);
+        cursor.sprite = item.view.sprite;
+        cursor.rectTransform.sizeDelta = item.view.rectTransform.sizeDelta;
+        cursor.transform.position = item.view.transform.position;
+        SetAlpha(cursor, 1);
+        cursor.transform.SetAsLastSibling();
+        foreach (var entry in tutorialHomes)
+            TutorialHome(entry.Key).gameObject.SetActive(entry.Key == item.home);
+        ShowTutorial(2 + tutorialFinished.Count, item.home);
+    }
+
+    private void TutorialStore(Stage5Place home)
+    {
+        if (tutorialBusy || tutorialHeld == null || tutorialHeld.home != home
+            || (backPanel != null && backPanel.activeInHierarchy)) return;
+        StartCoroutine(TutorialStoreGroup(home));
+    }
+
+    private IEnumerator TutorialStoreGroup(Stage5Place home)
+    {
+        tutorialBusy = true;
+        tutorialHomes[home].alpha = 1;
+        var selected = tutorialHeld;
+        selected.view.transform.position = cursor.transform.position;
+        SetAlpha(selected.view, 1);
+        SetAlpha(cursor, 0);
+        tutorialHeld = null;
+        yield return TutorialReturn(selected);
+        foreach (var item in tutorialItems)
+            if (item.home == home && !item.stored) yield return TutorialReturn(item);
+        tutorialFinished.Add(home);
+        foreach (var entry in tutorialHomes)
+        {
+            entry.Value.alpha = 1;
+            TutorialHome(entry.Key).gameObject.SetActive(true);
+        }
+        tutorialBusy = false;
+        if (tutorialFinished.Count < 3) ShowTutorial(2 + tutorialFinished.Count);
+        else StartCoroutine(TutorialSpecials());
+    }
+
+    private IEnumerator TutorialReturn(TutorialItem item)
+    {
+        SetAlpha(item.view, 1);
+        var rect = item.view.rectTransform;
+        Vector3 start = rect.position, destination = item.original.transform.position;
+        float duration = Mathf.Max(0.35f, moveSeconds);
+        for (float t = 0; t < duration; t += Time.unscaledDeltaTime)
+        {
+            rect.position = Vector3.Lerp(start, destination, Mathf.SmoothStep(0, 1, t / duration));
+            yield return null;
+        }
+        rect.position = destination;
+        item.view.gameObject.SetActive(false);
+        item.original.gameObject.SetActive(true);
+        SetAlpha(item.original, 1);
+        item.stored = true;
+    }
+
+    private IEnumerator TutorialBlink(Image image, int count, float halfPeriod)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            SetAlpha(image, 0.2f);
+            yield return new WaitForSecondsRealtime(halfPeriod);
+            SetAlpha(image, 1);
+            yield return new WaitForSecondsRealtime(halfPeriod);
+        }
+    }
+
+    private IEnumerator TutorialSpecials()
+    {
+        foreach (var spec in new[] { "Clay", "Paste" })
+        {
+            ShowTutorial(spec == "Clay" ? 5 : 6);
+            while (tutorialBusy) yield return null;
+            tutorialBusy = true;
+            var item = tutorialItems.Find(entry => entry.id.Equals(spec, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                item.original.gameObject.SetActive(false);
+                item.stored = false;
+                item.view.rectTransform.SetParent(deskArea, false);
+                item.view.rectTransform.anchoredPosition = Vector2.zero;
+                item.view.gameObject.SetActive(true);
+                yield return TutorialBlink(item.view, 2, 0.25f);
+                yield return TutorialReturn(item);
+                yield return TutorialBlink(item.original, 3, 0.6f);
+            }
+            else Debug.LogError("Stage5 Tutorial: " + spec + "がありません。", this);
+        }
+        foreach (var front in canvas.GetComponentsInChildren<Transform>(true))
+            if (front.name == "BookFront") front.gameObject.SetActive(false);
+        ShowTutorial(7);
+    }
+
+    private IEnumerator TutorialPulse()
+    {
+        while (tutorialRoot != null && tutorialRoot.gameObject.activeSelf)
+        {
+            if (!tutorialBusy && (backPanel == null || !backPanel.activeInHierarchy))
+            {
+                float alpha = 0.4f + 0.6f * (0.5f + 0.5f * Mathf.Cos(Time.unscaledTime * 5));
+                if (tutorialHeld != null)
+                {
+                    tutorialHomes[tutorialHeld.home].alpha = alpha;
+                    Vector2 point = Input.touchCount > 0 ? Input.GetTouch(0).position : (Vector2)Input.mousePosition;
+                    if (RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)canvas.transform, point, UiCamera, out var local))
+                        cursor.rectTransform.anchoredPosition = local;
+                }
+                else if (tutorialStep <= 4)
+                    foreach (var item in tutorialItems)
+                        if (!item.stored) SetAlpha(item.view, alpha);
+            }
+            yield return null;
+        }
+    }
+
+    private void FinishTutorial()
+    {
+        if (tutorialStep != 7 || tutorialBusy) return;
+        PlayerPrefs.SetInt(TutorialDoneKey, 1);
+        PlayerPrefs.Save();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(gameObject.scene.name);
+    }
+
+
     private static void SetAlpha(Image image, float alpha) { var color = image.color; color.a = alpha; image.color = color; }
     private static void Bind(GameObject go, Action<UnityEngine.EventSystems.PointerEventData> action)
     {
         var click = go.GetComponent<Stage5ClickTarget>() ?? go.AddComponent<Stage5ClickTarget>();
         click.Bind(action);
     }
+    private static bool IsTutorialChild(Transform child)
+    {
+        for (var parent = child.parent; parent != null; parent = parent.parent)
+            if (parent.name == "Tutorial") return true;
+        return false;
+    }
+
     private Transform Find(string name)
     {
         foreach (var root in gameObject.scene.GetRootGameObjects())
             foreach (var child in root.GetComponentsInChildren<Transform>(true))
-                if (child.name == name) return child;
+                if (child.name == name && (name == "Tutorial" || !IsTutorialChild(child))) return child;
         return null;
     }
 }
