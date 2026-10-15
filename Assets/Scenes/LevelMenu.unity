@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 111902568}
   - component: {fileID: 111902567}
   m_Layer: 5
-  m_Name: Image
+  m_Name: HowToPlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1902,6 +1902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04553a25b91d43789c15521e5812e3dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenu
+  tutorialButton: {fileID: 111902566}
   stage5Data: {fileID: 11400000, guid: 2179874245d004e43839a22ff55774ac, type: 2}
   levelImages:
   - unlocked: {fileID: 21300000, guid: 211f8847d8b74b142866ae62d4581c04, type: 3}
