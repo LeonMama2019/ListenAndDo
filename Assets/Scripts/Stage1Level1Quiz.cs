@@ -94,7 +94,8 @@ public class Stage1Level1Quiz : MonoBehaviour
         thirdTarget = object3 == null ? null : object3.GetComponent<TouchObjectTarget>();
         if (secondTarget != null) secondTarget.SetQuiz(this);
         if (thirdTarget != null) thirdTarget.SetQuiz(this);
-        bool completed = levelNumber > 1 || PlayerPrefs.GetInt(Stage1Tutorial.CompletionKey, 0) == 1;
+        bool completed = !StageLevelMenu.IsTutorialReplay(1)
+            && (levelNumber > 1 || PlayerPrefs.GetInt(Stage1Tutorial.CompletionKey, 0) == 1);
         if (tutorialPanel != null) tutorialPanel.gameObject.SetActive(!completed);
         if (penAnimator != null)
         {
