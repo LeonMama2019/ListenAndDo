@@ -240,6 +240,7 @@ public class Stage5TaskData : ScriptableObject
                     || (setting.count > 1 && setting.quantityVoice == null))
                     Debug.LogWarning("Stage5: 未完成または実物の個数を超える数量条件は出題しません。ID=" + setting?.objectId, this);
             }
+        string previousKey = null;
         for (int n = 0; n < config.questionCount; n++)
         {
             var format = formats[UnityEngine.Random.Range(0, formats.Count)];
@@ -260,6 +261,27 @@ public class Stage5TaskData : ScriptableObject
                 pool.RemoveAt(index); selected.Add(target);
                 for (int j = 0; j < target.setting.count; j++) sprites.Add(target.item.sprite);
             }
+            // Compare unordered targets: changing the spoken order alone is still the same task.
+            if (QuestionKey(format, selected) == previousKey)
+            {
+                foreach (var alternative in formats)
+                {
+                    var candidates = Eligible(alternative, config, counts);
+                    int limit = Math.Min(config.maxObjectKinds, candidates.Count);
+                    if (conjunctionVoice == null || !InsertsObjects(alternative)) limit = Math.Min(limit, 1);
+                    List<Target> replacement = null;
+                    for (int size = config.minObjectKinds; size <= limit && replacement == null; size++)
+                        replacement = FindDifferentTargets(alternative, candidates, size, 0, new List<Target>(), previousKey);
+                    if (replacement == null) continue;
+                    format = alternative;
+                    selected = replacement;
+                    break;
+                }
+                sprites.Clear();
+                foreach (var target in selected)
+                    for (int j = 0; j < target.setting.count; j++) sprites.Add(target.item.sprite);
+            }
+            previousKey = QuestionKey(format, selected);
             var clips = new List<AudioClip>();
             var text = new System.Text.StringBuilder();
             foreach (var part in format.parts)
@@ -279,6 +301,40 @@ public class Stage5TaskData : ScriptableObject
             question.RuntimeVoices = clips; result.Add(question);
         }
         return result;
+    }
+
+    private static string QuestionKey(Stage5QuestionFormat format, List<Target> selected)
+    {
+        var targets = new List<string>();
+        foreach (var target in selected)
+            targets.Add(target.item.sprite.GetInstanceID() + ":" + target.setting.count);
+        targets.Sort(StringComparer.Ordinal);
+        var parts = new List<string>();
+        foreach (var part in format.parts)
+            parts.Add(part.kind == Stage5VoicePartKind.Objects ? "objects" : "audio:" + part.voice.GetInstanceID());
+        return string.Join(",", parts) + "|" + string.Join(",", targets);
+    }
+
+    // Search combinations only when the random draw repeats. Stop at the first valid alternative.
+    // No retry cap: even one rare alternative prevents an immediate repeat.
+    private static List<Target> FindDifferentTargets(Stage5QuestionFormat format, List<List<Target>> pool,
+        int remaining, int start, List<Target> selected, string previousKey)
+    {
+        if (remaining == 0)
+            return QuestionKey(format, selected) != previousKey ? new List<Target>(selected) : null;
+        for (int i = start; i <= pool.Count - remaining; i++)
+        {
+            int variants = InsertsObjects(format) ? pool[i].Count : 1;
+            for (int j = 0; j < variants; j++)
+            {
+                selected.Add(pool[i][j]);
+                var result = FindDifferentTargets(format, pool, remaining - 1, i + 1, selected, previousKey);
+                selected.RemoveAt(selected.Count - 1);
+                if (result != null) return result;
+            }
+        }
+        // A single available task must remain playable.
+        return null;
     }
 
     private static bool ValidPlaces(IReadOnlyList<Stage5Place> places)
