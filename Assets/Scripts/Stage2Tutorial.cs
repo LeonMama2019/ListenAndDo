@@ -79,7 +79,13 @@ public class Stage2Tutorial : MonoBehaviour
     private void StartStepArrowBlink()
     {
         if (step != 2 && step != 4) return;
-        var arrow = steps[step - 1].transform.Find("Arrow2");
+        Transform arrow = null;
+        foreach (Transform child in steps[step - 1].transform)
+            if (child.name.Trim().Equals("Arrow2", StringComparison.Ordinal))
+            {
+                arrow = child;
+                break;
+            }
         if (arrow == null)
         {
             Debug.LogWarning("Stage2 Tutorial " + step + ": 子のArrow2がありません。", this);
