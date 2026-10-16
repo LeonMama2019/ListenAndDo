@@ -52,11 +52,15 @@ public class Stage4Quiz : MonoBehaviour
 
         CacheScene();
         CenterSinglePerson();
-        BuildQuestionPlan();
-        recorder = new StageLevelResultRecorder(4, level, QuestionCount);
+        if (!TutorialMode)
+        {
+            BuildQuestionPlan();
+            recorder = new StageLevelResultRecorder(4, level, QuestionCount);
+        }
         voice = gameObject.AddComponent<AudioSource>(); voice.playOnAwake=false; voice.spatialBlend=0; SpeechSpeedSource.Bind(voice);
         if (checkMark != null) { checkAudio=checkMark.GetComponent<AudioSource>(); checkMark.SetActive(false); }
-        BeginQuestion();
+        if (TutorialMode) BeginTutorial();
+        else BeginQuestion();
     }
 
     private Transform Find(string n)
@@ -346,7 +350,7 @@ public class Stage4Quiz : MonoBehaviour
     }
     private void Replay()
     {
-        if(!accepting||finished||speaking!=null)return;
+        if(TutorialMode || !accepting||finished||speaking!=null)return;
         recorder.RecordReplay(); speaking=StartCoroutine(SpeakQuestion());
     }
 
@@ -370,6 +374,18 @@ public class Stage4Quiz : MonoBehaviour
     }
     private void Resolve(bool correct)
     {
+        if (TutorialMode)
+        {
+            if (tutorialStep != 4 || !accepting || TutorialModalOpen || !correct) return;
+            accepting = false;
+            if (checkMark != null)
+            {
+                checkMark.SetActive(true);
+                if (checkAudio != null) checkAudio.Play();
+            }
+            StartCoroutine(TutorialCorrect());
+            return;
+        }
         if(!correct){recorder.RecordWrongAnswer();return;}
         accepting=false; recorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         if(checkMark!=null){checkMark.SetActive(true);if(checkAudio!=null)checkAudio.Play();}
@@ -381,6 +397,132 @@ public class Stage4Quiz : MonoBehaviour
         questionIndex++;
         if(questionIndex<QuestionCount)BeginQuestion();
         else{finished=true;StageLevelMenu.MarkCompleted(4,level);StageResultScreenDisplay.OpenAfterGame(4,level);}
+    }
+
+    private Transform tutorialRoot;
+    private readonly GameObject[] tutorialSteps = new GameObject[5];
+    private int tutorialStep;
+    private bool tutorialNextReady;
+    private bool TutorialMode => StageLevelMenu.IsTutorialReplay(4);
+    private bool TutorialModalOpen => Find("BackReturn")?.gameObject.activeInHierarchy == true;
+
+    private void Awake()
+    {
+        tutorialRoot = Find("Tutorial");
+        if (tutorialRoot == null) return;
+        foreach (var audio in tutorialRoot.GetComponentsInChildren<AudioSource>(true))
+        {
+            audio.playOnAwake = false;
+            audio.Stop();
+        }
+        tutorialRoot.gameObject.SetActive(false);
+    }
+
+    private void BeginTutorial()
+    {
+        if (tutorialRoot == null || personRoots[1] == null || personImages[1] == null || backs[1] == null)
+        { Debug.LogError("Stage4 Tutorial: Tutorial and Person2 front/back are required.", this); return; }
+        for (int i = 0; i < tutorialSteps.Length; i++)
+        {
+            var child = tutorialRoot.Find((i + 1).ToString());
+            if (child == null) { Debug.LogError("Stage4 Tutorial: missing step " + (i + 1), this); return; }
+            tutorialSteps[i] = child.gameObject;
+        }
+        foreach (var graphic in tutorialRoot.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+        for (int number = 1; number <= 3; number++)
+        {
+            int captured = number;
+            Transform buttonRoot = null;
+            foreach (var child in tutorialSteps[number - 1].GetComponentsInChildren<Transform>(true))
+                if (child.name.Trim().Equals("button", StringComparison.OrdinalIgnoreCase)) { buttonRoot = child; break; }
+            if (buttonRoot == null) { Debug.LogError("Stage4 Tutorial: missing Button in step " + number, this); return; }
+            var button = buttonRoot.GetComponent<Button>() ?? buttonRoot.gameObject.AddComponent<Button>();
+            button.targetGraphic = buttonRoot.GetComponent<Graphic>();
+            if (button.targetGraphic != null) button.targetGraphic.raycastTarget = true;
+            button.onClick = new Button.ButtonClickedEvent();
+            button.onClick.AddListener(() =>
+            {
+                if (tutorialStep == captured && tutorialNextReady && !TutorialModalOpen) ShowTutorialStep(captured + 1);
+            });
+        }
+        // Keep the center Person2 artwork and its matching back together.
+        targetPerson = people.Find(p => p.FrontSprite == personImages[1].sprite) ?? people[Mathf.Min(1, people.Count - 1)];
+        targetObject = objects[0];
+        for (int i = 0; i < personRoots.Length; i++)
+        {
+            if (personRoots[i] != null) personRoots[i].gameObject.SetActive(i == 1);
+            if (backs[i] != null) backs[i].SetActive(false);
+            for (int j = 0; j < 2; j++) if (heldImages[i,j] != null) heldImages[i,j].gameObject.SetActive(false);
+        }
+        var center = (RectTransform)personRoots[1];
+        center.anchorMin = new Vector2(.5f, center.anchorMin.y);
+        center.anchorMax = new Vector2(.5f, center.anchorMax.y);
+        center.anchoredPosition = new Vector2(0f, center.anchoredPosition.y);
+        personImages[1].enabled = true;
+        personImages[1].sprite = targetPerson.FrontSprite;
+        personImages[1].preserveAspect = true;
+        var backImage = backs[1].GetComponent<Image>();
+        if (backImage != null) { backImage.sprite = targetPerson.BackSprite; backImage.preserveAspect = true; }
+        if (heldImages[1,0] == null) { Debug.LogError("Stage4 Tutorial: Person2/Object1 is required.", this); return; }
+        heldImages[1,0].sprite = targetObject.Sprite;
+        heldImages[1,0].preserveAspect = true;
+        heldImages[1,0].gameObject.SetActive(true);
+        SetPanels(false, false, false, false);
+        if (answerPanel != null) answerPanel.SetActive(false);
+        if (speaker != null) speaker.interactable = false;
+        tutorialRoot.gameObject.SetActive(true);
+        tutorialRoot.SetAsLastSibling();
+        ShowTutorialStep(1);
+    }
+
+    private void ShowTutorialStep(int number)
+    {
+        foreach (var audio in tutorialRoot.GetComponentsInChildren<AudioSource>(true)) audio.Stop();
+        tutorialStep = number;
+        accepting = false;
+        tutorialNextReady = number != 3;
+        for (int i = 0; i < tutorialSteps.Length; i++) tutorialSteps[i].SetActive(i == number - 1);
+        if (number == 4)
+        {
+            currentType = Stage4QuestionType.What;
+            SetPanels(false, true, false, false);
+            FillObjectChoices(targetObject, false, new List<Stage4ObjectEntry> { targetObject });
+            SetQuestionText(data.WhatQuestionText.Replace("{Person}", targetPerson.DisplayName));
+        }
+        StartCoroutine(PlayTutorialStep(number));
+    }
+
+    private IEnumerator PlayTutorialStep(int number)
+    {
+        var audio = tutorialSteps[number - 1].GetComponent<AudioSource>();
+        if (audio != null && audio.clip != null)
+        {
+            SpeechSpeedSource.Bind(audio);
+            audio.Play();
+            while (audio.isPlaying) yield return null;
+        }
+        else Debug.LogWarning("Stage4 Tutorial " + number + ": assign its AudioSource voice.", this);
+        if (number != tutorialStep) yield break;
+        if (number == 3)
+        {
+            // Turn only after the third explanation has finished.
+            backs[1].SetActive(true);
+            personImages[1].enabled = false;
+            for (int j = 0; j < 2; j++) if (heldImages[1,j] != null) heldImages[1,j].gameObject.SetActive(false);
+            tutorialNextReady = true;
+        }
+        else if (number == 4)
+        {
+            yield return SpeakQuestion();
+        }
+    }
+
+    private IEnumerator TutorialCorrect()
+    {
+        yield return new WaitForSecondsRealtime(3f);
+        while (TutorialModalOpen) yield return null;
+        if (answerPanel != null) answerPanel.SetActive(false);
+        ShowTutorialStep(5);
     }
 
     private static void Shuffle<T>(IList<T> list)
