@@ -429,7 +429,7 @@ public class Stage4Quiz : MonoBehaviour
             tutorialSteps[i] = child.gameObject;
         }
         foreach (var graphic in tutorialRoot.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
-        for (int number = 1; number <= 3; number++)
+        foreach (int number in new[] { 1, 2, 3, 5 })
         {
             int captured = number;
             Transform buttonRoot = null;
@@ -442,7 +442,17 @@ public class Stage4Quiz : MonoBehaviour
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener(() =>
             {
-                if (tutorialStep == captured && tutorialNextReady && !TutorialModalOpen) ShowTutorialStep(captured + 1);
+                if (tutorialStep != captured || !tutorialNextReady || TutorialModalOpen) return;
+                if (captured == 5)
+                {
+                    accepting = false;
+                    StopAllCoroutines();
+                    if (voice != null) voice.Stop();
+                    if (checkAudio != null) checkAudio.Stop();
+                    tutorialRoot.gameObject.SetActive(false);
+                    StageLevelMenu.OpenStageMenu(4);
+                }
+                else ShowTutorialStep(captured + 1);
             });
         }
         // Keep the center Person2 artwork and its matching back together.
