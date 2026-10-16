@@ -446,7 +446,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &170848767
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4334,22 +4334,18 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726813364}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33975be7afbe4ee0b4ae6e05c40dc8fc, type: 3}
+  m_Script: {fileID: 11500000, guid: e624d6dd663248a6b7a891c5dd28835d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Stage2Tutorial
+  m_EditorClassIdentifier: Assembly-CSharp::Stage3Tutorial
   steps:
   - {fileID: 409910135}
   - {fileID: 1775123973}
   - {fileID: 121131635}
   - {fileID: 1153884751}
   - {fileID: 1895590468}
-  swipe: {fileID: 170848767}
-  die: {fileID: 1964114257}
-  swipeDistance: 160
-  motionSeconds: 1
-  transitionDelay: 3
+  promptDelay: 2
 --- !u!114 &2800000001
 MonoBehaviour:
   m_ObjectHideFlags: 0

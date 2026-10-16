@@ -32,6 +32,7 @@ public class Stage3Quiz : MonoBehaviour
     private Coroutine instruction;
     private int level, question, selectedSlot = -1;
     private bool accepting, dropping, finished;
+    private Stage3Tutorial tutorial;
     private double started;
     private Vector2 pointerPosition;
     private Camera UiCamera => canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
@@ -52,6 +53,8 @@ public class Stage3Quiz : MonoBehaviour
             foreach (var oldQuiz in root.GetComponentsInChildren<Stage1Level1Quiz>(true)) oldQuiz.enabled = false;
             foreach (var hand in root.GetComponentsInChildren<HandSelector>(true)) hand.enabled = false;
         }
+        tutorial = GetComponentInChildren<Stage3Tutorial>(true);
+        if (tutorial != null) tutorial.gameObject.SetActive(false);
         // This scene was copied from Stage2; its tutorial is not a Stage3 tutorial.
         foreach (var t in GetComponentsInChildren<Stage2Tutorial>(true)) t.gameObject.SetActive(false);
     }
@@ -71,6 +74,13 @@ public class Stage3Quiz : MonoBehaviour
         foreach (var box in boxes) box.Image.sprite = boxEntries[box.BoxId].Sprite;
         if (speaker != null && speaker.onClick.GetPersistentEventCount() == 0)
             speaker.onClick.AddListener(ReplayInstruction);
+        if (StageLevelMenu.IsTutorialReplay(3))
+        {
+            if (speaker != null) speaker.interactable = false;
+            if (tutorial == null || !tutorial.Begin(data, itemViews, boxes, () => ModalOpen))
+                Debug.LogError("Stage3: tutorial setup is incomplete.", this);
+            return;
+        }
         recorder = new StageLevelResultRecorder(3, level, questionCount);
         NextQuestion();
     }
@@ -170,6 +180,11 @@ public class Stage3Quiz : MonoBehaviour
 
     public void SelectItem(int slot, Vector2 screenPoint)
     {
+        if (StageLevelMenu.IsTutorialReplay(3))
+        {
+            if (tutorial != null) tutorial.SelectItem(slot, screenPoint);
+            return;
+        }
         if (!accepting || dropping || finished || ModalOpen || slot < 0 || slot >= 5) return;
         ClearCursor();
         selectedSlot = slot;
