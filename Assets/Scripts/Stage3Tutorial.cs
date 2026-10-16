@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Stage3Tutorial : MonoBehaviour
 {
-    [SerializeField] private GameObject[] steps = new GameObject[5];
+    [SerializeField] private GameObject[] steps = new GameObject[6];
     [SerializeField, Min(0f)] private float promptDelay = 2f;
     private Stage3ObjectData data;
     private Stage3ObjectEntry cup;
@@ -22,8 +22,8 @@ public class Stage3Tutorial : MonoBehaviour
 
     public bool Begin(Stage3ObjectData source, Image[] views, Stage3BoxTarget[] boxes, Func<bool> blocked)
     {
-        if (steps == null || steps.Length != 5 || Array.Exists(steps, x => x == null))
-        { Debug.LogError("Stage3 Tutorial: assign steps 1-5.", this); return false; }
+        if (steps == null || steps.Length != 6 || Array.Exists(steps, x => x == null))
+        { Debug.LogError("Stage3 Tutorial: assign steps 1-6.", this); return false; }
         data = source;
         foreach (var entry in data.Items) if (entry.ObjectId == "blue_cup") cup = entry;
         foreach (var box in boxes) if (box.BoxId == "yellow_box") yellowBox = box;
@@ -47,6 +47,7 @@ public class Stage3Tutorial : MonoBehaviour
         boxInput.Tutorial = this;
         ConnectButton(1);
         ConnectButton(2);
+        ConnectButton(6);
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
         Show(1);
@@ -61,7 +62,13 @@ public class Stage3Tutorial : MonoBehaviour
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener(() =>
             {
-                if (step == number && !Blocked) Show(number + 1);
+                if (step != number || Blocked) return;
+                if (number == steps.Length)
+                {
+                    gameObject.SetActive(false);
+                    StageLevelMenu.OpenStageMenu(3);
+                }
+                else Show(number + 1);
             });
             if (button.targetGraphic != null) button.targetGraphic.raycastTarget = true;
         }
@@ -86,7 +93,16 @@ public class Stage3Tutorial : MonoBehaviour
         {
             PlayStepVoice();
             if (number == 4) Blink(yellowBox.Image);
+            if (number == 5) StartCoroutine(AdvanceAfterPlacementVoice());
         }
+    }
+    private IEnumerator AdvanceAfterPlacementVoice()
+    {
+        var audio = steps[4].GetComponent<AudioSource>();
+        // Finish the placement explanation before showing the final advice and exit button.
+        while (audio != null && audio.isPlaying) yield return null;
+        while (Blocked) yield return null;
+        Show(6);
     }
     private IEnumerator ProblemThenHint()
     {
