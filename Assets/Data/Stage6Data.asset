@@ -15,49 +15,57 @@ MonoBehaviour:
   items:
   - id: 1
     sprite: {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+    nameVoice: {fileID: 8300000, guid: 9d443dfeca9287d488cea07fa6f9b5d3, type: 3}
     home: 0
   - id: 2
     sprite: {fileID: 6579298820036695858, guid: 81793d369047a7743b3a7516edaee350, type: 3}
+    nameVoice: {fileID: 8300000, guid: d0b89897e983433479e58ca8a65175b2, type: 3}
     home: 0
   - id: 3
     sprite: {fileID: 8859225441076862958, guid: caa8aed993a8b084197726b7793e7d0e, type: 3}
+    nameVoice: {fileID: 8300000, guid: 54da6bdce5f0c0342952bc9f33b2df19, type: 3}
     home: 0
   - id: 4
     sprite: {fileID: -4174624928600890918, guid: 4d448095384cd6448a39c61bb9cb3df5, type: 3}
+    nameVoice: {fileID: 8300000, guid: 9982fd58a9e1b4a478cb3daf068bc8b2, type: 3}
     home: 1
   - id: 5
     sprite: {fileID: -709768274109351568, guid: d8f2491a4a17d4a4e98274298c068557, type: 3}
+    nameVoice: {fileID: 8300000, guid: 80478196ca3039c4692f43292b02ce4c, type: 3}
     home: 1
   - id: 6
     sprite: {fileID: 7384515168655976234, guid: 060aaff55f0af0f4ab24daceb926504c, type: 3}
+    nameVoice: {fileID: 8300000, guid: 8edd37c0027e9cb468f6ea6c2ce4b413, type: 3}
     home: 1
   - id: 7
     sprite: {fileID: 7766721758921934520, guid: 2fe4913e345470945a1e80f595523173, type: 3}
+    nameVoice: {fileID: 8300000, guid: 1f8acd2ee180e504bb266aa56e3c310e, type: 3}
     home: 1
   - id: 8
     sprite: {fileID: -7827045836371682005, guid: 12d3b95ec0064c2478d39b38060fce80, type: 3}
+    nameVoice: {fileID: 8300000, guid: b03dbad3041b9624cbe5fd599bf19af4, type: 3}
     home: 1
   personVoices:
   - person: 0
-    nameVoice: {fileID: 0}
+    nameVoice: {fileID: 8300000, guid: 47219050c82bd59428db2cf2b4edc60f, type: 3}
   - person: 1
-    nameVoice: {fileID: 0}
+    nameVoice: {fileID: 8300000, guid: 2f52bfb8295030047961feb7184af7e0, type: 3}
   - person: 2
-    nameVoice: {fileID: 0}
+    nameVoice: {fileID: 8300000, guid: b905e51df5187004eb4df27144b7b5b4, type: 3}
   roomVoices:
   - room: 0
-    locationVoice: {fileID: 0}
+    locationVoice: {fileID: 8300000, guid: 07be26276f4b8b24eb54767f8395dd8f, type: 3}
   - room: 1
-    locationVoice: {fileID: 0}
+    locationVoice: {fileID: 8300000, guid: f94a77d6b7fd7cc498bd2dc654f0d48e, type: 3}
   storageVoices:
   - storage: 0
     nameVoice: {fileID: 0}
   - storage: 1
     nameVoice: {fileID: 0}
-  tidyAfterVoice: {fileID: 0}
-  recipientParticleVoice: {fileID: 0}
-  giveVoice: {fileID: 0}
-  conjunctionVoice: {fileID: 0}
+  tidyAfterVoice: {fileID: 8300000, guid: 976158f056771c54594abe2e261edeb8, type: 3}
+  recipientParticleVoice: {fileID: 8300000, guid: 07b95956a1fca52439bc25ea615b5938, type: 3}
+  giveVoice: {fileID: 8300000, guid: 7e00cb09fbfc1094d880bf2d172f5d2b, type: 3}
+  conjunctionVoice: {fileID: 8300000, guid: d8623a788c087ae42b64f0910bd15ab5, type: 3}
   levels:
   - level: 1
     questionCount: 7
@@ -135,4 +143,4 @@ MonoBehaviour:
     people: []
     deliveries: []
     instructionVoices: []
-    instructionMemo:
+    instructionMemo: 
