@@ -37,6 +37,84 @@ MonoBehaviour:
   - id: 8
     sprite: {fileID: -7827045836371682005, guid: 12d3b95ec0064c2478d39b38060fce80, type: 3}
     home: 1
+  personVoices:
+  - person: 0
+    nameVoice: {fileID: 0}
+  - person: 1
+    nameVoice: {fileID: 0}
+  - person: 2
+    nameVoice: {fileID: 0}
+  roomVoices:
+  - room: 0
+    locationVoice: {fileID: 0}
+  - room: 1
+    locationVoice: {fileID: 0}
+  storageVoices:
+  - storage: 0
+    nameVoice: {fileID: 0}
+  - storage: 1
+    nameVoice: {fileID: 0}
+  tidyAfterVoice: {fileID: 0}
+  recipientParticleVoice: {fileID: 0}
+  giveVoice: {fileID: 0}
+  conjunctionVoice: {fileID: 0}
+  levels:
+  - level: 1
+    questionCount: 7
+    scatterMode: 0
+    itemPool: 0
+    peoplePerRoom: 1
+    deliveryCount: 1
+    specifyRoom: 1
+  - level: 2
+    questionCount: 7
+    scatterMode: 0
+    itemPool: 1
+    peoplePerRoom: 1
+    deliveryCount: 1
+    specifyRoom: 1
+  - level: 3
+    questionCount: 7
+    scatterMode: 1
+    itemPool: 2
+    peoplePerRoom: 1
+    deliveryCount: 1
+    specifyRoom: 1
+  - level: 4
+    questionCount: 7
+    scatterMode: 1
+    itemPool: 2
+    peoplePerRoom: 3
+    deliveryCount: 1
+    specifyRoom: 1
+  - level: 5
+    questionCount: 7
+    scatterMode: 1
+    itemPool: 2
+    peoplePerRoom: 3
+    deliveryCount: 1
+    specifyRoom: 0
+  - level: 6
+    questionCount: 7
+    scatterMode: 1
+    itemPool: 2
+    peoplePerRoom: 3
+    deliveryCount: 2
+    specifyRoom: 1
+  - level: 7
+    questionCount: 7
+    scatterMode: 1
+    itemPool: 2
+    peoplePerRoom: 3
+    deliveryCount: 2
+    specifyRoom: 0
+  - level: 8
+    questionCount: 7
+    scatterMode: 1
+    itemPool: 2
+    peoplePerRoom: 3
+    deliveryCount: 3
+    specifyRoom: 0
   questions:
   - taskId: 1
     level: 0
@@ -57,4 +135,4 @@ MonoBehaviour:
     people: []
     deliveries: []
     instructionVoices: []
-    instructionMemo: 
+    instructionMemo:
