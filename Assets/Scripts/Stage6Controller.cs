@@ -80,7 +80,7 @@ public class Stage6Controller : MonoBehaviour
         voice = gameObject.AddComponent<AudioSource>();
         voice.playOnAwake = false;
         SpeechSpeedSource.Bind(voice);
-        BindSurface(desk, SurfaceClick);
+        BindSurface(desk, e => DeskClick(e.position));
         BindSurface(pencase, e => Store(Stage6Storage.Pencase, e.position));
         BindSurface(odouguArea, e => Store(Stage6Storage.Odougu, e.position));
         BindSurface(odougu, e => Store(Stage6Storage.Odougu, e.position));
@@ -224,7 +224,14 @@ public class Stage6Controller : MonoBehaviour
     private void ClickItem(Item item, Vector2 point)
     {
         if (!CanAct || item.delivered) return;
-        if (held != null) { SurfaceClick(point); return; }
+        if (held != null)
+        {
+            // An item must forward the click to the surface it is actually on.
+            // In particular, stored objects can cover the container's background.
+            if (item.view.rectTransform.parent == desk) DeskClick(point);
+            else Store(item.home, point);
+            return;
+        }
         held = item; heldRotated = false;
         item.view.gameObject.SetActive(false);
         cursor.sprite = item.view.sprite;
@@ -233,22 +240,19 @@ public class Stage6Controller : MonoBehaviour
         cursor.gameObject.SetActive(true);
         FollowCursor();
     }
-    private void SurfaceClick(PointerEventData e) => SurfaceClick(e.position);
-    private void SurfaceClick(Vector2 point)
+    private void DeskClick(Vector2 point)
     {
         if (!CanAct || held == null) return;
-        if (RectTransformUtility.RectangleContainsScreenPoint(pencase, point, UiCamera)) Store(Stage6Storage.Pencase, point);
-        else if (RectTransformUtility.RectangleContainsScreenPoint(odouguArea, point, UiCamera)) Store(Stage6Storage.Odougu, point);
-        else if (RectTransformUtility.RectangleContainsScreenPoint(desk, point, UiCamera))
+        // Each pickup starts a new cycle: pickup, rotate on desk, put down on desk.
+        // Storage clicks bypass this cycle and attempt to place immediately.
+        if (!heldRotated)
         {
-            // Same sequence as Stage5: pick, rotate, then put down.
-            if (!heldRotated)
-            {
-                float step = held.home == Stage6Storage.Pencase && held.sceneName.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0 ? 180 : 90;
-                cursor.rectTransform.Rotate(0, 0, step); heldRotated = true; return;
-            }
-            Place(desk, point, false);
+            float step = held.home == Stage6Storage.Pencase && held.sceneName.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0 ? 180 : 90;
+            cursor.rectTransform.Rotate(0, 0, step);
+            heldRotated = true;
+            return;
         }
+        Place(desk, point, false);
     }
     private void Store(Stage6Storage home, Vector2 point)
     {
@@ -276,7 +280,7 @@ public class Stage6Controller : MonoBehaviour
         }
         item.stored = stored;
         rect.SetAsLastSibling(); item.view.gameObject.SetActive(true);
-        held = null; cursor.gameObject.SetActive(false);
+        held = null; heldRotated = false; cursor.gameObject.SetActive(false);
         CheckComplete();
     }
     private static bool AllowsOverlap(Item a, Item b) => a.home == Stage6Storage.Odougu && b.home == Stage6Storage.Odougu
