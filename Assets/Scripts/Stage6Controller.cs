@@ -178,6 +178,12 @@ public class Stage6Controller : MonoBehaviour
             var recipient = person;
             BindSurface(target, e => Deliver(location, recipient));
         }
+        var authoredReturn = room.Find("BackToWork");
+        if (authoredReturn != null)
+        {
+            Connect(authoredReturn, () => { if (CanAct) ShowWork(); });
+            return;
+        }
         // A small persistent return button for each destination; holding state stays on Canvas.
         var image = NewImage("Stage6Return", (RectTransform)room, null, new Vector2(150, 60));
         image.color = new Color(1, 0.75f, 0.35f);
