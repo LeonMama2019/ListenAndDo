@@ -262,9 +262,36 @@ public class Stage6LegacyQuestion
 [UnityEditor.CustomEditor(typeof(Stage6Data))]
 public class Stage6DataInspector : UnityEditor.Editor
 {
+    // Keep the existing serialized list and audio references; show two direct audio slots.
+    private void DrawStorageVoice(UnityEditor.SerializedProperty list, Stage6Storage storage, string label)
+    {
+        UnityEditor.SerializedProperty entry = null;
+        for (int i = 0; i < list.arraySize; i++)
+        {
+            var candidate = list.GetArrayElementAtIndex(i);
+            if (candidate.FindPropertyRelative("storage").intValue == (int)storage)
+            { entry = candidate; break; }
+        }
+        if (entry == null)
+        {
+            int index = list.arraySize;
+            list.InsertArrayElementAtIndex(index);
+            entry = list.GetArrayElementAtIndex(index);
+            entry.FindPropertyRelative("storage").intValue = (int)storage;
+            entry.FindPropertyRelative("nameVoice").objectReferenceValue = null;
+        }
+        UnityEditor.EditorGUILayout.PropertyField(entry.FindPropertyRelative("nameVoice"), new GUIContent(label));
+    }
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        serializedObject.Update();
+        var storageList = serializedObject.FindProperty("storageVoices");
+        UnityEditor.EditorGUILayout.LabelField("収納先の名前の音声", UnityEditor.EditorStyles.boldLabel);
+        DrawStorageVoice(storageList, Stage6Storage.Pencase, "筆箱（Pencase）");
+        DrawStorageVoice(storageList, Stage6Storage.Odougu, "お道具箱（Odougu）");
+        UnityEditor.EditorGUILayout.Space();
+        DrawPropertiesExcluding(serializedObject, "m_Script", "storageVoices");
+        serializedObject.ApplyModifiedProperties();
         UnityEditor.EditorGUILayout.HelpBox("素材とレベル条件から音声・正解を同時生成します。場所を省略する場合は人物を2部屋で重複させず、各場所の人数は上限として扱います。", UnityEditor.MessageType.Info);
         if (GUILayout.Button("設定を確認"))
         {
