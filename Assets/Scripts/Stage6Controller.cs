@@ -289,8 +289,9 @@ public class Stage6Controller : MonoBehaviour
     private void Deliver(Stage6Room room, Stage6Person person)
     {
         if (!CanAct || held == null) return;
-        // Previously delivered items count as tidied; all other objects must already be stored.
-        if (!held.stored || items.Exists(x => x != held && !x.delivered && !x.stored)) return;
+        // The carried delivery item is exempt; every remaining object must be tidied.
+        // Picking it up from the desk must not make a correct delivery impossible.
+        if (items.Exists(x => x != held && !IsTidied(x))) return;
         int match = question.deliveries.FindIndex(d => d.room == room && d.person == person && d.itemId == held.id);
         if (match < 0 || fulfilled.Contains(match)) { recorder.RecordWrongAnswer(); return; }
         fulfilled.Add(match); held.delivered = true; held.stored = false;
@@ -309,13 +310,7 @@ public class Stage6Controller : MonoBehaviour
     private void CheckComplete()
     {
         if (!CanAct || held != null || fulfilled.Count != question.deliveries.Count) return;
-        foreach (var item in items)
-        {
-            if (item.delivered) continue;
-            var area = item.home == Stage6Storage.Pencase ? pencase : odouguArea;
-            if (!item.stored || (item.view.rectTransform.parent != area && item.view.rectTransform.parent != item.originalParent)
-                || !Stage6PlacementGeometry.FullyInside(item.view.rectTransform, area)) return;
-        }
+        if (items.Exists(item => !IsTidied(item))) return;
         completed = true; accepting = false;
         if (check != null)
         {
@@ -326,6 +321,15 @@ public class Stage6Controller : MonoBehaviour
         }
         recorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         StartCoroutine(Next());
+    }
+    private bool IsTidied(Item item)
+    {
+        if (item.delivered) return true;
+        var area = item.home == Stage6Storage.Pencase ? pencase : odouguArea;
+        // Place validates bounds and overlaps before setting stored. Authored items in
+        // the unscattered container are already stored, even at its decorative edges.
+        return item.stored && (item.view.rectTransform.parent == area
+            || item.view.rectTransform.parent == item.originalParent);
     }
     private IEnumerator Next()
     {
