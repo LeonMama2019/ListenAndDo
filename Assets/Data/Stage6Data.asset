@@ -59,9 +59,9 @@ MonoBehaviour:
     locationVoice: {fileID: 8300000, guid: f94a77d6b7fd7cc498bd2dc654f0d48e, type: 3}
   storageVoices:
   - storage: 0
-    nameVoice: {fileID: 0}
+    nameVoice: {fileID: 8300000, guid: c9b82a88a8b469d45a0f9d43930cdb49, type: 3}
   - storage: 1
-    nameVoice: {fileID: 0}
+    nameVoice: {fileID: 8300000, guid: 107e0c24a0d244f4f976e95462d7e458, type: 3}
   tidyAfterVoice: {fileID: 8300000, guid: 976158f056771c54594abe2e261edeb8, type: 3}
   recipientParticleVoice: {fileID: 8300000, guid: 07b95956a1fca52439bc25ea615b5938, type: 3}
   giveVoice: {fileID: 8300000, guid: 7e00cb09fbfc1094d880bf2d172f5d2b, type: 3}
