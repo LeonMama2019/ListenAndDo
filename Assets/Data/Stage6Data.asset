@@ -12,5 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c9d3040ad349b9b662d39f5d48bd08, type: 3}
   m_Name: Stage6Data
   m_EditorClassIdentifier: Assembly-CSharp::Stage6Data
-  items: []
-  questions: []
+  items:
+  - id: 1
+    sprite: {fileID: -6418337541015408120, guid: 2ca6d98eb8ebf8441b023cc0e32038eb, type: 3}
+    home: 0
+  - id: 2
+    sprite: {fileID: 6579298820036695858, guid: 81793d369047a7743b3a7516edaee350, type: 3}
+    home: 0
+  - id: 3
+    sprite: {fileID: 8859225441076862958, guid: caa8aed993a8b084197726b7793e7d0e, type: 3}
+    home: 0
+  - id: 4
+    sprite: {fileID: -4174624928600890918, guid: 4d448095384cd6448a39c61bb9cb3df5, type: 3}
+    home: 1
+  - id: 5
+    sprite: {fileID: -709768274109351568, guid: d8f2491a4a17d4a4e98274298c068557, type: 3}
+    home: 1
+  - id: 6
+    sprite: {fileID: 7384515168655976234, guid: 060aaff55f0af0f4ab24daceb926504c, type: 3}
+    home: 1
+  - id: 7
+    sprite: {fileID: 7766721758921934520, guid: 2fe4913e345470945a1e80f595523173, type: 3}
+    home: 1
+  - id: 8
+    sprite: {fileID: -7827045836371682005, guid: 12d3b95ec0064c2478d39b38060fce80, type: 3}
+    home: 1
+  questions:
+  - taskId: 1
+    level: 0
+    scatterPlaces: 00000000
+    people:
+    - room: 0
+      person: 1
+    deliveries:
+    - itemId: 
+      room: 0
+      person: 0
+    instructionVoices:
+    - {fileID: 0}
+    instructionMemo: 
+  - taskId: 
+    level: 0
+    scatterPlaces: 
+    people: []
+    deliveries: []
+    instructionVoices: []
+    instructionMemo: 
