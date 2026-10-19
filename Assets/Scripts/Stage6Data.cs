@@ -74,6 +74,7 @@ public class Stage6Delivery
 }
 
 // Generated only at runtime: these are not authored question assets.
+[Serializable]
 public class Stage6Question
 {
     public string taskId;
