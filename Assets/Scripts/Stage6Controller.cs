@@ -37,6 +37,9 @@ public class Stage6Controller : MonoBehaviour
     private int index, level;
     private bool accepting, completed, heldRotated;
     private Coroutine speech;
+    private Transform tutorialRoot;
+    private int tutorialStep;
+    private bool tutorialBusy;
     private Camera UiCamera => canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
     private bool CanAct => accepting && !completed && !(backPanel != null && backPanel.gameObject.activeInHierarchy);
 
@@ -95,10 +98,161 @@ public class Stage6Controller : MonoBehaviour
         SetupRoom(ground, Stage6Room.Ground);
         if (check != null) check.SetParent(canvas.transform, true);
         level = StageLevelMenu.SelectedStage == 6 ? StageLevelMenu.SelectedLevel : 1;
+        if (StageLevelMenu.IsTutorialReplay(6)) { BeginTutorial(); return; }
         questions = data.GetQuestions(level);
         if (questions.Count == 0) { Fail("出題できる問題がありません。"); return; }
         recorder = new StageLevelResultRecorder(6, level, questions.Count);
         Begin();
+    }
+    private void BeginTutorial()
+    {
+        tutorialRoot = Find(canvas.transform, "Tutorial");
+        if (tutorialRoot == null) { Fail("Stage6 Tutorialがありません。"); return; }
+        accepting = false;
+        ShowWork();
+        check?.gameObject.SetActive(false);
+        foreach (var item in items) RestoreTutorialItem(item);
+        foreach (var audio in tutorialRoot.GetComponentsInChildren<AudioSource>(true))
+        { audio.playOnAwake = false; audio.Stop(); }
+        // Banners are hints, not an input-blocking full-screen overlay.
+        foreach (var graphic in tutorialRoot.GetComponentsInChildren<Graphic>(true))
+            graphic.raycastTarget = false;
+        foreach (string name in new[] { "topbanner", "downbanner" })
+        {
+            var banner = tutorialRoot.Find(name);
+            if (banner == null) continue;
+            Connect(banner.Find("nextbutton"), TutorialNext);
+            var buttonImage = banner.Find("nextbutton")?.GetComponent<Graphic>();
+            if (buttonImage != null) buttonImage.raycastTarget = true;
+        }
+        Connect(Find(panel, "Back"), () => StageLevelMenu.OpenStageMenu(6));
+        Connect(Find(panel, "Speaker"), ReplayTutorialVoice);
+        tutorialRoot.gameObject.SetActive(true);
+        tutorialRoot.SetAsLastSibling();
+        ShowTutorialStep(1);
+    }
+    private void TutorialNext()
+    {
+        if (tutorialBusy || (backPanel != null && backPanel.gameObject.activeInHierarchy)) return;
+        // Steps after 3 will be connected as their interactions are authored.
+        if (tutorialStep < 3) ShowTutorialStep(tutorialStep + 1);
+    }
+    private void ShowTutorialStep(int number)
+    {
+        tutorialStep = number;
+        voice.Stop();
+        foreach (string name in new[] { "topbanner", "downbanner" })
+        {
+            var banner = tutorialRoot.Find(name);
+            if (banner == null) continue;
+            bool showBanner = false;
+            foreach (Transform child in banner)
+            {
+                if (!int.TryParse(child.name, out int n)) continue;
+                bool show = n == number;
+                child.gameObject.SetActive(show);
+                showBanner |= show;
+            }
+            banner.gameObject.SetActive(showBanner);
+        }
+        ReplayTutorialVoice();
+        if (number == 2 || number == 3)
+            StartCoroutine(TutorialTidy(number == 2 ? Stage6Storage.Pencase : Stage6Storage.Odougu));
+        else SetTutorialBusy(false);
+    }
+    private void ReplayTutorialVoice()
+    {
+        if (tutorialRoot == null) return;
+        var stepView = Find(tutorialRoot, tutorialStep.ToString());
+        var source = stepView != null ? stepView.GetComponent<AudioSource>() : null;
+        if (source == null || source.clip == null) return;
+        voice.clip = source.clip;
+        voice.Play();
+    }
+    private void SetTutorialBusy(bool busy)
+    {
+        tutorialBusy = busy;
+        foreach (string name in new[] { "topbanner", "downbanner" })
+        {
+            var button = tutorialRoot.Find(name + "/nextbutton")?.GetComponent<Button>();
+            if (button != null) button.interactable = !busy && tutorialStep < 3;
+        }
+    }
+    private void RestoreTutorialItem(Item item)
+    {
+        var rect = item.view.rectTransform;
+        rect.SetParent(item.originalParent, false);
+        rect.anchorMin = item.originalAnchorMin; rect.anchorMax = item.originalAnchorMax;
+        rect.pivot = item.originalPivot; rect.sizeDelta = item.originalSizeDelta;
+        rect.localPosition = item.originalPosition; rect.localRotation = item.originalRotation;
+        rect.localScale = item.originalScale;
+        item.stored = true; item.delivered = false;
+        item.view.gameObject.SetActive(true);
+    }
+    private IEnumerator TutorialTidy(Stage6Storage home)
+    {
+        SetTutorialBusy(true);
+        var targets = items.FindAll(item => item.home == home);
+        var colors = new Dictionary<Item, Color>();
+        var starts = new Dictionary<Item, Vector3>();
+        var rotations = new Dictionary<Item, Quaternion>();
+        for (int i = 0; i < targets.Count; i++)
+        {
+            var item = targets[i];
+            colors[item] = item.view.color;
+            var rect = item.view.rectTransform;
+            rect.SetParent(desk, false);
+            rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one * 0.5f;
+            rect.sizeDelta = item.size; rect.localScale = Vector3.one;
+            rect.localRotation = item.originalRotation;
+            // A spread-out demonstration keeps the highlighted object visible.
+            int columns = Mathf.Min(3, targets.Count);
+            int rows = Mathf.CeilToInt((float)targets.Count / columns);
+            rect.localPosition = new Vector2(
+                Mathf.Lerp(desk.rect.xMin, desk.rect.xMax, ((i % columns) + 0.5f) / columns),
+                Mathf.Lerp(desk.rect.yMax, desk.rect.yMin, ((i / columns) + 0.5f) / rows));
+            item.stored = false;
+        }
+        float elapsed = 0f;
+        while (elapsed < 2f)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float alpha = Mathf.PingPong(elapsed * 3f, 1f);
+            foreach (var item in targets)
+            {
+                bool highlight = home == Stage6Storage.Pencase
+                    ? item.sceneName.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0
+                    : item.sceneName.Equals("Crayon", StringComparison.OrdinalIgnoreCase);
+                if (highlight)
+                {
+                    var color = colors[item]; color.a *= Mathf.Lerp(0.2f, 1f, alpha);
+                    item.view.color = color;
+                }
+            }
+            yield return null;
+        }
+        foreach (var item in targets)
+        {
+            item.view.color = colors[item];
+            starts[item] = item.view.rectTransform.position;
+            rotations[item] = item.view.rectTransform.rotation;
+        }
+        elapsed = 0f;
+        const float duration = 0.45f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / duration));
+            foreach (var item in targets)
+            {
+                var rect = item.view.rectTransform;
+                rect.position = Vector3.Lerp(starts[item], item.originalParent.TransformPoint(item.originalPosition), t);
+                rect.rotation = Quaternion.Slerp(rotations[item], item.originalParent.rotation * item.originalRotation, t);
+            }
+            yield return null;
+        }
+        foreach (var item in targets) RestoreTutorialItem(item);
+        SetTutorialBusy(false);
     }
     private void Register(RectTransform parent, Stage6Storage home)
     {
