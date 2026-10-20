@@ -313,7 +313,14 @@ public class Stage6Controller : MonoBehaviour
             yield return null;
         }
         RestoreTutorialItem(item);
-        yield return TutorialBlink(item.view, 3, 0.6f);
+        if (sceneName.Equals("Clay", StringComparison.OrdinalIgnoreCase))
+        {
+            var scissors = items.Find(entry => entry.home == Stage6Storage.Odougu
+                && entry.sceneName.Equals("Scissors", StringComparison.OrdinalIgnoreCase));
+            if (scissors != null) yield return TutorialBlink(scissors.view, 3, 0.6f);
+            else Debug.LogError("Stage6 Tutorial: Scissorsがありません。", this);
+        }
+        else yield return TutorialBlink(item.view, 3, 0.6f);
         SetTutorialBusy(false);
     }
     private IEnumerator TutorialDeliverToTeacher()
