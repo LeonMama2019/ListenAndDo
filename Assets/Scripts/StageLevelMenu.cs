@@ -157,7 +157,7 @@ public class StageLevelMenu : MonoBehaviour
     {
         var target = tutorialButton != null ? tutorialButton : Find("HowToPlay");
         if (target == null) return;
-        bool supported = SelectedStage == 1 || SelectedStage == 2 || SelectedStage == 3 || SelectedStage == 4 || SelectedStage == 5;
+        bool supported = SelectedStage == 1 || SelectedStage == 2 || SelectedStage == 3 || SelectedStage == 4 || SelectedStage == 5 || SelectedStage == 6;
         target.gameObject.SetActive(supported);
         if (!supported) return;
         var image = target.GetComponent<Image>();
@@ -171,7 +171,7 @@ public class StageLevelMenu : MonoBehaviour
 
     public void PlayTutorial()
     {
-        if (SelectedStage != 1 && SelectedStage != 2 && SelectedStage != 3 && SelectedStage != 4 && SelectedStage != 5) return;
+        if (SelectedStage != 1 && SelectedStage != 2 && SelectedStage != 3 && SelectedStage != 4 && SelectedStage != 5 && SelectedStage != 6) return;
         string scene = "Stage" + SelectedStage;
         if (!Application.CanStreamedLevelBeLoaded(scene))
         {
