@@ -243,6 +243,7 @@ public class Stage6Controller : MonoBehaviour
     private void DeskClick(Vector2 point)
     {
         if (!CanAct || held == null) return;
+        if (!RectTransformUtility.RectangleContainsScreenPoint(desk, point, UiCamera)) return;
         // Each pickup starts a new cycle: pickup, rotate on desk, put down on desk.
         // Storage clicks bypass this cycle and attempt to place immediately.
         if (!heldRotated)
@@ -267,14 +268,39 @@ public class Stage6Controller : MonoBehaviour
         var rect = item.view.rectTransform;
         var oldParent = rect.parent; var oldPosition = rect.localPosition; var oldRotation = rect.localRotation;
         var oldSize = rect.sizeDelta; var oldScale = rect.localScale;
-        rect.SetParent(area, false); rect.sizeDelta = item.size; rect.localScale = Vector3.one;
-        rect.anchoredPosition = local; rect.localRotation = cursor.rectTransform.localRotation;
+        var oldAnchorMin = rect.anchorMin; var oldAnchorMax = rect.anchorMax; var oldPivot = rect.pivot;
+        rect.SetParent(area, false);
+        rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one * 0.5f;
+        rect.sizeDelta = item.size; rect.localScale = Vector3.one;
+        rect.localPosition = local; rect.localRotation = cursor.rectTransform.localRotation;
+        if (!stored)
+        {
+            // Like Stage5, shift an edge click inward instead of rejecting the drop.
+            // Measure after rotation in the destination's space.
+            var corners = new Vector3[4];
+            rect.GetWorldCorners(corners);
+            Vector2 min = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+            Vector2 max = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+            foreach (var corner in corners)
+            {
+                Vector2 offset = area.InverseTransformPoint(corner) - rect.localPosition;
+                min = Vector2.Min(min, offset); max = Vector2.Max(max, offset);
+            }
+            var bounds = area.rect;
+            float left = bounds.xMin - min.x, right = bounds.xMax - max.x;
+            float bottom = bounds.yMin - min.y, top = bounds.yMax - max.y;
+            local.x = left <= right ? Mathf.Clamp(local.x, left, right) : (left + right) * 0.5f;
+            local.y = bottom <= top ? Mathf.Clamp(local.y, bottom, top) : (bottom + top) * 0.5f;
+            rect.localPosition = local;
+        }
         bool valid = Stage6PlacementGeometry.FullyInside(rect, area);
         if (stored) valid &= !items.Exists(other => other != item && other.stored && !other.delivered && other.home == item.home
             && !AllowsOverlap(item, other) && Stage6PlacementGeometry.Overlaps(rect, other.view.rectTransform));
         if (!valid)
         {
-            rect.SetParent(oldParent, false); rect.localPosition = oldPosition; rect.localRotation = oldRotation;
+            rect.SetParent(oldParent, false);
+            rect.anchorMin = oldAnchorMin; rect.anchorMax = oldAnchorMax; rect.pivot = oldPivot;
+            rect.localPosition = oldPosition; rect.localRotation = oldRotation;
             rect.sizeDelta = oldSize; rect.localScale = oldScale;
             return;
         }
