@@ -259,7 +259,38 @@ public class Stage6Controller : MonoBehaviour
     {
         if (!CanAct || held == null) return;
         if (held.home != home) { recorder.RecordWrongAnswer(); return; }
+        if (home == Stage6Storage.Pencase
+            && held.sceneName.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            StorePencil();
+            return;
+        }
         Place(home == Stage6Storage.Pencase ? pencase : odouguArea, point, true);
+    }
+    private void StorePencil()
+    {
+        // Each physical pencil has its own authored slot, including Pencil1/2/3.
+        // Restore already stored contents too so manual placement cannot block the last slot.
+        foreach (var item in items)
+        {
+            if (item.home != Stage6Storage.Pencase || item.delivered
+                || (item != held && !item.stored)) continue;
+            var rect = item.view.rectTransform;
+            rect.SetParent(item.originalParent, false);
+            rect.anchorMin = item.originalAnchorMin;
+            rect.anchorMax = item.originalAnchorMax;
+            rect.pivot = item.originalPivot;
+            rect.sizeDelta = item.originalSizeDelta;
+            rect.localPosition = item.originalPosition;
+            rect.localRotation = item.originalRotation;
+            rect.localScale = item.originalScale;
+            item.stored = true;
+            item.view.gameObject.SetActive(true);
+        }
+        held = null;
+        heldRotated = false;
+        cursor.gameObject.SetActive(false);
+        CheckComplete();
     }
     private void Place(RectTransform area, Vector2 point, bool stored)
     {
