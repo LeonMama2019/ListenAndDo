@@ -40,6 +40,7 @@ public class Stage6Controller : MonoBehaviour
     private Transform tutorialRoot;
     private int tutorialStep;
     private bool tutorialBusy;
+    private bool tutorialCursorAnimated;
     private Camera UiCamera => canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
     private bool CanAct => accepting && !completed && !(backPanel != null && backPanel.gameObject.activeInHierarchy);
 
@@ -165,6 +166,14 @@ public class Stage6Controller : MonoBehaviour
         else if (number == 4 || number == 5)
             StartCoroutine(TutorialSpecial(number == 4 ? "Clay" : "Paste"));
         else if (number == 6) StartCoroutine(TutorialCrayonPickup());
+        else if (number == 9) StartCoroutine(TutorialBlinkRoomButtons());
+        else if (number == 10) StartCoroutine(TutorialOpenClassroom());
+        else if (number == 11)
+        {
+            ShowWork();
+            StartCoroutine(TutorialCrayonPickup(false));
+        }
+        else if (number == 12) StartCoroutine(TutorialDeliverToTeacher());
         else SetTutorialBusy(false);
     }
     private void ReplayTutorialVoice()
@@ -238,9 +247,7 @@ public class Stage6Controller : MonoBehaviour
             float alpha = Mathf.PingPong(elapsed * 3f, 1f);
             foreach (var item in targets)
             {
-                bool highlight = home == Stage6Storage.Pencase
-                    ? item.sceneName.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0
-                    : item.home == Stage6Storage.Odougu;
+                bool highlight = item.home == home;
                 if (highlight)
                 {
                     var color = colors[item]; color.a *= Mathf.Lerp(0.2f, 1f, alpha);
@@ -275,8 +282,7 @@ public class Stage6Controller : MonoBehaviour
     private IEnumerator TutorialSpecial(string sceneName)
     {
         SetTutorialBusy(true);
-        // Match Stage5: narration, blink twice on desk, return, blink in storage.
-        while (voice.isPlaying) yield return null;
+        // Start the desk demonstration alongside narration, then blink in storage.
         var item = items.Find(entry => entry.home == Stage6Storage.Odougu
             && entry.sceneName.Equals(sceneName, StringComparison.OrdinalIgnoreCase));
         if (item == null)
@@ -310,6 +316,144 @@ public class Stage6Controller : MonoBehaviour
         yield return TutorialBlink(item.view, 3, 0.6f);
         SetTutorialBusy(false);
     }
+    private IEnumerator TutorialDeliverToTeacher()
+    {
+        SetTutorialBusy(true);
+        var teacher = ground.Find(Stage6Person.Teacher.ToString()) as RectTransform;
+        if (held == null || teacher == null)
+        {
+            Debug.LogError("Stage6 Tutorial: 持っているクレヨン、またはGroundのTeacherがありません。", this);
+            SetTutorialBusy(false);
+            yield break;
+        }
+        var button = Find(panel, "Groundbutton");
+        var buttonImage = button != null ? button.GetComponent<Image>() : null;
+        if (buttonImage != null) yield return TutorialBlink(buttonImage, 3, 0.3f);
+        if (button != null)
+        {
+            Vector3 original = button.localScale;
+            const float pulseDuration = 0.45f;
+            for (float elapsed = 0; elapsed < pulseDuration; elapsed += Time.unscaledDeltaTime)
+            {
+                float pulse = Mathf.Sin(Mathf.Clamp01(elapsed / pulseDuration) * Mathf.PI);
+                button.localScale = original * (1f + 0.12f * pulse);
+                yield return null;
+            }
+            button.localScale = original;
+        }
+        panel.gameObject.SetActive(false);
+        classRoom.gameObject.SetActive(false);
+        ground.gameObject.SetActive(true);
+        foreach (Stage6Person person in Enum.GetValues(typeof(Stage6Person)))
+        {
+            var target = ground.Find(person.ToString());
+            if (target != null) target.gameObject.SetActive(person == Stage6Person.Teacher);
+        }
+        Canvas.ForceUpdateCanvases();
+        tutorialRoot.SetAsLastSibling();
+        // Keep the held crayon visible through travel, then demonstrate the teacher tap.
+        tutorialCursorAnimated = true;
+        var pointerSprite = TutorialPointerSprite();
+        var pointer = NewImage("Stage6TeacherClickPointer", (RectTransform)canvas.transform,
+            pointerSprite, new Vector2(40, 50));
+        pointer.raycastTarget = false;
+        pointer.rectTransform.pivot = new Vector2(0, 1);
+        Vector3 destination = teacher.TransformPoint(new Vector3(0, 50f, 0));
+        Vector3 start = cursor.rectTransform.position;
+        pointer.rectTransform.position = start;
+        const float moveDuration = 0.7f;
+        for (float elapsed = 0; elapsed < moveDuration; elapsed += Time.unscaledDeltaTime)
+        {
+            Vector3 position = Vector3.Lerp(start, destination,
+                Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / moveDuration)));
+            pointer.rectTransform.position = position;
+            cursor.rectTransform.position = position;
+            yield return null;
+        }
+        pointer.rectTransform.position = destination;
+        cursor.rectTransform.position = destination;
+        yield return new WaitForSecondsRealtime(0.3f);
+        Vector3 teacherScale = teacher.localScale;
+        teacher.localScale = teacherScale * 1.05f;
+        pointer.rectTransform.localScale = Vector3.one * 0.8f;
+        var rays = new List<Image>();
+        for (int i = 0; i < 4; i++)
+        {
+            float angle = (45 + i * 90) * Mathf.Deg2Rad;
+            var ray = NewImage("TeacherClickRay", (RectTransform)canvas.transform, null, new Vector2(6, 18));
+            ray.color = new Color(1f, 0.65f, 0.05f);
+            ray.raycastTarget = false;
+            ray.rectTransform.position = canvas.transform.TransformPoint(
+                canvas.transform.InverseTransformPoint(destination)
+                + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * 28f);
+            ray.rectTransform.localRotation = Quaternion.Euler(0, 0, i * 90 - 45);
+            rays.Add(ray);
+        }
+        yield return new WaitForSecondsRealtime(0.2f);
+        teacher.localScale = teacherScale;
+        foreach (var ray in rays) Destroy(ray.gameObject);
+        var item = held;
+        var rect = item.view.rectTransform;
+        rect.SetParent(teacher, false);
+        rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one * 0.5f;
+        rect.anchoredPosition = new Vector2(0, 50f);
+        rect.sizeDelta = item.size;
+        rect.localRotation = Quaternion.identity;
+        rect.localScale = Vector3.one * 0.6f;
+        item.delivered = true; item.stored = false;
+        item.view.raycastTarget = false;
+        item.view.gameObject.SetActive(true);
+        held = null; heldRotated = false;
+        cursor.gameObject.SetActive(false);
+        tutorialCursorAnimated = false;
+        Destroy(pointer.gameObject);
+        Destroy(pointerSprite.texture);
+        Destroy(pointerSprite);
+        SetTutorialBusy(false);
+    }
+    private IEnumerator TutorialOpenClassroom()
+    {
+        SetTutorialBusy(true);
+        ShowWork();
+        var button = Find(panel, "Class1button");
+        if (button != null)
+        {
+            Vector3 original = button.localScale;
+            const float duration = 0.45f;
+            for (float elapsed = 0; elapsed < duration; elapsed += Time.unscaledDeltaTime)
+            {
+                float pulse = Mathf.Sin(Mathf.Clamp01(elapsed / duration) * Mathf.PI);
+                button.localScale = original * (1f + 0.12f * pulse);
+                yield return null;
+            }
+            button.localScale = original;
+        }
+        panel.gameObject.SetActive(false);
+        ground.gameObject.SetActive(false);
+        classRoom.gameObject.SetActive(true);
+        foreach (Stage6Person person in Enum.GetValues(typeof(Stage6Person)))
+        {
+            var target = classRoom.Find(person.ToString());
+            if (target != null) target.gameObject.SetActive(person == Stage6Person.Girl);
+        }
+        // Tutorial stays on the root Canvas, so Next remains visible in the classroom.
+        tutorialRoot.SetAsLastSibling();
+        SetTutorialBusy(false);
+    }
+    private IEnumerator TutorialBlinkRoomButtons()
+    {
+        SetTutorialBusy(true);
+        var classButton = Find(panel, "Class1button")?.GetComponent<Image>();
+        var groundButton = Find(panel, "Groundbutton")?.GetComponent<Image>();
+        // Run both three-blink cues together.
+        Coroutine classBlink = classButton != null
+            ? StartCoroutine(TutorialBlink(classButton, 3, 0.4f)) : null;
+        Coroutine groundBlink = groundButton != null
+            ? StartCoroutine(TutorialBlink(groundButton, 3, 0.4f)) : null;
+        if (classBlink != null) yield return classBlink;
+        if (groundBlink != null) yield return groundBlink;
+        SetTutorialBusy(false);
+    }
     private IEnumerator TutorialBlink(Image image, int count, float halfPeriod)
     {
         Color original = image.color;
@@ -322,7 +466,7 @@ public class Stage6Controller : MonoBehaviour
             yield return new WaitForSecondsRealtime(halfPeriod);
         }
     }
-    private IEnumerator TutorialCrayonPickup()
+    private IEnumerator TutorialCrayonPickup(bool advanceToRotation = true)
     {
         SetTutorialBusy(true);
         var item = items.Find(entry => entry.home == Stage6Storage.Odougu
@@ -389,11 +533,16 @@ public class Stage6Controller : MonoBehaviour
         Destroy(pointer.gameObject);
         Destroy(pointerSprite.texture);
         Destroy(pointerSprite);
-        // Let step 6 narration finish, then show the held crayon for about two seconds.
-        while (voice.isPlaying) yield return null;
-        yield return new WaitForSecondsRealtime(2f);
-        SetTutorialBusy(false);
-        ShowTutorialStep(7);
+        if (advanceToRotation)
+        {
+            // Step 6 advances after narration and two seconds holding the crayon.
+            while (voice.isPlaying) yield return null;
+            yield return new WaitForSecondsRealtime(2f);
+            SetTutorialBusy(false);
+            ShowTutorialStep(7);
+        }
+        else SetTutorialBusy(false); // Step 11 keeps the crayon held until Next.
+
     }
     private static Sprite TutorialPointerSprite()
     {
@@ -532,7 +681,7 @@ public class Stage6Controller : MonoBehaviour
     }
     private void Update()
     {
-        if (held != null) FollowCursor();
+        if (held != null && !tutorialCursorAnimated) FollowCursor();
         UpdateTutorialNextButtons();
     }
     private void FollowCursor()
