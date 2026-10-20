@@ -160,7 +160,7 @@ public class Stage6Controller : MonoBehaviour
                 child.gameObject.SetActive(show);
                 showBanner |= show;
             }
-            banner.Find("nextbutton")?.gameObject.SetActive(true);
+            banner.Find("nextbutton")?.gameObject.SetActive(number != 6 && number != 7);
             banner.gameObject.SetActive(showBanner);
         }
         ReplayTutorialVoice();
@@ -209,7 +209,7 @@ public class Stage6Controller : MonoBehaviour
         {
             var target = tutorialRoot.Find(name + "/nextbutton");
             if (target == null) continue;
-            target.gameObject.SetActive(true);
+            target.gameObject.SetActive(tutorialStep != 6 && tutorialStep != 7);
             var button = target.GetComponent<Button>();
             if (button != null) button.interactable = ready;
             var graphic = button != null ? button.targetGraphic : target.GetComponent<Graphic>();
