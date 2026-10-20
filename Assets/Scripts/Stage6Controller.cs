@@ -389,7 +389,9 @@ public class Stage6Controller : MonoBehaviour
         Destroy(pointer.gameObject);
         Destroy(pointerSprite.texture);
         Destroy(pointerSprite);
-        // Pickup completes step 6 automatically; step 7 waits for a real desk tap.
+        // Let step 6 narration finish, then show the held crayon for about two seconds.
+        while (voice.isPlaying) yield return null;
+        yield return new WaitForSecondsRealtime(2f);
         SetTutorialBusy(false);
         ShowTutorialStep(7);
     }
