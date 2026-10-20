@@ -133,6 +133,7 @@ public class Stage6Controller : MonoBehaviour
     }
     private void TutorialNext()
     {
+        if (tutorialStep == 6 || tutorialStep == 7) return;
         if (tutorialBusy || voice.isPlaying || (backPanel != null && backPanel.gameObject.activeInHierarchy)) return;
         // Keep later authored explanations accessible while their interactions are added.
         if (Find(tutorialRoot, (tutorialStep + 1).ToString()) != null)
@@ -183,7 +184,7 @@ public class Stage6Controller : MonoBehaviour
     private void UpdateTutorialNextButtons()
     {
         if (tutorialRoot == null || !tutorialRoot.gameObject.activeInHierarchy) return;
-        bool ready = !tutorialBusy && !voice.isPlaying
+        bool ready = tutorialStep != 6 && tutorialStep != 7 && !tutorialBusy && !voice.isPlaying
             && !(backPanel != null && backPanel.gameObject.activeInHierarchy);
         foreach (string name in new[] { "topbanner", "downbanner" })
         {
@@ -387,8 +388,9 @@ public class Stage6Controller : MonoBehaviour
         Destroy(pointer.gameObject);
         Destroy(pointerSprite.texture);
         Destroy(pointerSprite);
-        // Retain the held crayon for the next tutorial step.
+        // Pickup completes step 6 automatically; step 7 waits for a real desk tap.
         SetTutorialBusy(false);
+        ShowTutorialStep(7);
     }
     private static Sprite TutorialPointerSprite()
     {
@@ -559,6 +561,16 @@ public class Stage6Controller : MonoBehaviour
     }
     private void DeskClick(Vector2 point)
     {
+        if (tutorialRoot != null && tutorialRoot.gameObject.activeInHierarchy)
+        {
+            if (tutorialStep != 7 || tutorialBusy || voice.isPlaying || held == null
+                || (backPanel != null && backPanel.gameObject.activeInHierarchy)
+                || !RectTransformUtility.RectangleContainsScreenPoint(desk, point, UiCamera)) return;
+            cursor.rectTransform.Rotate(0, 0, 90f);
+            heldRotated = true;
+            ShowTutorialStep(8);
+            return;
+        }
         if (!CanAct || held == null) return;
         if (!RectTransformUtility.RectangleContainsScreenPoint(desk, point, UiCamera)) return;
         // Each pickup starts a new cycle: pickup, rotate on desk, put down on desk.
