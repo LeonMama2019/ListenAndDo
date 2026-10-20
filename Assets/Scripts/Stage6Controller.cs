@@ -133,7 +133,7 @@ public class Stage6Controller : MonoBehaviour
     }
     private void TutorialNext()
     {
-        if (tutorialStep == 6 || tutorialStep == 7) return;
+        if (tutorialStep == 6 || tutorialStep == 7 || (tutorialStep == 8 && held != null)) return;
         if (tutorialBusy || voice.isPlaying || (backPanel != null && backPanel.gameObject.activeInHierarchy)) return;
         // Keep later authored explanations accessible while their interactions are added.
         if (Find(tutorialRoot, (tutorialStep + 1).ToString()) != null)
@@ -184,7 +184,8 @@ public class Stage6Controller : MonoBehaviour
     private void UpdateTutorialNextButtons()
     {
         if (tutorialRoot == null || !tutorialRoot.gameObject.activeInHierarchy) return;
-        bool ready = tutorialStep != 6 && tutorialStep != 7 && !tutorialBusy && !voice.isPlaying
+        bool ready = tutorialStep != 6 && tutorialStep != 7
+            && !(tutorialStep == 8 && held != null) && !tutorialBusy && !voice.isPlaying
             && !(backPanel != null && backPanel.gameObject.activeInHierarchy);
         foreach (string name in new[] { "topbanner", "downbanner" })
         {
@@ -563,12 +564,21 @@ public class Stage6Controller : MonoBehaviour
     {
         if (tutorialRoot != null && tutorialRoot.gameObject.activeInHierarchy)
         {
-            if (tutorialStep != 7 || tutorialBusy || voice.isPlaying || held == null
+            if ((tutorialStep != 7 && tutorialStep != 8) || tutorialBusy || voice.isPlaying || held == null
                 || (backPanel != null && backPanel.gameObject.activeInHierarchy)
                 || !RectTransformUtility.RectangleContainsScreenPoint(desk, point, UiCamera)) return;
-            cursor.rectTransform.Rotate(0, 0, 90f);
-            heldRotated = true;
-            ShowTutorialStep(8);
+            if (tutorialStep == 7)
+            {
+                cursor.rectTransform.Rotate(0, 0, 90f);
+                heldRotated = true;
+                ShowTutorialStep(8);
+            }
+            else
+            {
+                // Reuse normal desk placement, including inward adjustment near the edges.
+                Place(desk, point, false);
+                UpdateTutorialNextButtons();
+            }
             return;
         }
         if (!CanAct || held == null) return;
