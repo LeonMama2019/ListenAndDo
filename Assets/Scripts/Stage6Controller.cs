@@ -165,6 +165,7 @@ public class Stage6Controller : MonoBehaviour
         else if (number == 4 || number == 5)
             StartCoroutine(TutorialSpecial(number == 4 ? "Clay" : "Paste"));
         else if (number == 6) StartCoroutine(TutorialCrayonPickup());
+        else if (number == 9) StartCoroutine(TutorialBlinkRoomButtons());
         else SetTutorialBusy(false);
     }
     private void ReplayTutorialVoice()
@@ -305,6 +306,20 @@ public class Stage6Controller : MonoBehaviour
         }
         RestoreTutorialItem(item);
         yield return TutorialBlink(item.view, 3, 0.6f);
+        SetTutorialBusy(false);
+    }
+    private IEnumerator TutorialBlinkRoomButtons()
+    {
+        SetTutorialBusy(true);
+        var classButton = Find(panel, "Class1button")?.GetComponent<Image>();
+        var groundButton = Find(panel, "Groundbutton")?.GetComponent<Image>();
+        // Run both three-blink cues together.
+        Coroutine classBlink = classButton != null
+            ? StartCoroutine(TutorialBlink(classButton, 3, 0.4f)) : null;
+        Coroutine groundBlink = groundButton != null
+            ? StartCoroutine(TutorialBlink(groundButton, 3, 0.4f)) : null;
+        if (classBlink != null) yield return classBlink;
+        if (groundBlink != null) yield return groundBlink;
         SetTutorialBusy(false);
     }
     private IEnumerator TutorialBlink(Image image, int count, float halfPeriod)
