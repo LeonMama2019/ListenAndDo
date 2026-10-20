@@ -454,7 +454,7 @@ public class Stage6Controller : MonoBehaviour
         if (button != null)
         {
             Vector3 original = button.localScale;
-            const float duration = 0.45f;
+            const float duration = 1.2f;
             for (float elapsed = 0; elapsed < duration; elapsed += Time.unscaledDeltaTime)
             {
                 float pulse = Mathf.Sin(Mathf.Clamp01(elapsed / duration) * Mathf.PI);
@@ -463,6 +463,7 @@ public class Stage6Controller : MonoBehaviour
             }
             button.localScale = original;
         }
+        yield return new WaitForSecondsRealtime(0.6f);
         panel.gameObject.SetActive(false);
         ground.gameObject.SetActive(false);
         classRoom.gameObject.SetActive(true);
@@ -473,6 +474,7 @@ public class Stage6Controller : MonoBehaviour
         }
         // Tutorial stays on the root Canvas, so Next remains visible in the classroom.
         tutorialRoot.SetAsLastSibling();
+        yield return new WaitForSecondsRealtime(1.5f);
         SetTutorialBusy(false);
     }
     private IEnumerator TutorialBlinkRoomButtons()
