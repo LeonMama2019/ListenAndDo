@@ -330,7 +330,7 @@ public class Stage6Controller : MonoBehaviour
         {
             var rect = held.view.rectTransform;
             rect.SetParent(target, false); rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one * 0.5f;
-            rect.anchoredPosition = new Vector2(0, -target.rect.height * 0.15f);
+            rect.anchoredPosition = new Vector2(0, 50f);
             rect.sizeDelta = held.size; rect.localRotation = Quaternion.identity; rect.localScale = Vector3.one * 0.6f;
             held.view.raycastTarget = false; held.view.gameObject.SetActive(true);
         }
