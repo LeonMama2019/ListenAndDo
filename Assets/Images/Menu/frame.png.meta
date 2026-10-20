@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "ChatGPT \u753B\u50CF 2026\u5E749\u670828\u65E5 11_11_19_0"
+      name: banner
       rect:
         serializedVersion: 2
         x: 29
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "ChatGPT \u753B\u50CF 2026\u5E749\u670828\u65E5 11_11_19_0": -1733418412985838583
+      banner: -1733418412985838583
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
