@@ -166,14 +166,14 @@ public class Stage6Controller : MonoBehaviour
         else if (number == 4 || number == 5)
             StartCoroutine(TutorialSpecial(number == 4 ? "Clay" : "Paste"));
         else if (number == 6) StartCoroutine(TutorialCrayonPickup());
-        else if (number == 9) StartCoroutine(TutorialBlinkRoomButtons());
-        else if (number == 10) StartCoroutine(TutorialOpenClassroom());
-        else if (number == 11)
+        else if (number == 10) StartCoroutine(TutorialBlinkRoomButtons());
+        else if (number == 11) StartCoroutine(TutorialOpenClassroom());
+        else if (number == 12)
         {
             ShowWork();
             StartCoroutine(TutorialCrayonPickup(false));
         }
-        else if (number == 12) StartCoroutine(TutorialDeliverToTeacher());
+        else if (number == 13) StartCoroutine(TutorialDeliverToTeacher());
         else SetTutorialBusy(false);
     }
     private void ReplayTutorialVoice()
@@ -541,7 +541,7 @@ public class Stage6Controller : MonoBehaviour
             SetTutorialBusy(false);
             ShowTutorialStep(7);
         }
-        else SetTutorialBusy(false); // Step 11 keeps the crayon held until Next.
+        else SetTutorialBusy(false); // Step 12 keeps the crayon held until Next.
 
     }
     private static Sprite TutorialPointerSprite()
