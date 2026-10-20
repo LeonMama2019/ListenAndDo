@@ -1133,7 +1133,18 @@ public class Stage5Prototype : MonoBehaviour
                 item.view.gameObject.SetActive(true);
                 yield return TutorialBlink(item.view, 2, 0.25f);
                 yield return TutorialReturn(item);
-                yield return TutorialBlink(item.original, 3, 0.6f);
+                if (spec == "Clay")
+                {
+                    var scissors = tutorialItems.Find(entry =>
+                        entry.id.Equals("Scissors", StringComparison.OrdinalIgnoreCase));
+                    if (scissors != null)
+                    {
+                        scissors.original.rectTransform.SetAsLastSibling();
+                        yield return TutorialBlink(scissors.original, 3, 0.6f);
+                    }
+                    else Debug.LogError("Stage5 Tutorial: Scissorsがありません。", this);
+                }
+                else yield return TutorialBlink(item.original, 3, 0.6f);
             }
             else Debug.LogError("Stage5 Tutorial: " + spec + "がありません。", this);
         }
