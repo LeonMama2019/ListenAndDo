@@ -166,6 +166,12 @@ public class Stage6Controller : MonoBehaviour
             StartCoroutine(TutorialSpecial(number == 4 ? "Clay" : "Paste"));
         else if (number == 6) StartCoroutine(TutorialCrayonPickup());
         else if (number == 9) StartCoroutine(TutorialBlinkRoomButtons());
+        else if (number == 10) StartCoroutine(TutorialOpenClassroom());
+        else if (number == 11)
+        {
+            ShowWork();
+            StartCoroutine(TutorialCrayonPickup(false));
+        }
         else SetTutorialBusy(false);
     }
     private void ReplayTutorialVoice()
@@ -308,6 +314,35 @@ public class Stage6Controller : MonoBehaviour
         yield return TutorialBlink(item.view, 3, 0.6f);
         SetTutorialBusy(false);
     }
+    private IEnumerator TutorialOpenClassroom()
+    {
+        SetTutorialBusy(true);
+        ShowWork();
+        var button = Find(panel, "Class1button");
+        if (button != null)
+        {
+            Vector3 original = button.localScale;
+            const float duration = 0.45f;
+            for (float elapsed = 0; elapsed < duration; elapsed += Time.unscaledDeltaTime)
+            {
+                float pulse = Mathf.Sin(Mathf.Clamp01(elapsed / duration) * Mathf.PI);
+                button.localScale = original * (1f + 0.12f * pulse);
+                yield return null;
+            }
+            button.localScale = original;
+        }
+        panel.gameObject.SetActive(false);
+        ground.gameObject.SetActive(false);
+        classRoom.gameObject.SetActive(true);
+        foreach (Stage6Person person in Enum.GetValues(typeof(Stage6Person)))
+        {
+            var target = classRoom.Find(person.ToString());
+            if (target != null) target.gameObject.SetActive(person == Stage6Person.Girl);
+        }
+        // Tutorial stays on the root Canvas, so Next remains visible in the classroom.
+        tutorialRoot.SetAsLastSibling();
+        SetTutorialBusy(false);
+    }
     private IEnumerator TutorialBlinkRoomButtons()
     {
         SetTutorialBusy(true);
@@ -334,7 +369,7 @@ public class Stage6Controller : MonoBehaviour
             yield return new WaitForSecondsRealtime(halfPeriod);
         }
     }
-    private IEnumerator TutorialCrayonPickup()
+    private IEnumerator TutorialCrayonPickup(bool advanceToRotation = true)
     {
         SetTutorialBusy(true);
         var item = items.Find(entry => entry.home == Stage6Storage.Odougu
@@ -401,11 +436,16 @@ public class Stage6Controller : MonoBehaviour
         Destroy(pointer.gameObject);
         Destroy(pointerSprite.texture);
         Destroy(pointerSprite);
-        // Let step 6 narration finish, then show the held crayon for about two seconds.
-        while (voice.isPlaying) yield return null;
-        yield return new WaitForSecondsRealtime(2f);
-        SetTutorialBusy(false);
-        ShowTutorialStep(7);
+        if (advanceToRotation)
+        {
+            // Step 6 advances after narration and two seconds holding the crayon.
+            while (voice.isPlaying) yield return null;
+            yield return new WaitForSecondsRealtime(2f);
+            SetTutorialBusy(false);
+            ShowTutorialStep(7);
+        }
+        else SetTutorialBusy(false); // Step 11 keeps the crayon held until Next.
+
     }
     private static Sprite TutorialPointerSprite()
     {
