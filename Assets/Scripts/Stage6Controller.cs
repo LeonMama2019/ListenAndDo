@@ -134,8 +134,8 @@ public class Stage6Controller : MonoBehaviour
     private void TutorialNext()
     {
         if (tutorialBusy || (backPanel != null && backPanel.gameObject.activeInHierarchy)) return;
-        // Steps after 3 will be connected as their interactions are authored.
-        if (tutorialStep < 3) ShowTutorialStep(tutorialStep + 1);
+        // Steps after 5 will be connected as their interactions are authored.
+        if (tutorialStep < 5) ShowTutorialStep(tutorialStep + 1);
     }
     private void ShowTutorialStep(int number)
     {
@@ -158,6 +158,8 @@ public class Stage6Controller : MonoBehaviour
         ReplayTutorialVoice();
         if (number == 2 || number == 3)
             StartCoroutine(TutorialTidy(number == 2 ? Stage6Storage.Pencase : Stage6Storage.Odougu));
+        else if (number == 4 || number == 5)
+            StartCoroutine(TutorialSpecial(number == 4 ? "Clay" : "Paste"));
         else SetTutorialBusy(false);
     }
     private void ReplayTutorialVoice()
@@ -175,7 +177,7 @@ public class Stage6Controller : MonoBehaviour
         foreach (string name in new[] { "topbanner", "downbanner" })
         {
             var button = tutorialRoot.Find(name + "/nextbutton")?.GetComponent<Button>();
-            if (button != null) button.interactable = !busy && tutorialStep < 3;
+            if (button != null) button.interactable = !busy && tutorialStep < 5;
         }
     }
     private void RestoreTutorialItem(Item item)
@@ -253,6 +255,56 @@ public class Stage6Controller : MonoBehaviour
         }
         foreach (var item in targets) RestoreTutorialItem(item);
         SetTutorialBusy(false);
+    }
+    private IEnumerator TutorialSpecial(string sceneName)
+    {
+        SetTutorialBusy(true);
+        // Match Stage5: narration, blink twice on desk, return, blink in storage.
+        while (voice.isPlaying) yield return null;
+        var item = items.Find(entry => entry.home == Stage6Storage.Odougu
+            && entry.sceneName.Equals(sceneName, StringComparison.OrdinalIgnoreCase));
+        if (item == null)
+        {
+            Debug.LogError("Stage6 Tutorial: " + sceneName + "がありません。", this);
+            SetTutorialBusy(false);
+            yield break;
+        }
+        var rect = item.view.rectTransform;
+        rect.SetParent(desk, false);
+        rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one * 0.5f;
+        rect.sizeDelta = item.size;
+        rect.localScale = Vector3.one;
+        rect.localRotation = item.originalRotation;
+        rect.localPosition = desk.rect.center;
+        item.stored = false;
+        item.view.gameObject.SetActive(true);
+        yield return TutorialBlink(item.view, 2, 0.25f);
+        Vector3 start = rect.position;
+        Quaternion rotation = rect.rotation;
+        Vector3 destination = item.originalParent.TransformPoint(item.originalPosition);
+        const float duration = 0.45f;
+        for (float elapsed = 0f; elapsed < duration; elapsed += Time.unscaledDeltaTime)
+        {
+            float t = Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / duration));
+            rect.position = Vector3.Lerp(start, destination, t);
+            rect.rotation = Quaternion.Slerp(rotation, item.originalParent.rotation * item.originalRotation, t);
+            yield return null;
+        }
+        RestoreTutorialItem(item);
+        yield return TutorialBlink(item.view, 3, 0.6f);
+        SetTutorialBusy(false);
+    }
+    private IEnumerator TutorialBlink(Image image, int count, float halfPeriod)
+    {
+        Color original = image.color;
+        for (int i = 0; i < count; i++)
+        {
+            Color dim = original; dim.a *= 0.2f;
+            image.color = dim;
+            yield return new WaitForSecondsRealtime(halfPeriod);
+            image.color = original;
+            yield return new WaitForSecondsRealtime(halfPeriod);
+        }
     }
     private void Register(RectTransform parent, Stage6Storage home)
     {
