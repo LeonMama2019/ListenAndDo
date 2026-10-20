@@ -40,6 +40,9 @@ public class Stage6Controller : MonoBehaviour
     private Transform tutorialRoot;
     private int tutorialStep;
     private bool tutorialBusy;
+    private readonly Dictionary<Graphic, Color> tutorialNextColors = new();
+    private bool tutorialNextReady;
+    private float tutorialNextBlinkStart;
     private bool tutorialCursorAnimated;
     private Camera UiCamera => canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
     private bool CanAct => accepting && !completed && !(backPanel != null && backPanel.gameObject.activeInHierarchy);
@@ -197,6 +200,11 @@ public class Stage6Controller : MonoBehaviour
         bool ready = tutorialStep != 6 && tutorialStep != 7
             && !(tutorialStep == 8 && held != null) && !tutorialBusy && !voice.isPlaying
             && !(backPanel != null && backPanel.gameObject.activeInHierarchy);
+        if (ready && !tutorialNextReady) tutorialNextBlinkStart = Time.unscaledTime;
+        tutorialNextReady = ready;
+        float blink = ready
+            ? 0.65f + 0.35f * Mathf.Cos((Time.unscaledTime - tutorialNextBlinkStart) * Mathf.PI * 2f)
+            : 1f;
         foreach (string name in new[] { "topbanner", "downbanner" })
         {
             var target = tutorialRoot.Find(name + "/nextbutton");
@@ -204,6 +212,16 @@ public class Stage6Controller : MonoBehaviour
             target.gameObject.SetActive(true);
             var button = target.GetComponent<Button>();
             if (button != null) button.interactable = ready;
+            var graphic = button != null ? button.targetGraphic : target.GetComponent<Graphic>();
+            if (graphic == null) continue;
+            if (!tutorialNextColors.TryGetValue(graphic, out var original))
+            {
+                original = graphic.color;
+                tutorialNextColors.Add(graphic, original);
+            }
+            var color = original;
+            color.a *= blink;
+            graphic.color = color;
         }
     }
     private void RestoreTutorialItem(Item item)
