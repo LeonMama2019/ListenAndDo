@@ -189,7 +189,7 @@ public class Stage6Data : ScriptableObject
         q.scatterPlaces.Add(first);
         if (config.scatterMode == Stage6ScatterMode.Both)
             q.scatterPlaces.Add(first == Stage6Storage.Pencase ? Stage6Storage.Odougu : Stage6Storage.Pencase);
-        if (config.specifyRoom)
+        if (config.specifyRoom && config.peoplePerRoom > 1)
         {
             foreach (Stage6Room room in Enum.GetValues(typeof(Stage6Room)))
             {
@@ -200,7 +200,8 @@ public class Stage6Data : ScriptableObject
         }
         else
         {
-            // Unique names across both rooms make the location-free instruction unambiguous.
+            // One-person rooms always show different people, leaving a distinct decoy for a single delivery.
+            // Location-free instructions also require unique names across both rooms.
             var pool = new List<Stage6Person> { Stage6Person.Teacher, Stage6Person.Boy, Stage6Person.Girl };
             int total = Math.Min(3, config.peoplePerRoom * 2);
             var start = (Stage6Room)UnityEngine.Random.Range(0, 2);
