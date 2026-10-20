@@ -237,7 +237,7 @@ public class Stage6Controller : MonoBehaviour
             {
                 bool highlight = home == Stage6Storage.Pencase
                     ? item.sceneName.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0
-                    : item.sceneName.Equals("Crayon", StringComparison.OrdinalIgnoreCase);
+                    : item.home == Stage6Storage.Odougu;
                 if (highlight)
                 {
                     var color = colors[item]; color.a *= Mathf.Lerp(0.2f, 1f, alpha);
