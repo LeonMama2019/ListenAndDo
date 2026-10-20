@@ -133,9 +133,11 @@ public class Stage6Controller : MonoBehaviour
     }
     private void TutorialNext()
     {
-        if (tutorialBusy || (backPanel != null && backPanel.gameObject.activeInHierarchy)) return;
-        // Steps after 5 will be connected as their interactions are authored.
-        if (tutorialStep < 5) ShowTutorialStep(tutorialStep + 1);
+        if (tutorialBusy || voice.isPlaying || (backPanel != null && backPanel.gameObject.activeInHierarchy)) return;
+        // Keep later authored explanations accessible while their interactions are added.
+        if (Find(tutorialRoot, (tutorialStep + 1).ToString()) != null)
+            ShowTutorialStep(tutorialStep + 1);
+        else StageLevelMenu.OpenStageMenu(6);
     }
     private void ShowTutorialStep(int number)
     {
@@ -153,6 +155,7 @@ public class Stage6Controller : MonoBehaviour
                 child.gameObject.SetActive(show);
                 showBanner |= show;
             }
+            banner.Find("nextbutton")?.gameObject.SetActive(true);
             banner.gameObject.SetActive(showBanner);
         }
         ReplayTutorialVoice();
@@ -174,10 +177,20 @@ public class Stage6Controller : MonoBehaviour
     private void SetTutorialBusy(bool busy)
     {
         tutorialBusy = busy;
+        UpdateTutorialNextButtons();
+    }
+    private void UpdateTutorialNextButtons()
+    {
+        if (tutorialRoot == null || !tutorialRoot.gameObject.activeInHierarchy) return;
+        bool ready = !tutorialBusy && !voice.isPlaying
+            && !(backPanel != null && backPanel.gameObject.activeInHierarchy);
         foreach (string name in new[] { "topbanner", "downbanner" })
         {
-            var button = tutorialRoot.Find(name + "/nextbutton")?.GetComponent<Button>();
-            if (button != null) button.interactable = !busy && tutorialStep < 5;
+            var target = tutorialRoot.Find(name + "/nextbutton");
+            if (target == null) continue;
+            target.gameObject.SetActive(true);
+            var button = target.GetComponent<Button>();
+            if (button != null) button.interactable = ready;
         }
     }
     private void RestoreTutorialItem(Item item)
@@ -418,7 +431,11 @@ public class Stage6Controller : MonoBehaviour
         ground.gameObject.SetActive(room == Stage6Room.Ground);
         FollowCursor();
     }
-    private void Update() { if (held != null) FollowCursor(); }
+    private void Update()
+    {
+        if (held != null) FollowCursor();
+        UpdateTutorialNextButtons();
+    }
     private void FollowCursor()
     {
         if (cursor == null || held == null) return;
