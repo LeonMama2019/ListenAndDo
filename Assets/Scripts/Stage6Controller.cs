@@ -238,9 +238,7 @@ public class Stage6Controller : MonoBehaviour
             float alpha = Mathf.PingPong(elapsed * 3f, 1f);
             foreach (var item in targets)
             {
-                bool highlight = home == Stage6Storage.Pencase
-                    ? item.sceneName.IndexOf("pencil", StringComparison.OrdinalIgnoreCase) >= 0
-                    : item.home == Stage6Storage.Odougu;
+                bool highlight = item.home == home;
                 if (highlight)
                 {
                     var color = colors[item]; color.a *= Mathf.Lerp(0.2f, 1f, alpha);
@@ -275,8 +273,7 @@ public class Stage6Controller : MonoBehaviour
     private IEnumerator TutorialSpecial(string sceneName)
     {
         SetTutorialBusy(true);
-        // Match Stage5: narration, blink twice on desk, return, blink in storage.
-        while (voice.isPlaying) yield return null;
+        // Start the desk demonstration alongside narration, then blink in storage.
         var item = items.Find(entry => entry.home == Stage6Storage.Odougu
             && entry.sceneName.Equals(sceneName, StringComparison.OrdinalIgnoreCase));
         if (item == null)
