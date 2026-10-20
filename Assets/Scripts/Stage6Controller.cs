@@ -163,6 +163,7 @@ public class Stage6Controller : MonoBehaviour
             StartCoroutine(TutorialTidy(number == 2 ? Stage6Storage.Pencase : Stage6Storage.Odougu));
         else if (number == 4 || number == 5)
             StartCoroutine(TutorialSpecial(number == 4 ? "Clay" : "Paste"));
+        else if (number == 6) StartCoroutine(TutorialCrayonPickup());
         else SetTutorialBusy(false);
     }
     private void ReplayTutorialVoice()
@@ -318,6 +319,99 @@ public class Stage6Controller : MonoBehaviour
             image.color = original;
             yield return new WaitForSecondsRealtime(halfPeriod);
         }
+    }
+    private IEnumerator TutorialCrayonPickup()
+    {
+        SetTutorialBusy(true);
+        var item = items.Find(entry => entry.home == Stage6Storage.Odougu
+            && entry.sceneName.Equals("Crayon", StringComparison.OrdinalIgnoreCase));
+        if (item == null)
+        {
+            Debug.LogError("Stage6 Tutorial: Crayonがありません。", this);
+            SetTutorialBusy(false);
+            yield break;
+        }
+        var rect = item.view.rectTransform;
+        rect.SetParent(desk, false);
+        rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one * 0.5f;
+        rect.sizeDelta = item.size; rect.localScale = Vector3.one;
+        rect.localRotation = item.originalRotation;
+        rect.localPosition = desk.rect.center;
+        item.stored = false;
+        item.view.gameObject.SetActive(true);
+
+        // A visible demo pointer approaches the crayon before pressing it.
+        var pointerSprite = TutorialPointerSprite();
+        var pointer = NewImage("Stage6TutorialPointer", (RectTransform)canvas.transform,
+            pointerSprite, new Vector2(40, 50));
+        pointer.raycastTarget = false;
+        pointer.rectTransform.pivot = new Vector2(0, 1);
+        Vector3 destination = rect.position;
+        Vector3 start = canvas.transform.TransformPoint(
+            canvas.transform.InverseTransformPoint(destination) + new Vector3(110, -90));
+        for (float elapsed = 0; elapsed < 0.6f; elapsed += Time.unscaledDeltaTime)
+        {
+            pointer.rectTransform.position = Vector3.Lerp(start, destination,
+                Mathf.SmoothStep(0, 1, elapsed / 0.6f));
+            yield return null;
+        }
+        pointer.rectTransform.position = destination;
+        yield return new WaitForSecondsRealtime(0.3f);
+        // Brief compression plus click rays makes the automatic press visible.
+        rect.localScale = Vector3.one * 0.92f;
+        pointer.rectTransform.localScale = Vector3.one * 0.8f;
+        var rays = new List<Image>();
+        for (int i = 0; i < 4; i++)
+        {
+            float angle = (45 + i * 90) * Mathf.Deg2Rad;
+            var ray = NewImage("ClickRay", (RectTransform)canvas.transform, null, new Vector2(6, 18));
+            ray.color = new Color(1f, 0.65f, 0.05f);
+            ray.raycastTarget = false;
+            ray.rectTransform.position = canvas.transform.TransformPoint(
+                canvas.transform.InverseTransformPoint(destination)
+                + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * 28f);
+            ray.rectTransform.localRotation = Quaternion.Euler(0, 0, i * 90 - 45);
+            rays.Add(ray);
+        }
+        yield return new WaitForSecondsRealtime(0.2f);
+        foreach (var ray in rays) Destroy(ray.gameObject);
+        rect.localScale = Vector3.one;
+        // Transfer the same sprite to the actual held-item cursor.
+        held = item; heldRotated = false;
+        item.view.gameObject.SetActive(false);
+        cursor.sprite = item.view.sprite;
+        cursor.rectTransform.sizeDelta = item.size;
+        cursor.rectTransform.localRotation = rect.localRotation;
+        cursor.gameObject.SetActive(true);
+        FollowCursor();
+        Destroy(pointer.gameObject);
+        Destroy(pointerSprite.texture);
+        Destroy(pointerSprite);
+        // Retain the held crayon for the next tutorial step.
+        SetTutorialBusy(false);
+    }
+    private static Sprite TutorialPointerSprite()
+    {
+        // Small code-drawn UI arrow: no additional scene or asset reference is needed.
+        const int width = 32, height = 40;
+        var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        texture.filterMode = FilterMode.Point;
+        bool Inside(int x, int y)
+        {
+            if (x < 0 || x >= width || y < 0 || y >= height) return false;
+            return (y <= 28 && x <= y * 0.65f)
+                || (y >= 20 && y <= 36 && x >= 7 + (y - 20) * 0.4f && x <= 13 + (y - 20) * 0.4f);
+        }
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+            {
+                bool inside = Inside(x, y);
+                bool edge = inside && (!Inside(x - 1, y) || !Inside(x + 1, y)
+                    || !Inside(x, y - 1) || !Inside(x, y + 1));
+                texture.SetPixel(x, height - 1 - y, inside ? (edge ? Color.black : Color.white) : Color.clear);
+            }
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, width, height), new Vector2(0, 1), 100);
     }
     private void Register(RectTransform parent, Stage6Storage home)
     {
