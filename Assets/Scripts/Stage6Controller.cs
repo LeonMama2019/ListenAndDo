@@ -174,6 +174,7 @@ public class Stage6Controller : MonoBehaviour
             StartCoroutine(TutorialCrayonPickup(false));
         }
         else if (number == 13) StartCoroutine(TutorialDeliverToTeacher());
+        else if (number == 14) StartCoroutine(TutorialFinishCheck());
         else SetTutorialBusy(false);
     }
     private void ReplayTutorialVoice()
@@ -317,11 +318,38 @@ public class Stage6Controller : MonoBehaviour
         {
             var scissors = items.Find(entry => entry.home == Stage6Storage.Odougu
                 && entry.sceneName.Equals("Scissors", StringComparison.OrdinalIgnoreCase));
-            if (scissors != null) yield return TutorialBlink(scissors.view, 3, 0.6f);
+            if (scissors != null)
+            {
+                scissors.view.rectTransform.SetAsLastSibling();
+                yield return TutorialBlink(scissors.view, 3, 0.6f);
+            }
             else Debug.LogError("Stage6 Tutorial: Scissorsがありません。", this);
         }
         else yield return TutorialBlink(item.view, 3, 0.6f);
         SetTutorialBusy(false);
+    }
+    private IEnumerator TutorialFinishCheck()
+    {
+        SetTutorialBusy(true);
+        while (voice.isPlaying) yield return null;
+        // Let the final explanation render before showing the completion feedback.
+        yield return null;
+        ShowCheckFeedback();
+        var sound = check != null ? check.GetComponent<AudioSource>() : null;
+        while (sound != null && sound.isPlaying) yield return null;
+        SetTutorialBusy(false);
+    }
+    private void ShowCheckFeedback()
+    {
+        if (check == null) return;
+        var sound = check.GetComponent<AudioSource>();
+        // Explicit playback avoids a duplicate chime from Play On Awake.
+        if (sound != null) sound.playOnAwake = false;
+        check.gameObject.SetActive(true);
+        check.SetAsLastSibling();
+        foreach (var graphic in check.GetComponentsInChildren<Graphic>(true))
+            graphic.raycastTarget = false;
+        if (sound != null && sound.clip != null) sound.PlayOneShot(sound.clip);
     }
     private IEnumerator TutorialDeliverToTeacher()
     {
@@ -870,13 +898,7 @@ public class Stage6Controller : MonoBehaviour
         if (!CanAct || held != null || fulfilled.Count != question.deliveries.Count) return;
         if (items.Exists(item => !IsTidied(item))) return;
         completed = true; accepting = false;
-        if (check != null)
-        {
-            check.gameObject.SetActive(true); check.SetAsLastSibling();
-            foreach (var graphic in check.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
-            var sound = check.GetComponent<AudioSource>();
-            if (sound != null && sound.clip != null) sound.PlayOneShot(sound.clip);
-        }
+        ShowCheckFeedback();
         recorder.RecordCorrect(Time.realtimeSinceStartupAsDouble);
         StartCoroutine(Next());
     }
