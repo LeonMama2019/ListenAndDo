@@ -83,7 +83,8 @@ public class StageLevelMenu : MonoBehaviour
         if (level == 1) return true;
         if (PlayerPrefs.GetInt(CompletionKey(stage, level - 1), 0) == 1) return true;
         StageLevelResult previous = StageLevelResultRecorder.Load(stage, level - 1);
-        return previous != null && previous.questions != null && previous.questions.Count == 7;
+        return previous != null && previous.questions != null
+            && (previous.questions.Count == 7 || (stage == 6 && previous.questions.Count == 4));
     }
 
     private static string CompletionKey(int stage, int level)
