@@ -25,16 +25,18 @@ public class StageSwipe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (first != null)
         {
             Vector2 position = content.anchoredPosition;
-            position.x = CenteredPosition(first);
+            position.x = AlignedPosition(first, false);
             content.anchoredPosition = position;
         }
     }
 
-    private float CenteredPosition(RectTransform stage)
+    private float AlignedPosition(RectTransform stage, bool rightEdge)
     {
-        float center = viewport.rect.center.x;
-        float stageCenter = viewport.InverseTransformPoint(stage.TransformPoint(stage.rect.center)).x;
-        return content.anchoredPosition.x + center - stageCenter;
+        float viewportEdge = rightEdge ? viewport.rect.xMax : viewport.rect.xMin;
+        float stageEdge = rightEdge ? stage.rect.xMax : stage.rect.xMin;
+        float edgeInViewport = viewport.InverseTransformPoint(
+            stage.TransformPoint(new Vector3(stageEdge, stage.rect.center.y, 0))).x;
+        return content.anchoredPosition.x + viewportEdge - edgeInViewport;
     }
 
     private void UpdateBounds()
@@ -43,10 +45,10 @@ public class StageSwipe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         RectTransform first = content.Find("Stage1") as RectTransform;
         RectTransform last = content.Find("Stage6") as RectTransform;
         if (first == null || last == null) return;
-        float a = CenteredPosition(first);
-        float b = CenteredPosition(last);
-        minX = Mathf.Min(a, b);
-        maxX = Mathf.Max(a, b);
+        // Start with Stage1 flush left; stop with Stage6 flush right.
+        maxX = AlignedPosition(first, false);
+        // If all cards fit, retain the left alignment without scrolling.
+        minX = Mathf.Min(maxX, AlignedPosition(last, true));
     }
 
     public void OnBeginDrag(PointerEventData e)
