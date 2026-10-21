@@ -1007,7 +1007,7 @@ public class Stage5Prototype : MonoBehaviour
         if (step >= 2 && step <= 4 && !selected.HasValue)
             tutorialRoot.Find("1")?.gameObject.SetActive(true);
         var button = tutorialRoot.Find("Button");
-        if (button != null) button.gameObject.SetActive(step == 7);
+        if (button != null) button.gameObject.SetActive(step == 10);
         if (tutorialNarration != null) StopCoroutine(tutorialNarration);
         tutorialVoice.Stop();
         Transform spoken = selected.HasValue ? panel?.Find(selected.Value.ToString()) : panel;
@@ -1150,10 +1150,143 @@ public class Stage5Prototype : MonoBehaviour
         }
         foreach (var front in canvas.GetComponentsInChildren<Transform>(true))
             if (front.name == "BookFront") front.gameObject.SetActive(false);
+        yield return TutorialManipulationDemo();
         tutorialAnimating = false;
-        ShowTutorial(7);
+        ShowTutorial(10);
     }
 
+    // Demonstrate all three clicks automatically; no player input is required.
+    private IEnumerator TutorialManipulationDemo()
+    {
+        var item = tutorialItems.Find(entry => entry.home == Stage5Place.Odougu
+            && entry.id.Equals("Crayon", StringComparison.OrdinalIgnoreCase));
+        if (item == null)
+        {
+            Debug.LogError("Stage5 Tutorial: Crayonがありません。", this);
+            yield break;
+        }
+        var rect = item.view.rectTransform;
+        item.original.gameObject.SetActive(false);
+        item.stored = false;
+        rect.SetParent(deskArea, false);
+        rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one * 0.5f;
+        rect.localScale = Vector3.one;
+        rect.localRotation = Quaternion.identity;
+        rect.anchoredPosition = Vector2.zero;
+        item.view.gameObject.SetActive(true);
+        SetAlpha(item.view, 1);
+        var pointerSprite = TutorialPointerSprite();
+        var pointer = NewImage("Stage5TutorialPointer", (RectTransform)canvas.transform,
+            pointerSprite, new Vector2(40, 50));
+        pointer.raycastTarget = false;
+        pointer.rectTransform.pivot = new Vector2(0, 1);
+        pointer.transform.position = canvas.transform.TransformPoint(
+            canvas.transform.InverseTransformPoint(rect.position) + new Vector3(110, -90));
+        try
+        {
+            ShowTutorial(7);
+            yield return TutorialDemoMove(pointer.rectTransform, rect.position, 0.6f);
+            yield return TutorialDemoClick(pointer, rect);
+            Vector3 lifted = canvas.transform.TransformPoint(
+                canvas.transform.InverseTransformPoint(rect.position) + new Vector3(0, 55));
+            yield return TutorialDemoMove(rect, lifted, 0.45f, pointer.rectTransform);
+            while (tutorialBusy) yield return null;
+            yield return new WaitForSecondsRealtime(2f);
+
+            ShowTutorial(8);
+            // Keep the object held while demonstrating the second click on DeskArea.
+            Vector3 deskPoint = deskArea.TransformPoint(deskArea.rect.center);
+            yield return TutorialDemoMove(rect, deskPoint, 0.6f, pointer.rectTransform);
+            yield return TutorialDemoClick(pointer, rect);
+            Quaternion startRotation = rect.localRotation;
+            Quaternion endRotation = startRotation * Quaternion.Euler(0, 0, 90);
+            for (float t = 0; t < 0.5f; t += Time.unscaledDeltaTime)
+            {
+                rect.localRotation = Quaternion.Slerp(startRotation, endRotation, t / 0.5f);
+                yield return null;
+            }
+            rect.localRotation = endRotation;
+            while (tutorialBusy) yield return null;
+            yield return new WaitForSecondsRealtime(2f);
+
+            ShowTutorial(9);
+            Vector3 storagePoint = odouguArea != null ? odouguArea.position : odougu.position;
+            yield return TutorialDemoMove(rect, storagePoint, 0.8f, pointer.rectTransform);
+            yield return TutorialDemoClick(pointer, rect);
+            yield return TutorialReturn(item);
+            pointer.gameObject.SetActive(false);
+            while (tutorialBusy) yield return null;
+            yield return new WaitForSecondsRealtime(2f);
+        }
+        finally
+        {
+            Destroy(pointer.gameObject);
+            Destroy(pointerSprite.texture);
+            Destroy(pointerSprite);
+        }
+    }
+
+    private IEnumerator TutorialDemoMove(RectTransform rect, Vector3 destination, float duration,
+        RectTransform pointer = null)
+    {
+        Vector3 start = rect.position;
+        for (float t = 0; t < duration; t += Time.unscaledDeltaTime)
+        {
+            rect.position = Vector3.Lerp(start, destination, Mathf.SmoothStep(0, 1, t / duration));
+            if (pointer != null) pointer.position = rect.position;
+            yield return null;
+        }
+        rect.position = destination;
+        if (pointer != null) pointer.position = destination;
+    }
+
+    private IEnumerator TutorialDemoClick(Image pointer, RectTransform item)
+    {
+        yield return new WaitForSecondsRealtime(0.3f);
+        pointer.rectTransform.localScale = Vector3.one * 0.8f;
+        item.localScale = Vector3.one * 0.92f;
+        var rays = new List<Image>();
+        for (int i = 0; i < 4; i++)
+        {
+            float angle = (45 + i * 90) * Mathf.Deg2Rad;
+            var ray = NewImage("ClickRay", (RectTransform)canvas.transform, null, new Vector2(6, 18));
+            ray.color = new Color(1f, 0.65f, 0.05f);
+            ray.raycastTarget = false;
+            ray.rectTransform.position = canvas.transform.TransformPoint(
+                canvas.transform.InverseTransformPoint(pointer.rectTransform.position)
+                + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * 28f);
+            ray.rectTransform.localRotation = Quaternion.Euler(0, 0, i * 90 - 45);
+            rays.Add(ray);
+        }
+        yield return new WaitForSecondsRealtime(0.2f);
+        foreach (var ray in rays) Destroy(ray.gameObject);
+        pointer.rectTransform.localScale = Vector3.one;
+        item.localScale = Vector3.one;
+    }
+
+    private static Sprite TutorialPointerSprite()
+    {
+        // Small code-drawn UI arrow: no additional scene or asset reference is needed.
+        const int width = 32, height = 40;
+        var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        texture.filterMode = FilterMode.Point;
+        bool Inside(int x, int y)
+        {
+            if (x < 0 || x >= width || y < 0 || y >= height) return false;
+            return (y <= 28 && x <= y * 0.65f)
+                || (y >= 20 && y <= 36 && x >= 7 + (y - 20) * 0.4f && x <= 13 + (y - 20) * 0.4f);
+        }
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+            {
+                bool inside = Inside(x, y);
+                bool edge = inside && (!Inside(x - 1, y) || !Inside(x + 1, y)
+                    || !Inside(x, y - 1) || !Inside(x, y + 1));
+                texture.SetPixel(x, height - 1 - y, inside ? (edge ? Color.black : Color.white) : Color.clear);
+            }
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, width, height), new Vector2(0, 1), 100);
+    }
     private IEnumerator TutorialPulse()
     {
         while (tutorialRoot != null && tutorialRoot.gameObject.activeSelf)
@@ -1176,7 +1309,7 @@ public class Stage5Prototype : MonoBehaviour
 
     private void FinishTutorial()
     {
-        if (tutorialStep != 7 || tutorialBusy) return;
+        if (tutorialStep != 10 || tutorialBusy) return;
         PlayerPrefs.SetInt(TutorialDoneKey, 1);
         PlayerPrefs.Save();
         if (!StageLevelMenu.ReturnFromTutorial(5))
