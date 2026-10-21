@@ -22,6 +22,7 @@ public class Stage6Controller : MonoBehaviour
         public Vector3 originalPosition, originalScale;
         public Quaternion originalRotation;
         public bool stored, delivered;
+        public int stackOrder;
     }
     private Canvas canvas;
     private Transform panel, work, classRoom, ground, backPanel, check;
@@ -35,6 +36,7 @@ public class Stage6Controller : MonoBehaviour
     private Stage6Question question;
     private StageLevelResultRecorder recorder;
     private int index, level;
+    private int nextStackOrder;
     private bool accepting, completed, heldRotated;
     private Coroutine speech;
     private Transform tutorialRoot;
@@ -645,6 +647,7 @@ public class Stage6Controller : MonoBehaviour
     private void Begin()
     {
         accepting = false; completed = false; held = null; fulfilled.Clear();
+        nextStackOrder = items.Count;
         question = questions[index];
         cursor.gameObject.SetActive(false);
         check?.gameObject.SetActive(false);
@@ -652,6 +655,7 @@ public class Stage6Controller : MonoBehaviour
         foreach (var item in items)
         {
             item.delivered = false;
+            item.stackOrder = items.IndexOf(item);
             item.stored = !question.scatterPlaces.Contains(item.home);
             var rect = item.view.rectTransform;
             rect.SetParent(item.originalParent, false);
@@ -872,6 +876,7 @@ public class Stage6Controller : MonoBehaviour
         bool valid = Stage6PlacementGeometry.FullyInside(rect, area);
         if (stored) valid &= !items.Exists(other => other != item && other.stored && !other.delivered && other.home == item.home
             && !AllowsOverlap(item, other) && Stage6PlacementGeometry.Overlaps(rect, other.view.rectTransform));
+        if (stored && item.home == Stage6Storage.Odougu) valid &= ClayStacksValid(item);
         if (!valid)
         {
             rect.SetParent(oldParent, false);
@@ -881,6 +886,7 @@ public class Stage6Controller : MonoBehaviour
             return;
         }
         item.stored = stored;
+        if (stored) item.stackOrder = ++nextStackOrder;
         rect.SetAsLastSibling(); item.view.gameObject.SetActive(true);
         held = null; heldRotated = false; cursor.gameObject.SetActive(false);
         CheckComplete();
@@ -890,8 +896,28 @@ public class Stage6Controller : MonoBehaviour
     private static bool Stackable(string id)
     {
         string key = id.Replace(" ", "").ToLowerInvariant();
-        return key == "colorpencil" || key == "coloredpencil" || key == "colordpencil" || key == "crayon" || key == "scissors" || key == "tape";
+        return key == "colorpencil" || key == "coloredpencil" || key == "colordpencil" || key == "crayon" || key == "scissors" || key == "tape" || key == "clay";
     }
+    private bool ClayStacksValid(Item moving)
+    {
+        foreach (var clay in items)
+        {
+            if (clay.home != Stage6Storage.Odougu
+                || !clay.sceneName.Replace(" ", "").Equals("Clay", StringComparison.OrdinalIgnoreCase)
+                || (clay != moving && (!clay.stored || clay.delivered || clay == held))) continue;
+            int above = 0;
+            foreach (var other in items)
+            {
+                if (other == clay || other.home != Stage6Storage.Odougu
+                    || (other != moving && (!other.stored || other.delivered || other == held))) continue;
+                bool isAbove = other == moving || (clay != moving && other.stackOrder > clay.stackOrder);
+                if (isAbove && Stage6PlacementGeometry.Overlaps(
+                    clay.view.rectTransform, other.view.rectTransform) && ++above > 1) return false;
+            }
+        }
+        return true;
+    }
+
     private void Deliver(Stage6Room room, Stage6Person person)
     {
         if (!CanAct || held == null) return;
