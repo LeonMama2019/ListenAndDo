@@ -71,20 +71,19 @@ public static class SpeechVoiceVolume
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
-        SceneManager.sceneLoaded -= BindTopSlider;
-        SceneManager.sceneLoaded += BindTopSlider;
+        SceneManager.sceneLoaded -= BindSceneSettings;
+        SceneManager.sceneLoaded += BindSceneSettings;
         Application.quitting -= Save;
         Application.quitting += Save;
     }
 
     private static void Save() { PlayerPrefs.Save(); }
 
-    private static void BindTopSlider(Scene scene, LoadSceneMode mode)
+    private static void BindSceneSettings(Scene scene, LoadSceneMode mode)
     {
         foreach (var root in scene.GetRootGameObjects())
             foreach (var audio in root.GetComponentsInChildren<AudioSource>(true))
                 SoundVolumeSource.Bind(audio);
-        if (scene.name != "Top") return;
         foreach (var root in scene.GetRootGameObjects())
             foreach (var slider in root.GetComponentsInChildren<Slider>(true))
             {
