@@ -124,6 +124,60 @@ public sealed class StageLevelResultRecorder
         return string.IsNullOrEmpty(json) ? null : JsonUtility.FromJson<StageLevelResult>(json);
     }
 
+    // Reset the six stages' records without touching audio settings or user identity.
+    public static void ClearAllRecords()
+    {
+        SpeechPlaybackSpeed.CancelQuestion();
+        for (int stage = 1; stage <= 6; stage++)
+            for (int level = 1; level <= 8; level++)
+            {
+                string countKey = HistoryCountKey(stage, level);
+                int count = PlayerPrefs.GetInt(countKey, 0);
+                for (int attempt = 1; attempt <= count; attempt++)
+                {
+                    string key = AttemptKey(stage, level, attempt);
+                    RemovePlacementCopies(PlayerPrefs.GetString(key, ""));
+                    PlayerPrefs.DeleteKey(key);
+                }
+                string latestKey = StorageKey(stage, level);
+                RemovePlacementCopies(PlayerPrefs.GetString(latestKey, ""));
+                PlayerPrefs.DeleteKey(latestKey);
+                PlayerPrefs.DeleteKey(countKey);
+                PlayerPrefs.DeleteKey($"ListenAndDo.Stage{stage}.Level{level}.Completed");
+            }
+        RemovePlacementCopy(PlayerPrefs.GetString("ListenAndDo.Stage5.Prototype.Latest", ""));
+        PlayerPrefs.DeleteKey("ListenAndDo.Stage5.Prototype.Latest");
+        PlayerPrefs.Save();
+    }
+
+    [Serializable]
+    private class PlacementIdentity { public string attemptId; }
+
+    private static void RemovePlacementCopies(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return;
+        try
+        {
+            var entry = JsonUtility.FromJson<StageLevelResult>(json);
+            if (entry?.questions == null) return;
+            foreach (var question in entry.questions)
+                if (question != null) RemovePlacementCopy(question.stage5PlacementLog);
+        }
+        catch (ArgumentException) { /* A malformed result must still be removable. */ }
+    }
+
+    private static void RemovePlacementCopy(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return;
+        try
+        {
+            var entry = JsonUtility.FromJson<PlacementIdentity>(json);
+            if (!string.IsNullOrEmpty(entry?.attemptId))
+                PlayerPrefs.DeleteKey("ListenAndDo.Stage5.Prototype." + entry.attemptId);
+        }
+        catch (ArgumentException) { /* Continue resetting the remaining records. */ }
+    }
+
     private const string UserIdKey = "ListenAndDo.LocalUserId";
 
     public static string GetOrCreateUserId()
