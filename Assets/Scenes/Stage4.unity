@@ -4763,7 +4763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackReturnController
   backReturnPanel: {fileID: 338903853}
-  levelMenuScene: StageTop
+  levelMenuScene: LevelMenu
   stageNumber: 4
 --- !u!114 &1038166504
 MonoBehaviour:
