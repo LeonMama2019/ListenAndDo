@@ -97,7 +97,7 @@ public class Stage6Controller : MonoBehaviour
         Connect(Find(panel, "Class1button"), () => ShowRoom(Stage6Room.Class1));
         Connect(Find(panel, "Groundbutton"), () => ShowRoom(Stage6Room.Ground));
         Connect(Find(panel, "Speaker"), Replay);
-        Connect(Find(panel, "Back"), () => { if (CanAct) canvas.GetComponent<BackReturnController>()?.Open(); });
+        Connect(Find(panel, "Back"), () => canvas.GetComponent<BackReturnController>()?.Open());
         SetupRoom(classRoom, Stage6Room.Class1);
         SetupRoom(ground, Stage6Room.Ground);
         if (check != null) check.SetParent(canvas.transform, true);
