@@ -42,7 +42,7 @@ public class Stage6StorageVoice
 public class Stage6LevelSettings
 {
     [Range(1, 8)] public int level = 1;
-    [Min(1)] public int questionCount = 7;
+    [Min(1)] public int questionCount = 4;
     public Stage6ScatterMode scatterMode;
     public Stage6ItemPool itemPool;
     [Range(1, 3)] public int peoplePerRoom = 1;
