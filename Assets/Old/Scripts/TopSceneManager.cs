@@ -20,6 +20,11 @@ public class TopSceneManager : MonoBehaviour
         LoadScene(sceneName);
     }
 
+    public void ResetRecords()
+    {
+        StageLevelResultRecorder.ClearAllRecords();
+    }
+
     private void LoadScene(string sceneName)
     {
         if (string.IsNullOrWhiteSpace(sceneName))
