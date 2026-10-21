@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class BackReturnController : MonoBehaviour
 {
     [SerializeField] private GameObject backReturnPanel;
-    [SerializeField] private string levelMenuScene = "StageTop";
+    [SerializeField] private string levelMenuScene = "LevelMenu";
     [SerializeField] private int stageNumber = 1;
 
     public const string SelectedStageKey = "SelectedStage";
