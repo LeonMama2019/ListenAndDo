@@ -81,10 +81,12 @@ public class Stage1Level1Quiz : MonoBehaviour
         obstructionAudio.playOnAwake = false;
         obstructionAudio.loop = false;
         obstructionAudio.spatialBlend = 0f;
+        SoundVolumeSource.Bind(obstructionAudio);
         clockAudio = gameObject.AddComponent<AudioSource>();
         clockAudio.playOnAwake = false;
         clockAudio.loop = true;
         clockAudio.spatialBlend = 0f;
+        SoundVolumeSource.Bind(clockAudio);
     }
 
     private void Start()
@@ -205,7 +207,7 @@ public class Stage1Level1Quiz : MonoBehaviour
         if (levelNumber == 7 && clockTickLoop != null)
         {
             clockAudio.clip = clockTickLoop;
-            clockAudio.volume = clockVolume;
+            SoundVolumeSource.SetBaseVolume(clockAudio, clockVolume);
             clockAudio.Play();
         }
         PlayCurrentInstruction();
@@ -322,7 +324,7 @@ public class Stage1Level1Quiz : MonoBehaviour
     private IEnumerator RandomClockSound()
     {
         clockAudio.clip = clockTickLoop;
-        clockAudio.volume = clockVolume;
+        SoundVolumeSource.SetBaseVolume(clockAudio, clockVolume);
         while (IsRunning)
         {
             float min = Mathf.Max(0.1f, obstructionMinInterval);
