@@ -211,8 +211,31 @@ public class Stage5Prototype : MonoBehaviour
     {
         string key = id.Replace(" ", "").ToLowerInvariant();
         return key == "colorpencil" || key == "coloredpencil" || key == "colordpencil"
-            || key == "crayon" || key == "scissors" || key == "tape";
+            || key == "crayon" || key == "scissors" || key == "tape" || key == "clay";
     }
+    // Evaluate the proposed drop as the newest (topmost) item, without changing the scene.
+    private bool ClayStacksValid(Book moving = null, RectTransform proposed = null)
+    {
+        foreach (var clay in books)
+        {
+            if (clay.home != Stage5Place.Odougu
+                || !clay.id.Replace(" ", "").Equals("Clay", StringComparison.OrdinalIgnoreCase)
+                || (clay != moving && (!clay.inCase || clay == held))) continue;
+            var clayRect = clay == moving ? proposed : clay.deskView.rectTransform;
+            int above = 0;
+            foreach (var other in books)
+            {
+                if (other == clay || other.home != Stage5Place.Odougu
+                    || (other != moving && (!other.inCase || other == held))) continue;
+                bool isAbove = other == moving || (clay != moving
+                    && other.deskView.transform.GetSiblingIndex() > clay.deskView.transform.GetSiblingIndex());
+                var otherRect = other == moving ? proposed : other.deskView.rectTransform;
+                if (isAbove && Overlaps(clayRect, otherRect) && ++above > 1) return false;
+            }
+        }
+        return true;
+    }
+
     private void BeginQuestion()
     {
         question = levelQuestions[questionIndex];
@@ -506,6 +529,7 @@ public class Stage5Prototype : MonoBehaviour
                     && !AllowsOverlap(books[i], books[j])
                     && Overlaps(books[i].deskView.rectTransform, books[j].deskView.rectTransform))
                 { reason = "重ならないように置いてね"; return false; }
+        if (!ClayStacksValid()) { reason = "ねんどの上は1つまで置けるよ"; return false; }
         reason = remaining.Count == 0 ? null : "机に残す物が足りません";
         return remaining.Count == 0;
     }
@@ -571,8 +595,9 @@ public class Stage5Prototype : MonoBehaviour
         bool inside = FullyInside(probe.rectTransform, area);
         bool overlaps = books.Exists(other => other != held && other.inCase && other.home == home
             && !AllowsOverlap(held, other) && Overlaps(probe.rectTransform, other.deskView.rectTransform));
+        bool clayStackValid = home != Stage5Place.Odougu || ClayStacksValid(held, probe.rectTransform);
         Destroy(probe.gameObject);
-        if (!inside || overlaps)
+        if (!inside || overlaps || !clayStackValid)
         { Log(held, inside ? "overlap_rejected" : "outside_rejected", "Cursor", home.ToString()); return; }
         StartCoroutine(PlaceContainer(local));
     }
