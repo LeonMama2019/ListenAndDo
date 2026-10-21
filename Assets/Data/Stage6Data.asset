@@ -68,56 +68,56 @@ MonoBehaviour:
   conjunctionVoice: {fileID: 8300000, guid: d8623a788c087ae42b64f0910bd15ab5, type: 3}
   levels:
   - level: 1
-    questionCount: 7
+    questionCount: 4
     scatterMode: 0
     itemPool: 0
     peoplePerRoom: 1
     deliveryCount: 1
     specifyRoom: 1
   - level: 2
-    questionCount: 7
+    questionCount: 4
     scatterMode: 0
     itemPool: 1
     peoplePerRoom: 1
     deliveryCount: 1
     specifyRoom: 1
   - level: 3
-    questionCount: 7
+    questionCount: 4
     scatterMode: 1
     itemPool: 2
     peoplePerRoom: 1
     deliveryCount: 1
     specifyRoom: 1
   - level: 4
-    questionCount: 7
+    questionCount: 4
     scatterMode: 1
     itemPool: 2
     peoplePerRoom: 3
     deliveryCount: 1
     specifyRoom: 1
   - level: 5
-    questionCount: 7
+    questionCount: 4
     scatterMode: 1
     itemPool: 2
     peoplePerRoom: 3
     deliveryCount: 1
     specifyRoom: 0
   - level: 6
-    questionCount: 7
+    questionCount: 4
     scatterMode: 1
     itemPool: 2
     peoplePerRoom: 3
     deliveryCount: 2
     specifyRoom: 1
   - level: 7
-    questionCount: 7
+    questionCount: 4
     scatterMode: 1
     itemPool: 2
     peoplePerRoom: 3
     deliveryCount: 2
     specifyRoom: 0
   - level: 8
-    questionCount: 7
+    questionCount: 4
     scatterMode: 1
     itemPool: 2
     peoplePerRoom: 3
