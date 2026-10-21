@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class BackReturnController : MonoBehaviour
 {
     [SerializeField] private GameObject backReturnPanel;
-    [SerializeField] private string levelMenuScene = "LevelMenu";
+    [SerializeField] private string levelMenuScene = "StageTop";
     [SerializeField] private int stageNumber = 1;
 
     public const string SelectedStageKey = "SelectedStage";
@@ -45,6 +45,7 @@ public class BackReturnController : MonoBehaviour
         }
 
         returning = true;
+        SpeechPlaybackSpeed.CancelQuestion();
         StageLevelMenu.SelectStageForMenu(stageNumber);
         // Keep stage selection only. Do not save an unfinished quiz result.
         PlayerPrefs.SetInt(SelectedStageKey, stageNumber);
