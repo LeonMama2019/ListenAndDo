@@ -23,6 +23,9 @@ public class TopSceneManager : MonoBehaviour
     public void ResetRecords()
     {
         StageLevelResultRecorder.ClearAllRecords();
+        // Discard the in-progress recorder so it cannot write pre-reset history back.
+        if (gameObject.scene.name != "Top")
+            LoadScene("Top");
     }
 
     private void LoadScene(string sceneName)
