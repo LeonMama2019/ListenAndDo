@@ -8,6 +8,12 @@ public class TopPlayerController : MonoBehaviour
     [SerializeField] private GameObject playerPanel;
     [SerializeField] private GameObject registrationPanel;
     [SerializeField] private TopSceneManager sceneManager;
+    [SerializeField] private GameObject changeNamePlate;
+    [SerializeField] private Button changeNameButton;
+    private TMP_InputField changeNameInput;
+    private Button changeNameOkButton;
+    private int renameIndex = -1;
+    private bool clearOldNameOnSelect;
     private PlayerProfileStore.SaveData data;
     private TMP_InputField nickname, age;
     private Button registerButton, newPlayerButton, selectButton;
@@ -43,8 +49,59 @@ public class TopPlayerController : MonoBehaviour
         nickname.onValueChanged.AddListener(_ => UpdateRegisterButton());
         age.onValueChanged.AddListener(_ => UpdateRegisterButton());
         playerPanel.transform.Find("selectbutton/name").GetComponent<TMP_Text>().richText = false;
+        SetupChangeName();
         Refresh();
         UpdateRegisterButton();
+    }
+    private void SetupChangeName()
+    {
+        changeNameInput = changeNamePlate.GetComponentInChildren<TMP_InputField>(true);
+        changeNameInput.richText = false;
+        changeNameInput.textComponent.richText = false;
+        changeNameInput.characterLimit = 10;
+        changeNameInput.lineType = TMP_InputField.LineType.SingleLine;
+        changeNameInput.onSelect.AddListener(_ =>
+        {
+            if (!clearOldNameOnSelect) return;
+            clearOldNameOnSelect = false;
+            changeNameInput.text = "";
+        });
+        var target = changeNamePlate.transform.Find("OKbutton").gameObject;
+        changeNameOkButton = target.GetComponent<Button>();
+        if (changeNameOkButton == null) changeNameOkButton = target.AddComponent<Button>();
+        changeNameOkButton.targetGraphic = target.GetComponent<Image>();
+        changeNameOkButton.onClick.AddListener(ConfirmChangeName);
+        changeNameInput.onValueChanged.AddListener(_ => UpdateChangeNameButton());
+        changeNameButton.onClick.AddListener(OpenChangeName);
+        changeNamePlate.SetActive(false);
+    }
+    private void OpenChangeName()
+    {
+        if (!Exists(data.selected)) return;
+        renameIndex = data.selected;
+        clearOldNameOnSelect = true;
+        changeNameInput.SetTextWithoutNotify(data.players[renameIndex].nickname);
+        changeNamePlate.SetActive(true);
+        changeNamePlate.transform.SetAsLastSibling();
+        selectButton.gameObject.SetActive(false);
+        UpdateChangeNameButton();
+    }
+    private void UpdateChangeNameButton()
+    {
+        changeNameOkButton.interactable = renameIndex >= 0 &&
+            !string.IsNullOrWhiteSpace(changeNameInput.text) && changeNameInput.text.Length <= 10;
+    }
+    private void ConfirmChangeName()
+    {
+        if (renameIndex < 0 || !Exists(renameIndex) ||
+            string.IsNullOrWhiteSpace(changeNameInput.text) || changeNameInput.text.Length > 10) return;
+        // Keep the existing userId so all results remain attached to this player.
+        data.players[renameIndex].nickname = changeNameInput.text.Trim();
+        Save();
+        renameIndex = -1;
+        changeNamePlate.SetActive(false);
+        selectButton.gameObject.SetActive(true);
+        Refresh();
     }
     private bool Exists(int i) => data.players[i] != null &&
         !string.IsNullOrWhiteSpace(data.players[i].nickname);
@@ -56,12 +113,15 @@ public class TopPlayerController : MonoBehaviour
     public void OpenPlayers()
     {
         registrationPanel.SetActive(false);
+        changeNamePlate.SetActive(false);
+        renameIndex = -1;
+        selectButton.gameObject.SetActive(true);
         Refresh();
         playerPanel.SetActive(true);
     }
     private void OpenRegistration()
     {
-        if (EmptySlot() < 0) return;
+        if (changeNamePlate.activeSelf || EmptySlot() < 0) return;
         nickname.text = "";
         age.text = "";
         registrationPanel.transform.Find("Toggle Group/noselect").GetComponent<Toggle>().isOn = true;
@@ -100,7 +160,7 @@ public class TopPlayerController : MonoBehaviour
     }
     private void Select(int index)
     {
-        if (!Exists(index)) return;
+        if (changeNamePlate.activeSelf || !Exists(index)) return;
         data.selected = index;
         Save();
         Refresh();
@@ -123,6 +183,8 @@ public class TopPlayerController : MonoBehaviour
         playerPanel.transform.Find("selectbutton/name").GetComponent<TMP_Text>().text =
             selected ? data.players[data.selected].nickname : "";
         selectButton.interactable = selected;
+        changeNameButton.gameObject.SetActive(selected);
+        if (selected) changeNameButton.transform.SetParent(slots[data.selected], false);
     }
     private void Save()
     {
