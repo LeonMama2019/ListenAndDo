@@ -39,8 +39,13 @@ public class TopPlayerController : MonoBehaviour
             Array.Resize(ref data.players, 2);
         data.selected = Mathf.Clamp(data.selected, 0, 1);
         nickname = registrationPanel.transform.Find("name").GetComponent<TMP_InputField>();
-        age = registrationPanel.transform.Find("name (1)").GetComponent<TMP_InputField>();
+        age = registrationPanel.transform.Find("age").GetComponent<TMP_InputField>();
         nickname.richText = false;
+        nickname.characterLimit = 10;
+        age.contentType = TMP_InputField.ContentType.Custom;
+        age.lineType = TMP_InputField.LineType.SingleLine;
+        age.keyboardType = TouchScreenKeyboardType.NumberPad;
+        age.onValidateInput = (_, __, c) => c >= '0' && c <= '9' ? c : '\0';
         for (int i = 0; i < 2; i++)
         {
             int index = i;
@@ -58,6 +63,7 @@ public class TopPlayerController : MonoBehaviour
         registerButton.targetGraphic = target.GetComponent<Image>();
         registerButton.onClick.AddListener(Register);
         nickname.onValueChanged.AddListener(_ => UpdateRegisterButton());
+        age.onValueChanged.AddListener(_ => UpdateRegisterButton());
         playerPanel.transform.Find("selectbutton/name").GetComponent<TMP_Text>().richText = false;
         Refresh();
         UpdateRegisterButton();
@@ -85,15 +91,23 @@ public class TopPlayerController : MonoBehaviour
         UpdateRegisterButton();
         nickname.ActivateInputField();
     }
+    private bool ValidRegistration()
+    {
+        if (string.IsNullOrWhiteSpace(nickname.text) || nickname.text.Length > 10 ||
+            string.IsNullOrEmpty(age.text)) return false;
+        foreach (char c in age.text)
+            if (c < '0' || c > '9') return false;
+        return int.TryParse(age.text, out int value) && value >= 0;
+    }
     private void UpdateRegisterButton()
     {
-        registerButton.interactable = EmptySlot() >= 0 && !string.IsNullOrWhiteSpace(nickname.text);
+        registerButton.interactable = EmptySlot() >= 0 && ValidRegistration();
     }
     private void Register()
     {
         int index = EmptySlot();
         string name = nickname.text.Trim();
-        if (index < 0 || string.IsNullOrWhiteSpace(name)) return;
+        if (index < 0 || !ValidRegistration()) return;
         string gender = "noselect";
         foreach (string value in new[] { "man", "woman", "noselect" })
             if (registrationPanel.transform.Find("Toggle Group/" + value).GetComponent<Toggle>().isOn)
