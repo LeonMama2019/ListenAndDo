@@ -8,36 +8,14 @@ public class TopPlayerController : MonoBehaviour
     [SerializeField] private GameObject playerPanel;
     [SerializeField] private GameObject registrationPanel;
     [SerializeField] private TopSceneManager sceneManager;
-    private const string SaveKey = "ListenAndDo.Players.v1";
-    [Serializable] private class Profile
-    {
-        public string nickname;
-        public string age;
-        public string gender;
-    }
-    [Serializable] private class SaveData
-    {
-        public Profile[] players = new Profile[2];
-        public int selected;
-    }
-    private SaveData data;
+    private PlayerProfileStore.SaveData data;
     private TMP_InputField nickname, age;
     private Button registerButton, newPlayerButton, selectButton;
     private readonly Transform[] slots = new Transform[2];
 
     private void Awake()
     {
-        data = new SaveData();
-        try
-        {
-            string json = PlayerPrefs.GetString(SaveKey, "");
-            if (!string.IsNullOrEmpty(json))
-                data = JsonUtility.FromJson<SaveData>(json) ?? new SaveData();
-        }
-        catch (ArgumentException) { Debug.LogWarning("Player registration data could not be read."); }
-        if (data.players == null || data.players.Length != 2)
-            Array.Resize(ref data.players, 2);
-        data.selected = Mathf.Clamp(data.selected, 0, 1);
+        data = PlayerProfileStore.Load();
         nickname = registrationPanel.transform.Find("name").GetComponent<TMP_InputField>();
         age = registrationPanel.transform.Find("age").GetComponent<TMP_InputField>();
         nickname.richText = false;
@@ -112,7 +90,8 @@ public class TopPlayerController : MonoBehaviour
         foreach (string value in new[] { "man", "woman", "noselect" })
             if (registrationPanel.transform.Find("Toggle Group/" + value).GetComponent<Toggle>().isOn)
                 gender = value;
-        data.players[index] = new Profile { nickname = name, age = age.text.Trim(), gender = gender };
+        data.players[index] = new PlayerProfileStore.Profile { nickname = name, age = age.text.Trim(), gender = gender,
+            userId = index == 0 ? PlayerProfileStore.LegacyUserId : Guid.NewGuid().ToString("N") };
         data.selected = index;
         Save();
         registrationPanel.SetActive(false);
@@ -147,11 +126,11 @@ public class TopPlayerController : MonoBehaviour
     }
     private void Save()
     {
-        PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(data));
-        PlayerPrefs.Save();
+        PlayerProfileStore.Save(data);
     }
     private void StartSelected()
     {
         if (Exists(data.selected)) sceneManager.OpenLevel("StageTop");
     }
 }
+

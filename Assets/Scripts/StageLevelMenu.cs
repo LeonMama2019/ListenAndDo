@@ -89,7 +89,7 @@ public class StageLevelMenu : MonoBehaviour
 
     private static string CompletionKey(int stage, int level)
     {
-        return $"ListenAndDo.Stage{stage}.Level{level}.Completed";
+        return StageLevelResultRecorder.CompletionKey(stage, level);
     }
 
     private void Start()
@@ -206,4 +206,5 @@ public class StageLevelMenu : MonoBehaviour
         return null;
     }
 }
+
 

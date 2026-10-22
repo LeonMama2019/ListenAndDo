@@ -67,6 +67,12 @@ public class StageResultScreenDisplay : MonoBehaviour
     {
         Transform canvas = FindInScene("Canvas");
         if (canvas == null) return;
+        if (gameObject.scene.name == "Result")
+        {
+            if (canvas.GetComponent<ResultHistoryScreen>() == null)
+                canvas.gameObject.AddComponent<ResultHistoryScreen>();
+            return;
+        }
         detail = canvas.Find("DetailPanel");
         stageMenu = canvas.Find("Panel");
         if (detail == null) return;
@@ -227,3 +233,4 @@ public class StageResultScreenDisplay : MonoBehaviour
         button.onClick.AddListener(action);
     }
 }
+

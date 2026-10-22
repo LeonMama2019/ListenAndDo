@@ -101,49 +101,70 @@ public sealed class StageLevelResultRecorder
         current = null;
         if (result.questions.Count != questionCount) return;
         result.completedAtUtc = DateTime.UtcNow.ToString("o");
-        EnsureHistoryMigrated(result.stageNumber, result.levelNumber);
-        int count = PlayerPrefs.GetInt(HistoryCountKey(result.stageNumber, result.levelNumber), 0);
+        EnsureHistoryMigrated(result.stageNumber, result.levelNumber, result.userId);
+        int count = PlayerPrefs.GetInt(HistoryCountKey(result.stageNumber, result.levelNumber, result.userId), 0);
         result.attemptNumber = count + 1;
         string json = JsonUtility.ToJson(result);
-        PlayerPrefs.SetString(AttemptKey(result.stageNumber, result.levelNumber, result.attemptNumber), json);
-        PlayerPrefs.SetInt(HistoryCountKey(result.stageNumber, result.levelNumber), result.attemptNumber);
+        PlayerPrefs.SetString(AttemptKey(result.stageNumber, result.levelNumber, result.attemptNumber, result.userId), json);
+        PlayerPrefs.SetInt(HistoryCountKey(result.stageNumber, result.levelNumber, result.userId), result.attemptNumber);
         // Keep the latest-result key for existing result screens and unlock checks.
-        PlayerPrefs.SetString(StorageKey(result.stageNumber, result.levelNumber), json);
+        PlayerPrefs.SetString(StorageKey(result.stageNumber, result.levelNumber, result.userId), json);
         PlayerPrefs.Save();
         saved = true;
     }
 
-    public static string StorageKey(int stage, int level)
+    private static string KeyPrefix(string userId)
     {
-        return $"ListenAndDo.Stage{stage}.Level{level}.Result";
+        // Keep the original keys for the first player so existing records survive.
+        return userId == PlayerProfileStore.LegacyUserId ? "ListenAndDo" : "ListenAndDo.Player." + userId;
     }
+
+    public static string StorageKey(int stage, int level) => StorageKey(stage, level, GetOrCreateUserId());
+    private static string StorageKey(int stage, int level, string userId) =>
+        $"{KeyPrefix(userId)}.Stage{stage}.Level{level}.Result";
+
+    public static string CompletionKey(int stage, int level) =>
+        $"{KeyPrefix(GetOrCreateUserId())}.Stage{stage}.Level{level}.Completed";
 
     public static StageLevelResult Load(int stage, int level)
     {
-        string json = PlayerPrefs.GetString(StorageKey(stage, level), "");
-        return string.IsNullOrEmpty(json) ? null : JsonUtility.FromJson<StageLevelResult>(json);
+        return Load(stage, level, GetOrCreateUserId());
+    }
+
+    private static StageLevelResult Load(int stage, int level, string userId) =>
+        Parse(PlayerPrefs.GetString(StorageKey(stage, level, userId), ""));
+
+    private static StageLevelResult Parse(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return null;
+        try { return JsonUtility.FromJson<StageLevelResult>(json); }
+        catch (ArgumentException) { Debug.LogWarning("A saved result could not be read."); return null; }
     }
 
     // Reset the six stages' records without touching audio settings or user identity.
     public static void ClearAllRecords()
     {
         SpeechPlaybackSpeed.CancelQuestion();
+        var userIds = new HashSet<string> { PlayerProfileStore.LegacyUserId };
+        foreach (var profile in PlayerProfileStore.Load().players)
+            if (!string.IsNullOrEmpty(profile?.userId)) userIds.Add(profile.userId);
+        foreach (string userId in userIds)
         for (int stage = 1; stage <= 6; stage++)
             for (int level = 1; level <= 8; level++)
             {
-                string countKey = HistoryCountKey(stage, level);
+                string countKey = HistoryCountKey(stage, level, userId);
                 int count = PlayerPrefs.GetInt(countKey, 0);
                 for (int attempt = 1; attempt <= count; attempt++)
                 {
-                    string key = AttemptKey(stage, level, attempt);
+                    string key = AttemptKey(stage, level, attempt, userId);
                     RemovePlacementCopies(PlayerPrefs.GetString(key, ""));
                     PlayerPrefs.DeleteKey(key);
                 }
-                string latestKey = StorageKey(stage, level);
+                string latestKey = StorageKey(stage, level, userId);
                 RemovePlacementCopies(PlayerPrefs.GetString(latestKey, ""));
                 PlayerPrefs.DeleteKey(latestKey);
                 PlayerPrefs.DeleteKey(countKey);
-                PlayerPrefs.DeleteKey($"ListenAndDo.Stage{stage}.Level{level}.Completed");
+                PlayerPrefs.DeleteKey($"{KeyPrefix(userId)}.Stage{stage}.Level{level}.Completed");
             }
         RemovePlacementCopy(PlayerPrefs.GetString("ListenAndDo.Stage5.Prototype.Latest", ""));
         PlayerPrefs.DeleteKey("ListenAndDo.Stage5.Prototype.Latest");
@@ -178,42 +199,28 @@ public sealed class StageLevelResultRecorder
         catch (ArgumentException) { /* Continue resetting the remaining records. */ }
     }
 
-    private const string UserIdKey = "ListenAndDo.LocalUserId";
+    public static string GetOrCreateUserId() => PlayerProfileStore.CurrentUserId;
 
-    public static string GetOrCreateUserId()
-    {
-        string id = PlayerPrefs.GetString(UserIdKey, "");
-        if (!string.IsNullOrEmpty(id)) return id;
-        id = Guid.NewGuid().ToString("N");
-        PlayerPrefs.SetString(UserIdKey, id);
-        PlayerPrefs.Save();
-        return id;
-    }
+    private static string HistoryCountKey(int stage, int level, string userId) =>
+        $"{KeyPrefix(userId)}.Stage{stage}.Level{level}.HistoryCount";
 
-    private static string HistoryCountKey(int stage, int level)
-    {
-        return $"ListenAndDo.Stage{stage}.Level{level}.HistoryCount";
-    }
-
-    private static string AttemptKey(int stage, int level, int attempt)
-    {
-        return $"ListenAndDo.Stage{stage}.Level{level}.Attempt{attempt}";
-    }
+    private static string AttemptKey(int stage, int level, int attempt, string userId) =>
+        $"{KeyPrefix(userId)}.Stage{stage}.Level{level}.Attempt{attempt}";
 
     // The previous format only retained the latest completed attempt.
     // Preserve that available record as history entry 1 without replacing it.
-    private static void EnsureHistoryMigrated(int stage, int level)
+    private static void EnsureHistoryMigrated(int stage, int level, string userId)
     {
-        string countKey = HistoryCountKey(stage, level);
+        string countKey = HistoryCountKey(stage, level, userId);
         if (PlayerPrefs.HasKey(countKey)) return;
-        StageLevelResult previous = Load(stage, level);
+        StageLevelResult previous = Load(stage, level, userId);
         int count = 0;
         if (previous != null && previous.questions != null && previous.questions.Count > 0)
         {
             previous.userId = string.IsNullOrEmpty(previous.userId)
-                ? GetOrCreateUserId() : previous.userId;
+                ? userId : previous.userId;
             previous.attemptNumber = 1;
-            PlayerPrefs.SetString(AttemptKey(stage, level, 1), JsonUtility.ToJson(previous));
+            PlayerPrefs.SetString(AttemptKey(stage, level, 1, userId), JsonUtility.ToJson(previous));
             count = 1;
         }
         PlayerPrefs.SetInt(countKey, count);
@@ -222,17 +229,19 @@ public sealed class StageLevelResultRecorder
 
     public static List<StageLevelResult> LoadHistory(int stage, int level)
     {
-        EnsureHistoryMigrated(stage, level);
-        int count = PlayerPrefs.GetInt(HistoryCountKey(stage, level), 0);
+        string userId = GetOrCreateUserId();
+        EnsureHistoryMigrated(stage, level, userId);
+        int count = PlayerPrefs.GetInt(HistoryCountKey(stage, level, userId), 0);
         List<StageLevelResult> history = new();
         for (int attempt = 1; attempt <= count; attempt++)
         {
-            string json = PlayerPrefs.GetString(AttemptKey(stage, level, attempt), "");
+            string json = PlayerPrefs.GetString(AttemptKey(stage, level, attempt, userId), "");
             if (string.IsNullOrEmpty(json)) continue;
-            StageLevelResult entry = JsonUtility.FromJson<StageLevelResult>(json);
+            StageLevelResult entry = Parse(json);
             if (entry != null) history.Add(entry);
         }
         return history;
     }
 
 }
+
