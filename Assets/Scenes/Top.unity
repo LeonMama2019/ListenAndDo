@@ -2831,10 +2831,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1451982338}
-        m_TargetAssemblyTypeName: TopSceneManager, Assembly-CSharp
-        m_MethodName: OpenLevel
-        m_Mode: 5
+      - m_Target: {fileID: 2140000000}
+        m_TargetAssemblyTypeName: TopPlayerController, Assembly-CSharp
+        m_MethodName: OpenPlayers
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3751,7 +3751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u306A\u307E\u3048"
+  m_text: ""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -5836,7 +5836,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u306A\u307E\u3048"
+  m_text: ""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -6143,7 +6143,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1339887108
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6258,7 +6258,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u306A\u307E\u3048"
+  m_text: ""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -6430,7 +6430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1429027644
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6623,6 +6623,7 @@ GameObject:
   - component: {fileID: 1451982335}
   - component: {fileID: 1451982334}
   - component: {fileID: 1451982338}
+  - component: {fileID: 2140000000}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -9463,3 +9464,18 @@ SceneRoots:
   - {fileID: 1843470970}
   - {fileID: 1451982337}
   - {fileID: 1592004938}
+--- !u!114 &2140000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451982333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56a08c59cf294574b82eafc5d572d902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPanel: {fileID: 873365967}
+  registrationPanel: {fileID: 168175696}
+  sceneManager: {fileID: 1451982338}
