@@ -13023,8 +13023,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 85.4, y: 0}
-  m_SizeDelta: {x: 30, y: 20}
+  m_AnchoredPosition: {x: 76.1, y: 0}
+  m_SizeDelta: {x: 25, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1822662308
 MonoBehaviour:
@@ -15193,14 +15193,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116199350}
   m_CullTransparentMesh: 1
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 992743649}
-  - {fileID: 1136041500}
-  - {fileID: 1565649801}
-  - {fileID: 1324640369}
 --- !u!114 &2140000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15213,3 +15205,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a3db46e2f6649849d045a4b3de182cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 992743649}
+  - {fileID: 1136041500}
+  - {fileID: 1565649801}
+  - {fileID: 1324640369}
