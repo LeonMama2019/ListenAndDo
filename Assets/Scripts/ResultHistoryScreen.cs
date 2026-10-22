@@ -76,10 +76,14 @@ public class ResultHistoryScreen : MonoBehaviour
 
     private void PopulatePage()
     {
+        // Scene row 1 is the bottom row; row 6 is the top row.
+        // Place the oldest record of this page at the bottom and newer ones above.
+        int end = history.Count - page * PageSize;
+        int start = Math.Max(0, end - PageSize);
         for (int row = 1; row <= PageSize; row++)
         {
-            int index = history.Count - 1 - page * PageSize - (row - 1);
-            StageLevelResult entry = index >= 0 ? history[index] : null;
+            int index = start + row - 1;
+            StageLevelResult entry = index < end ? history[index] : null;
             ResultRecordSummary summary = ResultRecordSummary.From(entry);
             SetColumn(1, "count" + row, entry == null ? "--回目" : entry.attemptNumber + "回目");
             SetColumn(2, "date" + row, entry == null ? "--" : DateLabel(entry.completedAtUtc));
