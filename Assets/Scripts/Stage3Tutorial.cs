@@ -50,6 +50,7 @@ public class Stage3Tutorial : MonoBehaviour
         ConnectButton(6);
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
+        StageTutorialBackButton.Bind(canvas, 3);
         Show(1);
         return true;
     }

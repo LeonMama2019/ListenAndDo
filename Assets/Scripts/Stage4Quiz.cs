@@ -482,6 +482,8 @@ public class Stage4Quiz : MonoBehaviour
         if (speaker != null) speaker.interactable = false;
         tutorialRoot.gameObject.SetActive(true);
         tutorialRoot.SetAsLastSibling();
+        var canvas = GetComponentInParent<Canvas>();
+        if (canvas != null) StageTutorialBackButton.Bind(canvas.rootCanvas, 4);
         ShowTutorialStep(1);
     }
 

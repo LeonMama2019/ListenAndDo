@@ -131,10 +131,10 @@ public class Stage6Controller : MonoBehaviour
             var buttonImage = banner.Find("nextbutton")?.GetComponent<Graphic>();
             if (buttonImage != null) buttonImage.raycastTarget = true;
         }
-        Connect(Find(panel, "Back"), () => StageLevelMenu.OpenStageMenu(6));
         Connect(Find(panel, "Speaker"), ReplayTutorialVoice);
         tutorialRoot.gameObject.SetActive(true);
         tutorialRoot.SetAsLastSibling();
+        StageTutorialBackButton.Bind(canvas, 6);
         ShowTutorialStep(1);
     }
     private void TutorialNext()

@@ -45,6 +45,7 @@ public class Stage2Tutorial : MonoBehaviour
         rect.offsetMin = rect.offsetMax = Vector2.zero;
         inputSurface.GetComponent<Image>().color = Color.clear;
         inputSurface.AddComponent<Stage2TutorialInput>().Tutorial = this;
+        StageTutorialBackButton.Bind(canvas, 2);
         ConnectStepButton(4);
         ConnectStepButton(5);
         Show(1);

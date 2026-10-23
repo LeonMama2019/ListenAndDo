@@ -35,6 +35,9 @@ public class Stage1Tutorial : MonoBehaviour
 
     private void Start()
     {
+        var canvas = GetComponentInParent<Canvas>();
+        if (canvas != null) StageTutorialBackButton.Bind(canvas.rootCanvas, 1);
+
         if (stage1Data != null)
             foreach (var candidate in stage1Data.Entries)
                 if (candidate != null && candidate.ObjectId == "1") { entry = candidate; break; }

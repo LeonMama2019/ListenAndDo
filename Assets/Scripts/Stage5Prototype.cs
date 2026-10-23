@@ -1000,6 +1000,7 @@ public class Stage5Prototype : MonoBehaviour
         tutorialRoot.gameObject.SetActive(true);
         tutorialRoot.SetAsLastSibling();
         foreach (var graphic in tutorialRoot.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+        StageTutorialBackButton.Bind(canvas, 5);
         foreach (var text in tutorialRoot.GetComponentsInChildren<TMP_Text>(true)) text.enabled = true;
         var close = tutorialRoot.Find("Button")?.GetComponent<Button>();
         if (close != null)
