@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 85504051}
   - component: {fileID: 85504053}
   - component: {fileID: 85504052}
+  - component: {fileID: 2700000101}
   m_Layer: 5
   m_Name: Nameplate
   m_TagString: Untagged
@@ -155,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -333, y: 187}
+  m_AnchoredPosition: {x: -280, y: 187}
   m_SizeDelta: {x: 200, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &85504052
@@ -1915,7 +1916,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u308C\u304A\u3093"
+  m_text: ""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -5697,3 +5698,15 @@ SceneRoots:
   - {fileID: 1136041500}
   - {fileID: 1565649801}
   - {fileID: 1324640369}
+--- !u!114 &2700000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85504050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2206c0c36445416fb3ea0967dc2cf674, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:

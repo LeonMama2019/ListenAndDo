@@ -3270,6 +3270,7 @@ GameObject:
   - component: {fileID: 678033645}
   - component: {fileID: 678033647}
   - component: {fileID: 678033646}
+  - component: {fileID: 2900000101}
   m_Layer: 5
   m_Name: Nameplate
   m_TagString: Untagged
@@ -3295,7 +3296,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -386.96, y: -224.77}
+  m_AnchoredPosition: {x: -280, y: -224.77}
   m_SizeDelta: {x: 150, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &678033646
@@ -6593,7 +6594,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u308C\u304A\u3093"
+  m_text: ""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -8462,8 +8463,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e006f6e190339864a940793d20e9ccc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1 &2131658811
 GameObject:
   m_ObjectHideFlags: 0
@@ -8561,3 +8562,15 @@ SceneRoots:
   - {fileID: 1810027415}
   - {fileID: 1038166501}
   - {fileID: 1635176273}
+--- !u!114 &2900000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678033644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2206c0c36445416fb3ea0967dc2cf674, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
