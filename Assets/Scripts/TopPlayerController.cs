@@ -23,6 +23,7 @@ public class TopPlayerController : MonoBehaviour
     {
         data = PlayerProfileStore.Load();
         nickname = registrationPanel.transform.Find("name").GetComponent<TMP_InputField>();
+        nickname.gameObject.AddComponent<WebGLImeTMPInput>();
         age = registrationPanel.transform.Find("age").GetComponent<TMP_InputField>();
         nickname.richText = false;
         nickname.characterLimit = 10;
@@ -66,6 +67,7 @@ public class TopPlayerController : MonoBehaviour
             clearOldNameOnSelect = false;
             changeNameInput.text = "";
         });
+        changeNameInput.gameObject.AddComponent<WebGLImeTMPInput>();
         var target = changeNamePlate.transform.Find("OKbutton").gameObject;
         changeNameOkButton = target.GetComponent<Button>();
         if (changeNameOkButton == null) changeNameOkButton = target.AddComponent<Button>();
