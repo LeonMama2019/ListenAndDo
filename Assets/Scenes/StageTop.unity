@@ -1377,7 +1377,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -280, y: 151}
+  m_AnchoredPosition: {x: -418, y: 151}
   m_SizeDelta: {x: 150, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &631653122
@@ -2678,7 +2678,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ""
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -3330,13 +3330,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageLevelMenuButton
   stageNumber: 3
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 173695451}
-  - {fileID: 565391036}
-  - {fileID: 97305407}
 --- !u!114 &2800000101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3347,5 +3340,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2206c0c36445416fb3ea0967dc2cf674, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 173695451}
+  - {fileID: 565391036}
+  - {fileID: 97305407}
