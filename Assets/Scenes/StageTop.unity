@@ -989,8 +989,9 @@ GameObject:
   - component: {fileID: 552176430}
   - component: {fileID: 552176429}
   - component: {fileID: 552176428}
+  - component: {fileID: 4000000001}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3349,3 +3350,16 @@ SceneRoots:
   - {fileID: 173695451}
   - {fileID: 565391036}
   - {fileID: 97305407}
+
+--- !u!114 &4000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 552176426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cf392ead4142459003526bd3e2162e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
