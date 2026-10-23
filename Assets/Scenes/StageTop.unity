@@ -1014,7 +1014,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -459.5, y: 236}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &552176428
 MonoBehaviour:
@@ -3343,14 +3343,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2206c0c36445416fb3ea0967dc2cf674, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 173695451}
-  - {fileID: 565391036}
-  - {fileID: 97305407}
-
 --- !u!114 &4000000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3361,5 +3353,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62cf392ead4142459003526bd3e2162e, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 173695451}
+  - {fileID: 565391036}
+  - {fileID: 97305407}

@@ -1831,7 +1831,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ""
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
@@ -2097,7 +2097,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -364, y: 203}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2121438226
 MonoBehaviour:
@@ -2229,14 +2229,6 @@ MonoBehaviour:
   - {fileID: 4679848200771493626, guid: 159f2078c83e6c1468bcf559576515b7, type: 3}
   - {fileID: -1384698669399603645, guid: 413afdafdb2986b44b251d38eddc76ae, type: 3}
   - {fileID: -3365203617982873346, guid: 9c4bfe79378740e49b27bae4d2df6275, type: 3}
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 1176813331}
-  - {fileID: 667116581}
-  - {fileID: 887005418}
-  - {fileID: 1901642415}
 --- !u!114 &2600000101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2247,5 +2239,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2206c0c36445416fb3ea0967dc2cf674, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 1176813331}
+  - {fileID: 667116581}
+  - {fileID: 887005418}
+  - {fileID: 1901642415}
