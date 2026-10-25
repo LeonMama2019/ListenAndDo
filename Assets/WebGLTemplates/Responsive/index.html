@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{{ PRODUCT_NAME }}}</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #231f20; }
+    #unity-container {
+      width: 100%; height: 100%; height: 100dvh;
+      padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+               env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+      display: flex; flex-direction: column;
+    }
+    #unity-stage { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; }
+    #unity-canvas { display: block; background: #231f20; touch-action: none; }
+    #unity-toolbar { flex: 0 0 auto; min-height: 30px; text-align: right; }
+    #unity-fullscreen-button { margin: 2px 8px; padding: 3px 12px; border: 1px solid #81776d; border-radius: 4px; color: #fff; background: #39332f; cursor: pointer; }
+    #unity-fullscreen-button:disabled { opacity: .5; cursor: default; }
+    #unity-loading { position: absolute; width: min(70%, 300px); color: #fff; font: 14px sans-serif; text-align: center; pointer-events: none; }
+    #unity-progress { width: 100%; margin-top: 10px; }
+    #unity-warning { position: absolute; z-index: 2; top: 8px; left: 5%; width: 90%; max-height: 70%; overflow: auto; font: 14px sans-serif; }
+    #unity-warning:empty { display: none; }
+    #unity-warning div { padding: 10px; margin-bottom: 4px; color: #231f20; background: #fff2be; overflow-wrap: anywhere; }
+    #unity-warning div[data-error] { background: #ffd4d4; }
+  </style>
+</head>
+<body>
+  <main id="unity-container">
+    <div id="unity-stage">
+      <canvas id="unity-canvas" width="1000" height="600" tabindex="-1" aria-label="Listen &amp; Do"></canvas>
+      <div id="unity-loading" role="status">読み込み中…<progress id="unity-progress" max="1" value="0"></progress></div>
+      <div id="unity-warning" role="alert"></div>
+    </div>
+    <div id="unity-toolbar"><button id="unity-fullscreen-button" type="button" disabled>全画面</button></div>
+  </main>
+  <script>
+    var canvas = document.getElementById("unity-canvas");
+    var stage = document.getElementById("unity-stage");
+    var loading = document.getElementById("unity-loading");
+    var fullscreenButton = document.getElementById("unity-fullscreen-button");
+
+    // Keep the authored 1000 x 600 layout inside the available iframe/viewport.
+    // Unity matches its render buffer to these CSS dimensions automatically.
+    function fitCanvas() {
+      var width = Math.min(stage.clientWidth, stage.clientHeight * 1000 / 600);
+      canvas.style.width = Math.max(1, width) + "px";
+      canvas.style.height = Math.max(1, width * 600 / 1000) + "px";
+    }
+    window.addEventListener("resize", fitCanvas);
+    window.addEventListener("orientationchange", fitCanvas);
+    document.addEventListener("fullscreenchange", fitCanvas);
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", fitCanvas);
+    if (window.ResizeObserver) new ResizeObserver(fitCanvas).observe(stage);
+
+    function showBanner(message, type) {
+      var banner = document.createElement("div");
+      banner.textContent = message;
+      if (type === "error") banner.setAttribute("data-error", "");
+      document.getElementById("unity-warning").appendChild(banner);
+      if (type !== "error") window.setTimeout(function () { banner.remove(); }, 5000);
+    }
+
+    // Fullscreen the document so the existing Japanese input dialog stays visible.
+    if (!document.fullscreenEnabled || !document.documentElement.requestFullscreen) {
+      document.getElementById("unity-toolbar").hidden = true;
+    } else {
+      fullscreenButton.addEventListener("click", function () {
+        var request = document.fullscreenElement
+          ? document.exitFullscreen()
+          : document.documentElement.requestFullscreen();
+        if (request && request.catch) request.catch(function () {
+          showBanner("全画面表示を利用できません。通常の画面で続けられます。", "warning");
+        });
+      });
+      document.addEventListener("fullscreenchange", function () {
+        fullscreenButton.textContent = document.fullscreenElement ? "全画面を終了" : "全画面";
+      });
+    }
+    fitCanvas();
+
+    var buildUrl = "Build";
+    var config = {
+      arguments: [],
+      dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+      frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+      codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#if MEMORY_FILENAME
+      memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+      symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+      productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+      productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+      showBanner: showBanner
+    };
+    var script = document.createElement("script");
+    script.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
+    script.onload = function () {
+      createUnityInstance(canvas, config, function (progress) {
+        document.getElementById("unity-progress").value = progress;
+      }).then(function (instance) {
+        window.unityInstance = instance;
+        loading.hidden = true;
+        fullscreenButton.disabled = false;
+        fitCanvas();
+      }).catch(function (message) {
+        loading.hidden = true;
+        showBanner(String(message), "error");
+      });
+    };
+    script.onerror = function () {
+      loading.hidden = true;
+      showBanner("ゲームを読み込めませんでした。ページを再読み込みしてください。", "error");
+    };
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>
