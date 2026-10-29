@@ -412,8 +412,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u304F\u308F\u3057\u304F\u307F\u308B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fc9e66b6d74bbe7429bacc8b82100411, type: 2}
-  m_sharedMaterial: {fileID: 2465128367423993225, guid: fc9e66b6d74bbe7429bacc8b82100411, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
+  m_sharedMaterial: {fileID: 8644910756610866362, guid: 9c35ca83adf1c7d4c9568b46bd447512, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
